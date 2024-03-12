@@ -1,7 +1,7 @@
 // src/vuic.js
 class Vuic {
     constructor(key) {
-        console.log('---[VUIC]--- constructor');
+        console.log('---[VUIC 4]--- constructor');
         if (!key) {
             console.log('A client_key must be provided');
             throw new Error('A client_key must be provided');
