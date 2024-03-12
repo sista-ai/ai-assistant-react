@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # Necessary for actions/checkout to fetch all history for versioning
+          fetch-depth: 0 # Necessary for actions/checkout to fetch all history for versioning and tagging
 
       - name: Use Node.js
         uses: actions/setup-node@v2
@@ -25,11 +25,9 @@ jobs:
         run: npm run build
 
       - name: Automatic Version Bump
-        id: autobump
-        uses: phips28/gh-action-bump-version@v6.0.0
+        uses: phips28/gh-action-bump-version@v9.1.1
         with:
-          tag-prefix: "" # This removes the 'v' prefix from tags if you don't want it
-          commit-message: "Bump version to {{version}}"
+          tag-prefix: ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
