@@ -20,4 +20,4 @@ const VuicProvider = ({ apiKey, children }) => {
     );
 };
 
-export default VuicProvider;
+export { VuicProvider };

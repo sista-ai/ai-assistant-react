@@ -1,3 +1,4 @@
+// src/vuic.js
 class Vuic {
     constructor(key) {
         console.log('---[VUIC]--- constructor');

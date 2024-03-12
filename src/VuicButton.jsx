@@ -17,4 +17,4 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
     );
 };
 
-export default VuicButton;
+export { VuicButton };
