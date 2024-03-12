@@ -1,4 +1,4 @@
-name: React Package CI/CD - Build and Publish to NPM
+name: VUIC React. Build and Publish to NPM
 
 on:
   push:
