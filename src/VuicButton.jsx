@@ -1,5 +1,5 @@
 import React from 'react';
-import useVuic from './VuicContext';
+import { useVuic } from './VuicContext';
 
 const VuicButton = ({ buttonText = 'Record', ...props }) => {
     const vuic = useVuic();

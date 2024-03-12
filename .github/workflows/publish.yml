@@ -28,7 +28,6 @@ jobs:
         uses: phips28/gh-action-bump-version@v9.1.1
         with:
           tag-prefix: ''
-          commit-message: 'CI: Auto bump version to {newVersion}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
