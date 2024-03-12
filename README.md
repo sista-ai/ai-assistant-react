@@ -1,1 +1,3 @@
-# VUIC
+# Sista Voice UI Controller
+
+Sista Voice UI Controller is a React package that provides...
