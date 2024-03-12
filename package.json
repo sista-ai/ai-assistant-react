@@ -1,6 +1,6 @@
 {
     "name": "@sista/vuic-react",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "A Voice UI Controller SDK to easily integrate voice commands into any applications.",
     "main": "dist/index.js",
     "repository": {
@@ -20,7 +20,7 @@
         "sdk"
     ],
     "author": "Sista AI <support@sista.ai>",
-    "license": "AGPL-3.0",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/sista-ai/vuic-react-sdk/issues"
     },
