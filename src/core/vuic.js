@@ -35,8 +35,9 @@ class Vuic {
             return;
         }
 
+        let stream;
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
+            stream = await navigator.mediaDevices.getUserMedia({
                 audio: true,
             });
             let mimeType = 'audio/webm';
@@ -51,12 +52,18 @@ class Vuic {
             mediaRecorder.onstop = async () => {
                 const audioBlob = new Blob(audioChunks, { type: mimeType });
                 await this._processVoiceCommand(audioBlob);
+                // Stop all tracks in the stream to turn off the microphone
+                stream.getTracks().forEach((track) => track.stop());
             };
 
             mediaRecorder.start();
             setTimeout(() => mediaRecorder.stop(), 3000);
         } catch (err) {
             console.error('Error getting media stream:', err);
+            // If an error occurs, stop all tracks in the stream
+            if (stream) {
+                stream.getTracks().forEach((track) => track.stop());
+            }
         }
     };
 
