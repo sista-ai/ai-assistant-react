@@ -25,21 +25,21 @@ class Vuic {
             console.error('MediaRecorder is not supported by this browser.');
             return;
         }
-    
+
         let stream;
         try {
             const getUserMedia = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
                 ? navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)
                 : (constraints) => new Promise((resolve, reject) =>
                     navigator.getUserMedia(constraints, resolve, reject));
-    
+
             stream = await getUserMedia({ audio: true });
-    
+
             let mimeType = 'audio/webm';
             if (!MediaRecorder.isTypeSupported(mimeType)) {
                 mimeType = 'audio/wav';
             }
-    
+
             const mediaRecorder = new MediaRecorder(stream, { mimeType });
             const audioChunks = [];
             mediaRecorder.ondataavailable = (event) =>
@@ -50,7 +50,7 @@ class Vuic {
                 // Stop all tracks in the stream to turn off the microphone
                 stream.getTracks().forEach((track) => track.stop());
             };
-    
+
             mediaRecorder.start();
             setTimeout(() => mediaRecorder.stop(), 3000);
         } catch (err) {
@@ -83,45 +83,69 @@ class Vuic {
     _handleProcessedVoiceCommandResponse = (response) => {
         console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse');
         console.log('@ RAW RESPONSE:', response);
-    
-        if (response && response.executableFunctions) {
-            const firstChoice = response.executableFunctions;
-            if (firstChoice.message && firstChoice.message.tool_calls) {
-                this._executeFunctions(firstChoice.message);
-            } else if (
-                firstChoice.message &&
-                firstChoice.message.content !== null
-            ) {
-                this._executeTextReply(firstChoice.message.content);
-            } else {
-                console.error(
-                    'Response does not match expected formats:',
-                    response,
-                );
-            }
-        } else {
-            console.error('Invalid response format:', response);
-        }
-    };
 
-    _executeTextReply = (content) => {
-        console.log('YOW:', content);
+        if (!response || !response.executableFunctions) {
+            console.error('Invalid response format:', response);
+            return;
+        }
+
+        const { message } = response.executableFunctions;
+
+        if (!message) {
+            console.error('Response does not contain a message:', response);
+            return;
+        }
+
+        if (message.tool_calls) {
+            this._executeFunctions(message);
+        } else if (message.content !== null) {
+            this._executeTextReply(message.content);
+        } else {
+            console.error('Response does not match expected formats:', response);
+        }
     };
 
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
-        const toolCalls = message.tool_calls;
-        toolCalls.forEach((toolCall) => {
+
+        if (!message || !message.tool_calls) {
+            console.error('Invalid message format:', message);
+            return;
+        }
+
+        message.tool_calls.forEach((toolCall) => {
+            if (!toolCall.function || !toolCall.function.name) {
+                console.error('Invalid tool call format:', toolCall);
+                return;
+            }
+
             const functionName = toolCall.function.name;
             const functionToCall = this.functionReferences[functionName];
-            if (functionToCall) {
-                const functionArgs = JSON.parse(toolCall.function.arguments);
-                const functionArgsArray = Object.values(functionArgs);
-                functionToCall(...functionArgsArray);
-            } else {
+
+            if (!functionToCall) {
                 console.error('No function found for name:', functionName);
+                return;
+            }
+
+            let functionArgs = {};
+            try {
+                functionArgs = JSON.parse(toolCall.function.arguments);
+            } catch (error) {
+                console.error('Failed to parse function arguments:', error);
+                return;
+            }
+
+            const functionArgsArray = Object.values(functionArgs);
+            try {
+                functionToCall(...functionArgsArray);
+            } catch (error) {
+                console.error(`Error executing function ${functionName}:`, error);
             }
         });
+    };
+
+    _executeTextReply = (content) => {
+        console.log('YOW:', content);
     };
 
     static init(key) {
