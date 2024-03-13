@@ -83,9 +83,9 @@ class Vuic {
     _handleProcessedVoiceCommandResponse = (response) => {
         console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse');
         console.log('@ RAW RESPONSE:', response);
-
-        if (response && response.executableFunctions && Array.isArray(response.executableFunctions)) {
-            const firstChoice = response.executableFunctions[0];
+    
+        if (response && response.executableFunctions) {
+            const firstChoice = response.executableFunctions;
             if (firstChoice.message && firstChoice.message.tool_calls) {
                 this._executeFunctions(firstChoice.message);
             } else if (
