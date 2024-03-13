@@ -1,4 +1,6 @@
 // src/core/vuic.js
+const config = require('./config');
+
 class Vuic {
     constructor(key) {
         console.log('--[VUIC]-- constructor');
@@ -17,34 +19,27 @@ class Vuic {
         this.functionReferences = functionReferences;
     }
 
-    // // for vanilla JS
-    // createVoiceButton(options) {
-    //     console.log('--[VUIC]-- createVoiceButton');
-    //     const button = document.createElement('button');
-    //     button.innerText = options.text || 'Talk to me';
-    //     button.addEventListener('click', () => {
-    //         this.startVoiceRecording();
-    //     });
-    //     return button;
-    // }
-
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
             return;
         }
-
+    
         let stream;
         try {
-            stream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
-            });
+            const getUserMedia = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
+                ? navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)
+                : (constraints) => new Promise((resolve, reject) =>
+                    navigator.getUserMedia(constraints, resolve, reject));
+    
+            stream = await getUserMedia({ audio: true });
+    
             let mimeType = 'audio/webm';
             if (!MediaRecorder.isTypeSupported(mimeType)) {
                 mimeType = 'audio/wav';
             }
-
+    
             const mediaRecorder = new MediaRecorder(stream, { mimeType });
             const audioChunks = [];
             mediaRecorder.ondataavailable = (event) =>
@@ -55,7 +50,7 @@ class Vuic {
                 // Stop all tracks in the stream to turn off the microphone
                 stream.getTracks().forEach((track) => track.stop());
             };
-
+    
             mediaRecorder.start();
             setTimeout(() => mediaRecorder.stop(), 3000);
         } catch (err) {
@@ -76,7 +71,7 @@ class Vuic {
             JSON.stringify(this.functionSignatures),
         );
 
-        await fetch('http://localhost:3077/processor/run', {
+        await fetch(`${config.vuicBaseURL}/processor/run`, {
             method: 'POST',
             body: formData,
         })
