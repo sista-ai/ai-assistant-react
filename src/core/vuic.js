@@ -96,6 +96,10 @@ class Vuic {
             return;
         }
 
+        if (response.audioFile) {
+            this._executeAudioReply(response.audioFile);
+        }
+
         if (message.tool_calls) {
             this._executeFunctions(message);
         } else if (message.content !== null) {
@@ -103,6 +107,26 @@ class Vuic {
         } else {
             console.error('Response does not match expected formats:', response);
         }
+    };
+
+    _executeAudioReply = (audioFileUrl) => {
+        // Check if the browser supports the Audio API
+        if (!window.Audio) {
+            console.error('This browser does not support the Audio API');
+            return;
+        }
+
+        const audio = new Audio(audioFileUrl);
+
+        // Handle errors when loading the audio file
+        audio.onerror = function () {
+            console.error('An error occurred while trying to load the audio file:', audioFileUrl);
+        };
+
+        // Handle errors when trying to play the audio
+        audio.play().catch(function (error) {
+            console.error('An error occurred while trying to play the audio:', error);
+        });
     };
 
     _executeFunctions = (message) => {
