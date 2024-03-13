@@ -1,32 +1,43 @@
 {
-	"name": "@sista/vuic-react",
-	"version": "1.0.0",
-	"description": "A Voice UI Controller SDK to easily integrate voice commands into any applications.",
-	"main": "vuic.js",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/sista-ai/vuic-react-sdk.git"
-	},
-	"keywords": [
-		"sista",
-		"voice",
-		"ui",
-		"controller",
-		"react",
-		"sdk"
-	],
-	"author": "Sista AI <support@sista.ai>",
-	"license": "AGPL-3.0",
-	"bugs": {
-		"url": "https://github.com/sista-ai/vuic-react-sdk/issues"
-	},
-	"homepage": "https://github.com/sista-ai/vuic-react-sdk#readme",
-	"peerDependencies": {
-		"react": "^16.8.0",
-		"react-dom": "^16.8.0"
-	},
-	"devDependencies": {
-		"react": "^16.8.0",
-		"react-dom": "^16.8.0"
-	}
+    "name": "@sista/vuic-react",
+    "version": "1.1.4",
+    "description": "A Voice UI Controller SDK to easily integrate voice commands into any applications.",
+    "main": "dist/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sista-ai/vuic-react-sdk.git"
+    },
+    "scripts": {
+        "build": "babel src --out-dir dist --extensions \".js,.jsx\" --copy-files",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "nodemon --exec yarn run build --watch src --ext js,jsx"
+    },
+    "keywords": [
+        "sista",
+        "voice",
+        "ui",
+        "controller",
+        "react",
+        "sdk"
+    ],
+    "author": "Sista AI <support@sista.ai>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sista-ai/vuic-react-sdk/issues"
+    },
+    "homepage": "https://github.com/sista-ai/vuic-react-sdk#readme",
+    "peerDependencies": {
+        "react": ">=16.11.0",
+        "react-dom": ">=16.11.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.23.9",
+        "@babel/core": "^7.24.0",
+        "@babel/preset-env": "^7.24.0",
+        "@babel/preset-react": "^7.23.3",
+        "nodemon": "^3.1.0"
+    },
+    "files": [
+        "dist"
+    ]
 }

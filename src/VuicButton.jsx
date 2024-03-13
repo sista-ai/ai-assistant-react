@@ -1,5 +1,5 @@
 import React from 'react';
-import useVuic from './VuicContext';
+import { useVuic } from './VuicContext';
 
 const VuicButton = ({ buttonText = 'Record', ...props }) => {
     const vuic = useVuic();
@@ -12,9 +12,9 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
 
     return (
         <button onClick={handleButtonClick} {...props}>
-            {buttonText}
+            MEGA 1 {buttonText} 
         </button>
     );
 };
 
-export default VuicButton;
+export { VuicButton };

@@ -1,0 +1,37 @@
+name: VUIC React - Build and Publish to NPM
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Necessary for actions/checkout to fetch all history for versioning and tagging
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Automatic Version Bump
+        uses: phips28/gh-action-bump-version@v9.1.1
+        with:
+          tag-prefix: ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        run: npm publish --access public  
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

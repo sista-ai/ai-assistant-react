@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Vuic from '../../vuic';
+import Vuic from './vuic';
 import { VuicContext } from './VuicContext';
 
 const VuicProvider = ({ apiKey, children }) => {
-    const [vuiSdk, setVuiSdk] = useState({
-        registerFunctions: () => {}, // Placeholder function
-        startVoiceRecording: () => {}, // Placeholder function
-    });
+    const [vuiSdk, setVuiSdk] = useState(null);
 
     useEffect(() => {
         if (apiKey) {
@@ -20,4 +17,4 @@ const VuicProvider = ({ apiKey, children }) => {
     );
 };
 
-export default VuicProvider;
+export { VuicProvider };
