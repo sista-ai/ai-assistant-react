@@ -1,7 +1,7 @@
-// src/vuic.js
+// src/core/vuic.js
 class Vuic {
     constructor(key) {
-        console.log('---[VUIC]--- constructor');
+        console.log('--[VUIC]-- constructor');
         if (!key) {
             console.log('A client_key must be provided');
             throw new Error('A client_key must be provided');
@@ -12,14 +12,14 @@ class Vuic {
     }
 
     registerFunctions(functionSignatures, functionReferences) {
-        console.log('---[VUIC]--- registerFunctions');
+        console.log('--[VUIC]-- registerFunctions');
         this.functionSignatures = functionSignatures;
         this.functionReferences = functionReferences;
     }
 
     // // for vanilla JS
     // createVoiceButton(options) {
-    //     console.log('---[VUIC]--- createVoiceButton');
+    //     console.log('--[VUIC]-- createVoiceButton');
     //     const button = document.createElement('button');
     //     button.innerText = options.text || 'Talk to me';
     //     button.addEventListener('click', () => {
@@ -29,7 +29,7 @@ class Vuic {
     // }
 
     startVoiceRecording = async () => {
-        console.log('---[VUIC]--- startVoiceRecording');
+        console.log('--[VUIC]-- startVoiceRecording');
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
             return;
@@ -61,7 +61,7 @@ class Vuic {
     };
 
     _processVoiceCommand = async (audioBlob) => {
-        console.log('---[VUIC]--- _processVoiceCommand');
+        console.log('--[VUIC]-- _processVoiceCommand');
         const formData = new FormData();
         formData.append('audio', audioBlob);
         formData.append(
@@ -79,7 +79,7 @@ class Vuic {
     };
 
     _handleProcessedVoiceCommandResponse = (response) => {
-        console.log('---[VUIC]--- _handleProcessedVoiceCommandResponse');
+        console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse');
         console.log('@ RAW RESPONSE:', response);
 
         if (response && response.actions && Array.isArray(response.actions)) {
@@ -107,7 +107,7 @@ class Vuic {
     };
 
     _executeFunctions = (message) => {
-        console.log('---[VUIC]--- _executeFunctions');
+        console.log('--[VUIC]-- _executeFunctions');
         const toolCalls = message.tool_calls;
         toolCalls.forEach((toolCall) => {
             const functionName = toolCall.function.name;

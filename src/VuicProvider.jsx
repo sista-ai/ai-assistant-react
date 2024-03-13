@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Vuic from './vuic';
+import Vuic from './core/vuic';
 import { VuicContext } from './VuicContext';
 
 const VuicProvider = ({ apiKey, children }) => {

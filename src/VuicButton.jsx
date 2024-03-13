@@ -12,7 +12,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
 
     return (
         <button onClick={handleButtonClick} {...props}>
-            MEGA 1 {buttonText} 
+            {buttonText} 
         </button>
     );
 };
