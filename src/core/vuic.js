@@ -20,13 +20,18 @@ class Vuic {
     }
 
     startVoiceRecording = async () => {
-        console.log('--[VUIC]-- startVoiceRecording');
+        console.log('--[VUIC]-- startVoiceRecording 1');
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
             return;
         }
 
         let stream;
+        let resolveRecordingPromise;
+        const recordingPromise = new Promise(resolve => {
+            resolveRecordingPromise = resolve;
+        });
+
         try {
             const getUserMedia = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
                 ? navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)
@@ -49,6 +54,7 @@ class Vuic {
                 await this._processVoiceCommand(audioBlob);
                 // Stop all tracks in the stream to turn off the microphone
                 stream.getTracks().forEach((track) => track.stop());
+                resolveRecordingPromise();
             };
 
             mediaRecorder.start();
@@ -59,7 +65,10 @@ class Vuic {
             if (stream) {
                 stream.getTracks().forEach((track) => track.stop());
             }
+            resolveRecordingPromise();
         }
+
+        return recordingPromise;
     };
 
     _processVoiceCommand = async (audioBlob) => {
