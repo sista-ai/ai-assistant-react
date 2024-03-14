@@ -20,7 +20,7 @@ class Vuic {
     }
 
     startVoiceRecording = async () => {
-        console.log('--[VUIC]-- startVoiceRecording 1');
+        console.log('--[VUIC]-- startVoiceRecording');
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
             return;

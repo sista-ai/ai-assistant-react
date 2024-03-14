@@ -20,6 +20,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
     return (
         <button
             onClick={handleButtonClick}
+            disabled={isRecording} // Disable the button while recording
             style={{
                 position: 'fixed',
                 bottom: '20px',
@@ -31,7 +32,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: isRecording ? '#00ff00' : '#ff0000', // Green background when recording, red otherwise
+                backgroundColor: isRecording ? '#a50000' : '#ff0000', // Green background when recording, red otherwise
                 color: '#ffffff', // White text/icon
                 border: 'none',
                 boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)', // Enhanced shadow
