@@ -20,8 +20,6 @@ yarn add @sista/vuic-react
 
 ## Setup
 
-To integrate the `@sista/vuic-react` SDK into your React application, follow these steps:
-
 ### 1. Initialize the SDK
 
 First, wrap your app component with the `VuicProvider` component and provide it with your API key. This is typically done in your main entry file, like `index.js` or `index.tsx`.
@@ -30,7 +28,7 @@ First, wrap your app component with the `VuicProvider` component and provide it 
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { VuicProvider } from "@sista/vuic-react";
-import App from "./App"; // Import your main App component
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -49,13 +47,17 @@ Replace `"YOUR_API_KEY"` with your actual API key.
 Within your application, import the `VuicButton` from the `@sista/vuic-react` package and add it to your component where you want the voice functionality to be accessible.
 
 ```js
+// ...
 import { VuicButton } from "@sista/vuic-react";
+
+// ...
 
 function MyComponent() {
   return (
     <div>
       {/* Other UI elements */}
       <VuicButton />
+      {/* Other UI elements */}
     </div>
   );
 }
@@ -63,9 +65,39 @@ function MyComponent() {
 
 ### 3. Configuration
 
-For your React app to interact via voice, you'll need to define voice-activated functions and their signatures. This setup is vital for the voice UI to understand and execute commands.
+Lastly you'll need to define voice-activated functions by registering their signatures. This setup is vital for the voice UI to understand and execute commands.
 
-#### Example: Configuring a `addTask` Function in a Todo App
+
+#### Function Signature Structure
+
+Before diving into an example, let's understand the structure of a functionSignatures object. This object describes the functions that your application can execute through voice commands, including their names, descriptions, parameters, and any other necessary details. Here’s the basic structure:
+
+```js
+const functionSignatures = [
+  {
+    type: 'function', // Indicates the type of signature
+    function: {
+      name: 'functionName', // The name of the function
+      description: 'A brief description of what the function does',
+      parameters: {
+        type: 'object', // Parameters are passed as an object
+        properties: {
+          paramName: { // Each parameter's name
+            type: 'string', // The type of the parameter (string, number, etc.)
+            description: 'Description of the parameter', // A brief description of the parameter
+          },
+        },
+        required: ['paramName'], // List of required parameters
+      },
+    },
+  },
+  // Add more function signatures as needed
+];
+
+```
+
+
+#### Example: using a Todo App
 
 In a todo application, you might want to allow users to add tasks through voice commands. Below is a streamlined example that includes defining the `addTask` function and registering it along with its signature:
 
