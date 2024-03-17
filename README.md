@@ -2,31 +2,126 @@
 
 Sista Voice UI Controller is a React package that provides a set of components and hooks to help you build voice-enabled applications with ease.
 
+This documentation provides a concise guide on how to install, setup, and use the `@sista/vuic-react` library for integrating voice functionality into your React applications.
+
 ## Installation
 
-To install the package, you can use either npm or yarn:
+Before you start using the `@sista/vuic-react` library, you need to install it. You can do this using either npm or yarn. Run one of the following commands in your project directory:
 
-```
+```bash
 npm install @sista/vuic-react
 ```
 
 or
 
-```
+```bash
 yarn add @sista/vuic-react
 ```
 
-## Usage
+## Setup
 
-Here's a basic example of how to use the package:
+To integrate the `@sista/vuic-react` SDK into your React application, follow these steps:
 
+### 1. Initialize the SDK
+
+First, wrap your app component with the `VuicProvider` component and provide it with your API key. This is typically done in your main entry file, like `index.js` or `index.tsx`.
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { VuicProvider } from "@sista/vuic-react";
+import App from "./App"; // Import your main App component
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <VuicProvider apiKey={"YOUR_API_KEY"}>
+      <App />
+    </VuicProvider>
+  </React.StrictMode>
+);
 ```
-import { xxx } from '@sista/vuic-react';
 
-...
+Replace `"YOUR_API_KEY"` with your actual API key.
+
+### 2. Import and Use the Voice Button
+
+Within your application, import the `VuicButton` from the `@sista/vuic-react` package and add it to your component where you want the voice functionality to be accessible.
+
+```js
+import { VuicButton } from "@sista/vuic-react";
+
+function MyComponent() {
+  return (
+    <div>
+      {/* Other UI elements */}
+      <VuicButton />
+    </div>
+  );
+}
 ```
 
-Replace `VoiceController` with the actual component you're exporting, and `Your application code here` with the actual content of your application.
+### 3. Configuration
+
+For your React app to interact via voice, you'll need to define voice-activated functions and their signatures. This setup is vital for the voice UI to understand and execute commands.
+
+#### Example: Configuring a `addTask` Function in a Todo App
+
+In a todo application, you might want to allow users to add tasks through voice commands. Below is a streamlined example that includes defining the `addTask` function and registering it along with its signature:
+
+```js
+// ...
+import { useVuic, useEffect } from '@sista/vuic-react';
+
+function TodoApp() {
+    // function to be voice activated by VUID
+    const addTask = (taskDescription) => {
+        console.log(`Added task: ${taskDescription}`);
+    };
+
+    // ...
+
+    const vuic = useVuic();
+    useEffect(() => {
+        const functionSignatures = [
+            {
+                type: 'function',
+                function: {
+                    name: 'addTask',
+                    description:
+                        'Adds a task to the todo list with a given description.',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            taskDescription: {
+                                type: 'string',
+                                description: 'The task description.',
+                            },
+                        },
+                        required: ['taskDescription'],
+                    },
+                },
+            },
+        ];
+
+        if (vuic) {
+            vuic.registerFunctions(functionSignatures, { addTask });
+        }
+    }, [vuic]);
+
+    return <div>{/* TodoApp UI elements here */}</div>;
+```
+
+ The `functionSignatures` object defines how `addTask` should be recognized and executed via voice commands. This function, along with its signature, is registered with the VUIC SDK using `useEffect` to ensure it's done once the component mounts.
+
+## Basic Usage
+
+The basic usage involves three key steps:
+
+1. **Initiate the SDK (`VuicProvider`):** Wrap your app with `VuicProvider` and provide your API key to initialize the voice functionality.
+2. **Import Voice Button (`<VuicButton />`):** Use the `VuicButton` component in your UI to give users the ability to interact with voice commands.
+3. **Write Your Config File:** Define and register your voice-activated functions using `vuic.registerFunctions(functionSignatures, functionReferences);` to make them accessible through voice commands.
+
 
 ## Contributing
 
@@ -38,4 +133,4 @@ Sista Voice UI Controller is [MIT licensed](./LICENSE).
 
 ## Support
 
-If you're having a problem with this package, please raise an issue on the [GitHub repository](LINK_TO_GITHUB_REPO) or contact us at [support@sista.ai](mailto:support@sista.ai).
+If you're having a problem with this package, please raise an issue on Github or contact us at [support@sista.ai](mailto:support@sista.ai).
