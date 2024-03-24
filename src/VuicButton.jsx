@@ -32,10 +32,10 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: isRecording ? '#a50000' : '#ff0000', // Green background when recording, red otherwise
-                color: '#ffffff', // White text/icon
+                backgroundColor: isRecording ? '#a50000' : '#ff0000',
+                color: isRecording ? '#888888' : '#ffffff',
                 border: 'none',
-                boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.2)', // Enhanced shadow
+                boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.7)', // Enhanced shadow
             }}
             onMouseOver={(e) => {
                 e.currentTarget.children[0].style.transform =
