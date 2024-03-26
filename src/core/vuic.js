@@ -9,8 +9,11 @@ class Vuic {
             throw new Error('A client_key must be provided');
         }
         this.key = key;
+        console.log('--[VUIC]-- Registered KEY:', key);
         this.functionSignatures = [];
+        console.log('--[VUIC]-- Registered function Signatures:', this.functionSignatures);
         this.functionReferences = {};
+        console.log('--[VUIC]-- Registered function References:', this.functionReferences);
     }
 
     registerFunctions(functionSignatures, functionReferences) {
