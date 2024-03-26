@@ -4,25 +4,32 @@ import EventEmitter from './EventEmitter';
 import startSoundFile from './assets/audio/start.mp3';
 import endSoundFile from './assets/audio/end.mp3';
 
-
 class Vuic extends EventEmitter {
-    constructor(key) {
+    constructor(key, vuicBaseURL = config.vuicBaseURL) {
+        console.log('--[VUIC]-- Constructor (v1)');
         super();
-        console.log('--[VUIC]-- constructor (v1)');
+
         if (!key) {
-            console.log('A client_key must be provided');
-            throw new Error('A client_key must be provided');
+            console.error('Missing API Key for VuicProvider.');
+            throw new Error('Missing API Key for VuicProvider. Get your FREE Key from https://admin.sista.ai/applications');
         }
+
+        this.vuicBaseURL = vuicBaseURL;
+        console.log('--[VUIC]-- Registered VUIC Base URL:', this.vuicBaseURL);
+
         this.key = key;
-        console.log('--[VUIC]-- Registered KEY:', key);
+        console.log('--[VUIC]-- Registered KEY:', this.key);
+
         this.functionSignatures = [];
         console.log('--[VUIC]-- Registered function Signatures:', this.functionSignatures);
+
         this.functionReferences = {};
         console.log('--[VUIC]-- Registered function References:', this.functionReferences);
     }
 
     registerFunctions(functionSignatures, functionReferences) {
         console.log('--[VUIC]-- registerFunctions');
+
         this.functionSignatures = functionSignatures;
         this.functionReferences = functionReferences;
     }
@@ -43,6 +50,7 @@ class Vuic extends EventEmitter {
 
         let stream;
         let resolveRecordingPromise;
+
         const recordingPromise = new Promise(resolve => {
             resolveRecordingPromise = resolve;
         });
@@ -62,15 +70,19 @@ class Vuic extends EventEmitter {
 
             const mediaRecorder = new MediaRecorder(stream, { mimeType });
             const audioChunks = [];
+            
             mediaRecorder.ondataavailable = (event) =>
                 audioChunks.push(event.data);
 
             mediaRecorder.onstop = async () => {
                 this.emitStateChange(EventEmitter.STATE_PROCESSING_START);
+
                 const audioBlob = new Blob(audioChunks, { type: mimeType });
+
                 await this._processVoiceCommand(audioBlob);
                 // Stop all tracks in the stream to turn off the microphone
                 stream.getTracks().forEach((track) => track.stop());
+
                 this.emitStateChange(EventEmitter.STATE_IDLE);
 
                 resolveRecordingPromise();
@@ -84,6 +96,7 @@ class Vuic extends EventEmitter {
             if (stream) {
                 stream.getTracks().forEach((track) => track.stop());
             }
+
             resolveRecordingPromise();
         }
 
@@ -92,6 +105,7 @@ class Vuic extends EventEmitter {
 
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
+        
         const formData = new FormData();
         formData.append('audio', audioBlob);
         formData.append(
@@ -99,7 +113,7 @@ class Vuic extends EventEmitter {
             JSON.stringify(this.functionSignatures),
         );
 
-        await fetch(`${config.vuicBaseURL}/processor/run`, {
+        await fetch(`${this.vuicBaseURL}/processor/run`, {
             method: 'POST',
             headers: {
                 'x-api-key': this.key,
@@ -221,8 +235,8 @@ class Vuic extends EventEmitter {
         return audio;
     }
 
-    static init(key) {
-        return new Vuic(key);
+    static init(key, vuicBaseURL) {
+        return new Vuic(key, vuicBaseURL);
     }
 }
 
