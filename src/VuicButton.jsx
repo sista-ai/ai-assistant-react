@@ -4,17 +4,17 @@ import { FaMicrophone } from 'react-icons/fa';
 
 const VuicButton = ({ buttonText = 'Record', ...props }) => {
     const vuic = useVuic();
-    const [recordingState, setRecordingState] = useState('idle'); // 'idle', 'recording', 'processing'
-    const [isButtonDisabled, setButtonDisabled] = useState(false); // New state variable
+    const [recordingState, setRecordingState] = useState('STATE_IDLE');
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
 
     useEffect(() => {
         if (vuic) {
             const handleStateChange = (newState) => {
                 setRecordingState((prevState) => {
-                    if (newState === 'audioEnd') {
-                        newState = 'idle'; // Reset state to 'idle' when audio ends
+                    if (newState === 'STATE_AUDIO_END') {
+                        newState = 'STATE_IDLE';
                     }
-                    setButtonDisabled(newState !== 'idle'); // Enable button if state is 'idle'
+                    setButtonDisabled(newState !== 'STATE_IDLE');
                     return newState;
                 });
             };
@@ -33,19 +33,20 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
         }
     };
 
-    // Define a mapping from state to button background color
     const stateToColor = {
-        idle: '#ff0000',
-        recording: '#2e9800',
-        processing: '#007cff',
-        audioStart: '#ff6801',
-        audioEnd: '#ff0000',
+        STATE_IDLE: '#ff0000', // Red for idle state
+        STATE_RECORDING_START: '#32CD32', // Lime green for recording start
+        STATE_RECORDING_END: '#228B22', // Forest green for recording end
+        STATE_PROCESSING_START: '#1E90FF', // Dodger blue for processing start
+        STATE_PROCESSING_END: '#00008B', // Dark blue for processing end
+        STATE_AUDIO_START: '#800080', // Purple for audio start
+        STATE_AUDIO_END: '#4B0082', // Indigo for audio end
     };
 
     return (
         <button
             onClick={handleButtonClick}
-            disabled={isButtonDisabled} // Disable button based on state
+            disabled={isButtonDisabled}
             style={{
                 position: 'fixed',
                 bottom: '20px',
@@ -64,17 +65,17 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
             }}
             onMouseOver={(e) => {
                 e.currentTarget.children[0].style.transform =
-                    'scale(1.5) rotate(360deg)'; // Scale up and rotate icon on hover
+                    'scale(1.5) rotate(360deg)';
             }}
             onMouseOut={(e) =>
                 (e.currentTarget.children[0].style.transform =
                     'scale(1) rotate(0deg)')
-            } // Scale down and reset rotation when hover ends
+            }
             {...props}
         >
             <FaMicrophone
                 style={{
-                    transition: 'transform 0.3s ease-in-out', // Add transition for smooth scaling
+                    transition: 'transform 0.3s ease-in-out',
                 }}
             />
         </button>

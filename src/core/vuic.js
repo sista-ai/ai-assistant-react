@@ -26,11 +26,11 @@ class Vuic extends EventEmitter {
 
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
-        this.emit(EventEmitter.STATE_CHANGE, EventEmitter.RECORDING);
+        this.emitStateChange(EventEmitter.STATE_RECORDING_START);
 
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
-            this.emit(EventEmitter.STATE_CHANGE, EventEmitter.IDLE);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
 
             return;
         }
@@ -59,12 +59,12 @@ class Vuic extends EventEmitter {
             mediaRecorder.ondataavailable = (event) =>
                 audioChunks.push(event.data);
             mediaRecorder.onstop = async () => {
-                this.emit(EventEmitter.STATE_CHANGE, EventEmitter.PROCESSING);
+                this.emitStateChange(EventEmitter.STATE_PROCESSING_START);
                 const audioBlob = new Blob(audioChunks, { type: mimeType });
                 await this._processVoiceCommand(audioBlob);
                 // Stop all tracks in the stream to turn off the microphone
                 stream.getTracks().forEach((track) => track.stop());
-                this.emit(EventEmitter.STATE_CHANGE, EventEmitter.IDLE);
+                this.emitStateChange(EventEmitter.STATE_IDLE);
 
                 resolveRecordingPromise();
             };
@@ -143,11 +143,11 @@ class Vuic extends EventEmitter {
         const audio = new Audio(audioFileUrl);
         // Emit AUDIO_START state when the audio starts
         audio.onplay = () => {
-            this.emit(EventEmitter.STATE_CHANGE, EventEmitter.AUDIO_START);
+            this.emitStateChange(EventEmitter.STATE_AUDIO_START);
         };
         // Emit AUDIO_END state when the audio ends
         audio.onended = () => {
-            this.emit(EventEmitter.STATE_CHANGE, EventEmitter.AUDIO_END);
+            this.emitStateChange(EventEmitter.STATE_AUDIO_END);
         };
         // Handle errors when loading the audio file
         audio.onerror = function () {
