@@ -24,6 +24,21 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Get current version
+        id: pkg
+        run: echo "::set-output name=version::$(node -p "require('./package.json').version")"
+
+      - name: Check if tag exists
+        run: |
+          NEW_TAG=$(npm version patch --git-tag-version=false)
+          if git rev-parse "$NEW_TAG" >/dev/null 2>&1; then
+            echo "tag exists"
+            git tag -d $NEW_TAG
+            git push origin :refs/tags/$NEW_TAG
+          else
+            echo "tag does not exist"
+          fi
+
       - name: Automatic Version Bump
         id: bump
         uses: phips28/gh-action-bump-version@v9.1.1
@@ -31,16 +46,6 @@ jobs:
           tag-prefix: ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Check if tag exists
-        run: |
-          if git rev-parse "${{ steps.bump.outputs.newTag }}" >/dev/null 2>&1; then
-            echo "tag exists"
-            git tag -d ${{ steps.bump.outputs.newTag }}
-            git push origin :refs/tags/${{ steps.bump.outputs.newTag }}
-          else
-            echo "tag does not exist"
-          fi
 
       - name: Publish to npm
         run: npm publish --access public  
