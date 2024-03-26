@@ -1,6 +1,7 @@
 // src/core/vuic.js
 const config = require('./config');
 import EventEmitter from './EventEmitter';
+
 class Vuic extends EventEmitter {
     constructor(key) {
         super();
@@ -25,11 +26,11 @@ class Vuic extends EventEmitter {
 
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
-        this.emit('stateChange', 'recording'); // Emit a recording state
+        this.emit(EventEmitter.STATE_CHANGE, EventEmitter.RECORDING);
 
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
-            this.emit('stateChange', 'idle'); // Revert to idle state if not supported
+            this.emit(EventEmitter.STATE_CHANGE, EventEmitter.IDLE);
 
             return;
         }
@@ -58,12 +59,12 @@ class Vuic extends EventEmitter {
             mediaRecorder.ondataavailable = (event) =>
                 audioChunks.push(event.data);
             mediaRecorder.onstop = async () => {
-                this.emit('stateChange', 'processing');
+                this.emit(EventEmitter.STATE_CHANGE, EventEmitter.PROCESSING);
                 const audioBlob = new Blob(audioChunks, { type: mimeType });
                 await this._processVoiceCommand(audioBlob);
                 // Stop all tracks in the stream to turn off the microphone
                 stream.getTracks().forEach((track) => track.stop());
-                this.emit('stateChange', 'idle'); // Revert to idle state after processing
+                this.emit(EventEmitter.STATE_CHANGE, EventEmitter.IDLE);
 
                 resolveRecordingPromise();
             };

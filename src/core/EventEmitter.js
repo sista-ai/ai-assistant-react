@@ -1,4 +1,5 @@
 // src/core/EventEmitter.js
+
 class EventEmitter {
     constructor() {
         this.events = {};
@@ -19,6 +20,22 @@ class EventEmitter {
     emit(eventName, ...args) {
         if (!this.events[eventName]) return;
         this.events[eventName].forEach(listener => listener(...args));
+    }
+
+    static get STATE_CHANGE() {
+        return 'stateChange';
+    }
+
+    static get IDLE() {
+        return 'idle';
+    }
+
+    static get RECORDING() {
+        return 'recording';
+    }
+
+    static get PROCESSING() {
+        return 'processing';
     }
 }
 
