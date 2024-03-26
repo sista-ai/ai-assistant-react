@@ -1,26 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useVuic } from './VuicContext';
 import { FaMicrophone } from 'react-icons/fa';
 
 const VuicButton = ({ buttonText = 'Record', ...props }) => {
     const vuic = useVuic();
-    const [isRecording, setIsRecording] = useState(false);
+    const [recordingState, setRecordingState] = useState('idle'); // 'idle', 'recording', 'processing'
 
-    const handleButtonClick = async () => {
+    useEffect(() => {
         if (vuic) {
-            setIsRecording(true);
-            try {
-                await vuic.startVoiceRecording();
-            } finally {
-                setIsRecording(false);
-            }
+            const handleStateChange = (newState) => {
+                setRecordingState(newState);
+            };
+
+            vuic.on('stateChange', handleStateChange);
+
+            return () => {
+                vuic.off('stateChange', handleStateChange);
+            };
         }
+    }, [vuic]);
+
+    const handleButtonClick = () => {
+        if (vuic) {
+            vuic.startVoiceRecording();
+        }
+    };
+
+    // Define a mapping from state to button background color
+    const stateToColor = {
+        idle: '#ff0000',
+        recording: '#00ff00',
+        processing: '#0000ff',
     };
 
     return (
         <button
             onClick={handleButtonClick}
-            disabled={isRecording} // Disable the button while recording
             style={{
                 position: 'fixed',
                 bottom: '20px',
@@ -32,24 +47,16 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: isRecording ? '#a50000' : '#ff0000',
-                color: isRecording ? '#888888' : '#ffffff',
+                backgroundColor: stateToColor[recordingState],
+                color: '#ffffff',
                 border: 'none',
-                boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.7)', // Enhanced shadow
+                boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.7)',
             }}
-            onMouseOver={(e) => {
-                e.currentTarget.children[0].style.transform =
-                    'scale(1.5) rotate(360deg)'; // Scale up and rotate icon on hover
-            }}
-            onMouseOut={(e) =>
-                (e.currentTarget.children[0].style.transform =
-                    'scale(1) rotate(0deg)')
-            } // Scale down and reset rotation when hover ends
             {...props}
         >
             <FaMicrophone
                 style={{
-                    transition: 'transform 0.3s ease-in-out', // Add transition for smooth scaling
+                    transition: 'transform 0.3s ease-in-out',
                 }}
             />
         </button>
