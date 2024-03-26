@@ -18,9 +18,9 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
                     return newState;
                 });
             };
-    
+
             vuic.on('stateChange', handleStateChange);
-    
+
             return () => {
                 vuic.off('stateChange', handleStateChange);
             };
@@ -36,7 +36,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
     // Define a mapping from state to button background color
     const stateToColor = {
         idle: '#ff0000',
-        recording: '#008000',
+        recording: '#2e9800',
         processing: '#007cff',
         audioStart: '#ff6801',
         audioEnd: '#ff0000',
