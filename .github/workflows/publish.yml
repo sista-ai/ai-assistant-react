@@ -25,11 +25,22 @@ jobs:
         run: npm run build
 
       - name: Automatic Version Bump
+        id: bump
         uses: phips28/gh-action-bump-version@v9.1.1
         with:
           tag-prefix: ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if tag exists
+        run: |
+          if git rev-parse "${{ steps.bump.outputs.newTag }}" >/dev/null 2>&1; then
+            echo "tag exists"
+            git tag -d ${{ steps.bump.outputs.newTag }}
+            git push origin :refs/tags/${{ steps.bump.outputs.newTag }}
+          else
+            echo "tag does not exist"
+          fi
 
       - name: Publish to npm
         run: npm publish --access public  
