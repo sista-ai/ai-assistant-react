@@ -77,7 +77,7 @@ class Vuic extends EventEmitter {
             };
 
             mediaRecorder.start();
-            setTimeout(() => mediaRecorder.stop(), 3000);
+            setTimeout(() => mediaRecorder.stop(), 3500);
         } catch (err) {
             console.error('Error getting media stream:', err);
             // If an error occurs, stop all tracks in the stream

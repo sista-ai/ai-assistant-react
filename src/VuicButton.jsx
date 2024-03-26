@@ -6,15 +6,15 @@ import styled, { keyframes } from 'styled-components';
 const pulse = keyframes`
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
   }
   70% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
   }
 `;
 
@@ -41,9 +41,9 @@ const Button = styled.button`
   bottom: 20px;
   right: 20px;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
+  width: 100px;
+  height: 100px;
+  font-size: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,7 +62,7 @@ const Button = styled.button`
   }
 
   &.STATE_AUDIO_START {
-    animation: ${pulse} 2s infinite;
+    animation: ${pulse} 1.5s infinite;
   }
 `;
 
