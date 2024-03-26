@@ -122,12 +122,12 @@ class Vuic extends EventEmitter {
         })
             .then((response) => response.json())
             .then((data) => this._handleProcessedVoiceCommandResponse(data))
-            .catch((error) => console.error('Error:', error));
+            .catch((error) => console.error('API Error:', error));
     };
 
     _handleProcessedVoiceCommandResponse = (response) => {
         console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse');
-        console.log('@ RAW RESPONSE:', response);
+        console.log('--[VUIC]-- RAW RESPONSE:', response);
 
         if (!response || !response.executableFunctions) {
             console.error('Invalid response format:', response);
@@ -189,13 +189,14 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- _executeFunctions');
 
         if (!message || !message.tool_calls) {
-            console.error('Invalid message format:', message);
+            console.error('E1: Invalid API response:', message);
             return;
         }
 
         message.tool_calls.forEach((toolCall) => {
+
             if (!toolCall.function || !toolCall.function.name) {
-                console.error('Invalid tool call format:', toolCall);
+                console.error('E2: Invalid API response:', toolCall);
                 return;
             }
 
@@ -203,15 +204,15 @@ class Vuic extends EventEmitter {
             const functionToCall = this.functionReferences[functionName];
 
             if (!functionToCall) {
-                console.error('No function found for name:', functionName);
-                return;
+                console.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
+                return; 
             }
 
             let functionArgs = {};
             try {
                 functionArgs = JSON.parse(toolCall.function.arguments);
             } catch (error) {
-                console.error('Failed to parse function arguments:', error);
+                console.error('E3: Invalid API response:', error);
                 return;
             }
 
@@ -219,19 +220,23 @@ class Vuic extends EventEmitter {
             try {
                 functionToCall(...functionArgsArray);
             } catch (error) {
-                console.error(`Error executing function ${functionName}:`, error);
+                console.error(`Error calling function ${functionName}:`, error);
             }
         });
     };
 
     _executeTextReply = (content) => {
-        console.log('YOW:', content);
+        console.log('--[VUIC]-- _executeTextReply');
+        console.log('AI Reply:', content);
     };
 
     playSound(soundFile, volume = 0.20) {
+        console.log('--[VUIC]-- playSound');
+
         let audio = new Audio(soundFile);
         audio.volume = volume;
         audio.play();
+
         return audio;
     }
 
