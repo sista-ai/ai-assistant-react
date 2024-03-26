@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useVuic } from './VuicContext';
 import { FaMicrophone } from 'react-icons/fa';
 import { FaVolumeUp } from 'react-icons/fa';
-import { FaMicrochip } from 'react-icons/fa';
+import { FaSatelliteDish } from 'react-icons/fa';
 import styled, { keyframes } from 'styled-components';
 
 const pulse = keyframes`
@@ -115,7 +115,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
             {...props}
         >
             {recordingState === 'STATE_PROCESSING_START' ? (
-                <FaMicrochip />
+                <FaSatelliteDish />
             ) : recordingState === 'STATE_AUDIO_START' ? (
                 <FaVolumeUp />
             ) : (
