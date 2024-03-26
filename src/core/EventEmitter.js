@@ -37,6 +37,14 @@ class EventEmitter {
     static get PROCESSING() {
         return 'processing';
     }
+
+    static get AUDIO_START() {
+        return 'audioStart';
+    }
+
+    static get AUDIO_END() {
+        return 'audioEnd';
+    }
 }
 
 export default EventEmitter;

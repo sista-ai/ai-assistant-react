@@ -141,7 +141,14 @@ class Vuic extends EventEmitter {
         }
 
         const audio = new Audio(audioFileUrl);
-
+        // Emit AUDIO_START state when the audio starts
+        audio.onplay = () => {
+            this.emit(EventEmitter.STATE_CHANGE, EventEmitter.AUDIO_START);
+        };
+        // Emit AUDIO_END state when the audio ends
+        audio.onended = () => {
+            this.emit(EventEmitter.STATE_CHANGE, EventEmitter.AUDIO_END);
+        };
         // Handle errors when loading the audio file
         audio.onerror = function () {
             console.error('An error occurred while trying to load the audio file:', audioFileUrl);

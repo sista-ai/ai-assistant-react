@@ -10,12 +10,17 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
     useEffect(() => {
         if (vuic) {
             const handleStateChange = (newState) => {
-                setRecordingState(newState);
-                setButtonDisabled(newState !== 'idle'); // Disable button if not idle
+                setRecordingState((prevState) => {
+                    if (newState === 'audioEnd') {
+                        newState = 'idle'; // Reset state to 'idle' when audio ends
+                    }
+                    setButtonDisabled(newState !== 'idle'); // Enable button if state is 'idle'
+                    return newState;
+                });
             };
-
+    
             vuic.on('stateChange', handleStateChange);
-
+    
             return () => {
                 vuic.off('stateChange', handleStateChange);
             };
@@ -25,7 +30,6 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
     const handleButtonClick = () => {
         if (vuic) {
             vuic.startVoiceRecording();
-            setButtonDisabled(true); // Disable button after click
         }
     };
 
@@ -34,6 +38,8 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
         idle: '#ff0000',
         recording: '#008000',
         processing: '#007cff',
+        audioStart: '#ff6801',
+        audioEnd: '#ff0000',
     };
 
     return (
