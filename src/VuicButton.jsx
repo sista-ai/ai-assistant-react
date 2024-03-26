@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useVuic } from './VuicContext';
 import { FaMicrophone } from 'react-icons/fa';
+import { FaVolumeUp } from 'react-icons/fa';
+import { FaMicrochip } from 'react-icons/fa';
 import styled, { keyframes } from 'styled-components';
 
 const pulse = keyframes`
   0% {
-    transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
   }
-  70% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+  50% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.3);
   }
   100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
   }
 `;
 
@@ -37,33 +36,33 @@ const bounce = keyframes`
 `;
 
 const Button = styled.button`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  font-size: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
-  border: none;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
-  transition: background-color 0.3s ease-in-out;
-  background-color: ${props => props.color};
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    border: none;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
+    transition: background-color 0.3s ease-in-out;
+    background-color: ${(props) => props.color};
 
-  &.STATE_RECORDING_START {
-    animation: ${spin} 2s infinite;
-  }
+    &.STATE_RECORDING_START {
+        animation: ${spin} 2s infinite;
+    }
 
-  &.STATE_PROCESSING_START {
-    animation: ${bounce} 2s infinite linear;
-  }
+    &.STATE_PROCESSING_START {
+        animation: ${bounce} 2s infinite linear;
+    }
 
-  &.STATE_AUDIO_START {
-    animation: ${pulse} 1.5s infinite;
-  }
+    &.STATE_AUDIO_START {
+        animation: ${pulse} 1.5s infinite;
+    }
 `;
 
 const VuicButton = ({ buttonText = 'Record', ...props }) => {
@@ -103,7 +102,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
         STATE_RECORDING_END: '#228B22', // Forest green for recording end
         STATE_PROCESSING_START: '#1E90FF', // Dodger blue for processing start
         STATE_PROCESSING_END: '#00008B', // Dark blue for processing end
-        STATE_AUDIO_START: '#800080', // Purple for audio start
+        STATE_AUDIO_START: '#FFD700', // Purple for audio start
         STATE_AUDIO_END: '#4B0082', // Indigo for audio end
     };
 
@@ -115,7 +114,13 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
             color={stateToColor[recordingState]}
             {...props}
         >
-            <FaMicrophone />
+            {recordingState === 'STATE_PROCESSING_START' ? (
+                <FaMicrochip />
+            ) : recordingState === 'STATE_AUDIO_START' ? (
+                <FaVolumeUp />
+            ) : (
+                <FaMicrophone />
+            )}
         </Button>
     );
 };
