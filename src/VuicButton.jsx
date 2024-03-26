@@ -1,6 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { useVuic } from './VuicContext';
 import { FaMicrophone } from 'react-icons/fa';
+import styled, { keyframes } from 'styled-components';
+
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+`;
+
+const spin = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const bounce = keyframes`
+  0%, 100% {
+    transform: scale(1.0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+`;
+
+const Button = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
+  transition: background-color 0.3s ease-in-out;
+  background-color: ${props => props.color};
+
+  &.STATE_RECORDING_START {
+    animation: ${spin} 2s infinite;
+  }
+
+  &.STATE_PROCESSING_START {
+    animation: ${bounce} 2s infinite linear;
+  }
+
+  &.STATE_AUDIO_START {
+    animation: ${pulse} 2s infinite;
+  }
+`;
 
 const VuicButton = ({ buttonText = 'Record', ...props }) => {
     const vuic = useVuic();
@@ -44,41 +108,15 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
     };
 
     return (
-        <button
+        <Button
             onClick={handleButtonClick}
             disabled={isButtonDisabled}
-            style={{
-                position: 'fixed',
-                bottom: '20px',
-                right: '20px',
-                borderRadius: '50%',
-                width: '60px',
-                height: '60px',
-                fontSize: '24px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: stateToColor[recordingState],
-                color: '#ffffff',
-                border: 'none',
-                boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.7)',
-            }}
-            onMouseOver={(e) => {
-                e.currentTarget.children[0].style.transform =
-                    'scale(1.5) rotate(360deg)';
-            }}
-            onMouseOut={(e) =>
-                (e.currentTarget.children[0].style.transform =
-                    'scale(1) rotate(0deg)')
-            }
+            className={recordingState}
+            color={stateToColor[recordingState]}
             {...props}
         >
-            <FaMicrophone
-                style={{
-                    transition: 'transform 0.3s ease-in-out',
-                }}
-            />
-        </button>
+            <FaMicrophone />
+        </Button>
     );
 };
 
