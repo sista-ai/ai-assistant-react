@@ -3,7 +3,7 @@ const config = require('./config');
 
 class Vuic {
     constructor(key) {
-        console.log('--[VUIC]-- constructor');
+        console.log('--[VUIC]-- constructor (v1)');
         if (!key) {
             console.log('A client_key must be provided');
             throw new Error('A client_key must be provided');
@@ -79,9 +79,12 @@ class Vuic {
             'functionsSignatures',
             JSON.stringify(this.functionSignatures),
         );
-
+    
         await fetch(`${config.vuicBaseURL}/processor/run`, {
             method: 'POST',
+            headers: {
+                'x-api-key': this.key,
+            },
             body: formData,
         })
             .then((response) => response.json())
