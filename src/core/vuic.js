@@ -1,6 +1,9 @@
 // src/core/vuic.js
 const config = require('./config');
 import EventEmitter from './EventEmitter';
+import startSound from './assets/audio/start.mp3';
+import endSound from './assets/audio/end.mp3';
+
 
 class Vuic extends EventEmitter {
     constructor(key) {
@@ -26,6 +29,9 @@ class Vuic extends EventEmitter {
 
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
+
+        // Play the start sound
+        new Audio(startSound).play();
         this.emitStateChange(EventEmitter.STATE_RECORDING_START);
 
         if (!window.MediaRecorder) {
@@ -58,6 +64,7 @@ class Vuic extends EventEmitter {
             const audioChunks = [];
             mediaRecorder.ondataavailable = (event) =>
                 audioChunks.push(event.data);
+
             mediaRecorder.onstop = async () => {
                 this.emitStateChange(EventEmitter.STATE_PROCESSING_START);
                 const audioBlob = new Blob(audioChunks, { type: mimeType });
@@ -122,6 +129,9 @@ class Vuic extends EventEmitter {
 
         if (response.audioFile) {
             this._executeAudioReply(response.audioFile);
+        } else {
+            // Play the end sound, only when no audio will be returned and just actions to be executed 
+            new Audio(endSound).play();
         }
 
         if (message.tool_calls) {
