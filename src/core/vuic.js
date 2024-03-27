@@ -1,4 +1,5 @@
 // src/core/vuic.js
+
 import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
 const config = require('./config');
@@ -55,7 +56,7 @@ class Vuic extends EventEmitter {
 
         // Play the start sound
         this.playSound(this.startSound);
-        this.emitStateChange(EventEmitter.STATE_RECORDING_START);
+        this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
         if (!window.MediaRecorder) {
             console.error('MediaRecorder is not supported by this browser.');
@@ -91,7 +92,7 @@ class Vuic extends EventEmitter {
                 audioChunks.push(event.data);
 
             mediaRecorder.onstop = async () => {
-                this.emitStateChange(EventEmitter.STATE_PROCESSING_START);
+                this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
                 const audioBlob = new Blob(audioChunks, { type: mimeType });
 
@@ -198,11 +199,11 @@ class Vuic extends EventEmitter {
 
         // Emit AUDIO_START state when the audio starts
         audio.onplay = () => {
-            this.emitStateChange(EventEmitter.STATE_AUDIO_START);
+            this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         };
         // Emit AUDIO_END state when the audio ends
         audio.onended = () => {
-            this.emitStateChange(EventEmitter.STATE_AUDIO_END);
+            this.emitStateChange(EventEmitter.STATE_SPEAKING_END);
         };
         // Handle errors when loading the audio file
         audio.onerror = function () {

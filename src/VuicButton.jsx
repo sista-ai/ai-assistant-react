@@ -52,25 +52,25 @@ const Button = styled.button`
     transition: background-color 0.3s ease-in-out;
     background-color: ${(props) => props.color};
     z-index: 9999;
-    
+
     &:hover {
         border: 1.5px solid #fff;
     }
 
-    &.STATE_RECORDING_START {
+    &.STATE_LISTENING_START {
         animation: ${spin} 2s infinite;
     }
 
-    &.STATE_PROCESSING_START {
+    &.STATE_THINKING_START {
         animation: ${bounce} 2s infinite linear;
     }
 
-    &.STATE_AUDIO_START {
+    &.STATE_SPEAKING_START {
         animation: ${pulse} 1.5s infinite;
     }
 `;
 
-const VuicButton = ({ buttonText = 'Record', ...props }) => {
+const VuicButton = ({ buttonText = 'Record', stateToColor, ...props }) => {
     const vuic = useVuic();
     const [recordingState, setRecordingState] = useState('STATE_IDLE');
     const [isButtonDisabled, setButtonDisabled] = useState(false);
@@ -79,7 +79,7 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
         if (vuic) {
             const handleStateChange = (newState) => {
                 setRecordingState((prevState) => {
-                    if (newState === 'STATE_AUDIO_END') {
+                    if (newState === 'STATE_SPEAKING_END') {
                         newState = 'STATE_IDLE';
                     }
                     setButtonDisabled(newState !== 'STATE_IDLE');
@@ -101,27 +101,28 @@ const VuicButton = ({ buttonText = 'Record', ...props }) => {
         }
     };
 
-    const stateToColor = {
-        STATE_IDLE: '#ff0000', // Red for idle state
-        STATE_RECORDING_START: '#32CD32', // Lime green for recording start
-        STATE_RECORDING_END: '#228B22', // Forest green for recording end
-        STATE_PROCESSING_START: '#1E90FF', // Dodger blue for processing start
-        STATE_PROCESSING_END: '#00008B', // Dark blue for processing end
-        STATE_AUDIO_START: '#FFD700', // Purple for audio start
-        STATE_AUDIO_END: '#4B0082', // Indigo for audio end
+    // Default stateToColor object
+    const defaultStateToColor = {
+        STATE_IDLE: '#4a6cf6', // Default color
+        STATE_LISTENING_START: '#ff0000', // Red
+        STATE_THINKING_START: '#0000ff', // Blue
+        STATE_SPEAKING_START: '#008000', // Green
     };
+
+    // Use the provided stateToColor prop if it's defined, otherwise use the default
+    const colors = stateToColor || defaultStateToColor;
 
     return (
         <Button
             onClick={handleButtonClick}
             disabled={isButtonDisabled}
             className={recordingState}
-            color={stateToColor[recordingState]}
+            color={colors[recordingState]}
             {...props}
         >
-            {recordingState === 'STATE_PROCESSING_START' ? (
+            {recordingState === 'STATE_THINKING_START' ? (
                 <FaSatelliteDish />
-            ) : recordingState === 'STATE_AUDIO_START' ? (
+            ) : recordingState === 'STATE_SPEAKING_START' ? (
                 <FaVolumeUp />
             ) : (
                 <FaMicrophone />

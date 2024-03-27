@@ -85,6 +85,25 @@ function MyComponent() {
 
 🎉 Congratulations! Almost done. Now you can start talking with your app. Just press the button and enjoy the experience. 😊👍
 
+#### Customize the button 
+
+```js
+    // InteractiveColors object
+    const InteractiveColors = {
+
+    };
+
+  <VuicButton stateToColor={customStateToColor} />
+```
+
+STATE_IDLE
+STATE_LISTENING_START
+STATE_LISTENING_END
+STATE_THINKING_START
+STATE_THINKING_END
+STATE_SPEAKING_START
+STATE_SPEAKING_END
+
 ### 3. Configuration: Control Your UI
 
 Let's define what your AI voice assistant can do!

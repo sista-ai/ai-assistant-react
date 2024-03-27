@@ -31,28 +31,28 @@ class EventEmitter {
         return 'STATE_IDLE';
     }
 
-    static get STATE_RECORDING_START() {
-        return 'STATE_RECORDING_START';
+    static get STATE_LISTENING_START() {
+        return 'STATE_LISTENING_START';
     }
 
-    static get STATE_RECORDING_END() {
-        return 'STATE_RECORDING_END';
+    static get STATE_LISTENING_END() {
+        return 'STATE_LISTENING_END';
     }
 
-    static get STATE_PROCESSING_START() {
+    static get STATE_THINKING_START() {
         return 'STATE_PROCESSING_START';
     }
 
-    static get STATE_PROCESSING_END() {
-        return 'STATE_PROCESSING_END';
+    static get STATE_THINKING_START() {
+        return 'STATE_THINKING_START';
     }
 
-    static get STATE_AUDIO_START() {
-        return 'STATE_AUDIO_START';
+    static get STATE_SPEAKING_START() {
+        return 'STATE_SPEAKING_START';
     }
 
-    static get STATE_AUDIO_END() {
-        return 'STATE_AUDIO_END';
+    static get STATE_SPEAKING_END() {
+        return 'STATE_SPEAKING_END';
     }
 }
 
