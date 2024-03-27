@@ -1,6 +1,5 @@
 # Sista: Voice UI Controller
 
-
 🔊 Unleash the power of voice 🎤 in your React apps with `@sista/vuic-react` 🚀
 
 This tiny, AI-powered library lets you build voice-enabled apps without any code changes!!
