@@ -85,21 +85,6 @@ function MyComponent() {
 
 🎉 Congratulations! Almost done. Now you can start talking with your app. Just press the button and enjoy the experience. 😊👍
 
-#### Customize the button 
-
-To change colors:
-
-```js
-    const colors = {
-        STATE_IDLE: '#4a6cf6', // Default
-        STATE_LISTENING_START: '#F64A7B', // Red
-        STATE_THINKING_START: '#4ac2f6', // Blue
-        STATE_SPEAKING_START: '#4af67f', // Green
-    };
-
-  <VuicButton buttonColors={colors} />
-```
-
 ### 3. Configuration: Control Your UI
 
 Let's define what your AI voice assistant can do!
@@ -233,6 +218,24 @@ function TodoApp() {
   return <div>{/* TodoApp UI elements here */}</div>;
 }
 ```
+
+## Customization
+
+### Change Button Colors
+
+You can modify the colors of the `VuicButton` for different states:
+
+```js
+    const colors = {
+        STATE_IDLE: '#4a6cf6', // Default
+        STATE_LISTENING_START: '#F64A7B', // Red
+        STATE_THINKING_START: '#4ac2f6', // Blue
+        STATE_SPEAKING_START: '#4af67f', // Green
+    };
+
+  <VuicButton buttonColors={colors} />
+```
+
 
 ## Contributing
 
