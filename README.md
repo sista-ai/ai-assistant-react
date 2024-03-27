@@ -41,7 +41,11 @@ import { VuicProvider } from "@sista/vuic-react";
 </VuicProvider>
 ```
 
-Replace `"YOUR_API_KEY"` with your actual API key. You can obtain your FREE API key from [admin.sista.ai](https://admin.sista.ai/applications).
+3. Add your API KEY
+
+Replace `"YOUR_API_KEY"` with your actual API key. 
+
+Obtain your FREE API key from the [admin dashboard](https://admin.sista.ai/applications). _(or visit admin.sista.ai)_
 
 Example:
 
