@@ -154,6 +154,7 @@ function TodoApp() {
     console.log(`Removed task: ${taskDescription}`);
   };
 
+  // Define function signatures
   const functionSignatures = [
     {
       type: 'function',
@@ -191,10 +192,16 @@ function TodoApp() {
     },
   ];
 
+  // Define function references
+  const functionReferences = {
+    addTask,
+    removeTask,
+  };
+
   const vuic = useVuic();
   useEffect(() => {
     if (vuic) {
-      vuic.registerFunctions(functionSignatures, { addTask, removeTask });
+    vuic.registerFunctions(functionSignatures, functionReferences);
     }
   }, [vuic]);
 
