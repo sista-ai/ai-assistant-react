@@ -1,8 +1,8 @@
 // src/core/vuic.js
-const config = require('./config');
 import EventEmitter from './EventEmitter';
-import startSoundFile from './assets/audio/start.mp3';
-import endSoundFile from './assets/audio/end.mp3';
+const config = require('./config');
+const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
+const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
 class Vuic extends EventEmitter {
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
@@ -25,6 +25,14 @@ class Vuic extends EventEmitter {
 
         this.functionReferences = {};
         console.log('--[VUIC]-- Registered function References:', this.functionReferences);
+
+        try {
+            // Preload the start and end sounds
+            this.startSound = new Audio(startProcessingAudioFileUrl);
+            this.endSound = new Audio(endProcessingAudioFileUrl);
+        } catch (error) {
+            console.error('Failed to load audio files:', error);
+        }
     }
 
     registerFunctions(functionSignatures, functionReferences) {
@@ -38,7 +46,7 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- startVoiceRecording');
 
         // Play the start sound
-        this.playSound(startSoundFile);
+        this.playSound(this.startSound);
         this.emitStateChange(EventEmitter.STATE_RECORDING_START);
 
         if (!window.MediaRecorder) {
@@ -70,7 +78,7 @@ class Vuic extends EventEmitter {
 
             const mediaRecorder = new MediaRecorder(stream, { mimeType });
             const audioChunks = [];
-            
+
             mediaRecorder.ondataavailable = (event) =>
                 audioChunks.push(event.data);
 
@@ -105,7 +113,7 @@ class Vuic extends EventEmitter {
 
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
-        
+
         const formData = new FormData();
         formData.append('audio', audioBlob);
         formData.append(
@@ -145,7 +153,7 @@ class Vuic extends EventEmitter {
             this._executeAudioReply(response.audioFile);
         } else {
             // Play the end sound, only when no audio will be returned and just actions to be executed 
-            this.playSound(endSoundFile);
+            this.playSound(this.endSound);
         }
 
         if (message.tool_calls) {
@@ -157,14 +165,20 @@ class Vuic extends EventEmitter {
         }
     };
 
-    _executeAudioReply = (audioFileUrl) => {
+    _executeAudioReply = (aiReplyAudioFileUrl) => {
         // Check if the browser supports the Audio API
         if (!window.Audio) {
             console.error('This browser does not support the Audio API');
             return;
         }
 
-        const audio = this.playSound(audioFileUrl, 1.0)
+        let audio;
+        try {
+            audio = this.playSound(new Audio(aiReplyAudioFileUrl), 1.0);
+        } catch (error) {
+            console.error('Failed to load and play audio file:', error);
+            return;
+        }
 
         // Emit AUDIO_START state when the audio starts
         audio.onplay = () => {
@@ -176,7 +190,7 @@ class Vuic extends EventEmitter {
         };
         // Handle errors when loading the audio file
         audio.onerror = function () {
-            console.error('An error occurred while trying to load the audio file:', audioFileUrl);
+            console.error('An error occurred while trying to load the audio file:', aiReplyAudioFileUrl);
         };
 
         // Handle errors when trying to play the audio
@@ -205,7 +219,7 @@ class Vuic extends EventEmitter {
 
             if (!functionToCall) {
                 console.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
-                return; 
+                return;
             }
 
             let functionArgs = {};
@@ -230,14 +244,17 @@ class Vuic extends EventEmitter {
         console.log('AI Reply:', content);
     };
 
-    playSound(soundFile, volume = 0.20) {
+    playSound(sound, volume = 0.20) {
         console.log('--[VUIC]-- playSound');
 
-        let audio = new Audio(soundFile);
-        audio.volume = volume;
-        audio.play();
+        try {
+            sound.volume = volume;
+            sound.play();
+        } catch (error) {
+            console.error('Failed to play sound:', error);
+        }
 
-        return audio;
+        return sound;
     }
 
     static init(key, vuicBaseURL) {
