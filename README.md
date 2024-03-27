@@ -90,7 +90,7 @@ function MyComponent() {
 
 Let's define what your AI voice assistant can do!
 
-#### Function Signature Structure
+#### A. Function Signature Structure
 
 The `functionSignature` object outlines the functions your app can perform. Each function has a name, description, and parameters.
 
@@ -119,17 +119,30 @@ const functionSignatures = [
 
 ```
 
+#### B. Function References Structure
+
+The `functionReferences` array contains references to the actual functions that are called when the corresponding voice command is recognized.
+
+```js
+const functionReferences = [
+  functionName1,
+  functionName2,
+  // Add more function references as needed
+];
+
+
+#### C. Register Your Function
+
 Register your voice-activated functions by passing two arguments to `vuic.registerFunctions`:
 
-1. `functionSignatures` is an array of objects, each representing a voice command. 
-2. `functionReferences` is an object containing references to the functions.
+1. `functionSignatures` is an array of objects.
+2. `functionReferences` is an array of function references.
 
-
-Here's an example:
+Example:
 
 ```js
 const vuic = useVuic();
-vuic.registerFunctions(functionSignatures, { functionReference });
+vuic.registerFunctions(functionSignatures, functionReferences);
 ```
 
 This registration should be done inside a `useEffect` hook to ensure it only runs once after the component mounts.
@@ -193,10 +206,10 @@ function TodoApp() {
   ];
 
   // Define function references
-  const functionReferences = {
+  const functionReferences = [
     addTask,
     removeTask,
-  };
+  ];
 
   const vuic = useVuic();
   useEffect(() => {

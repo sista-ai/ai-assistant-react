@@ -1,12 +1,13 @@
 // src/core/vuic.js
 import EventEmitter from './EventEmitter';
+import pkg from '../../package.json';
 const config = require('./config');
 const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
 const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
 class Vuic extends EventEmitter {
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
-        console.log('--[VUIC]-- Constructor (v1)');
+        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
         super();
 
         if (!key) {
@@ -21,10 +22,10 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- Registered KEY:', this.key);
 
         this.functionSignatures = [];
-        console.log('--[VUIC]-- Registered function Signatures:', this.functionSignatures);
+        
 
         this.functionReferences = {};
-        console.log('--[VUIC]-- Registered function References:', this.functionReferences);
+        
 
         try {
             // Preload the start and end sounds
@@ -37,9 +38,16 @@ class Vuic extends EventEmitter {
 
     registerFunctions(functionSignatures, functionReferences) {
         console.log('--[VUIC]-- registerFunctions');
-
+    
         this.functionSignatures = functionSignatures;
-        this.functionReferences = functionReferences;
+        console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
+    
+        // Convert array to object
+        this.functionReferences = functionReferences.reduce((obj, func) => {
+            obj[func.name] = func;
+            return obj;
+        }, {});
+        console.log('--[VUIC]-- Function References:', this.functionReferences);
     }
 
     startVoiceRecording = async () => {
@@ -206,7 +214,7 @@ class Vuic extends EventEmitter {
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
 
-        if (!this.functionReferences || this.functionReferences.length === 0) {
+        if (!this.functionReferences || Object.keys(this.functionReferences).length === 0) {
             throw new Error('functionReferences array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }
 
