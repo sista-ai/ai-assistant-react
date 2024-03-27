@@ -44,6 +44,7 @@ jobs:
         uses: phips28/gh-action-bump-version@v9.1.1
         with:
           tag-prefix: ''
+          commit-message-incrementing: 'unlikely-to-appear-pattern'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
