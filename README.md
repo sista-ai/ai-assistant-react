@@ -129,7 +129,7 @@ const functionReferences = [
   functionName2,
   // Add more function references as needed
 ];
-
+```
 
 #### C. Register Your Function
 
@@ -137,8 +137,6 @@ Register your voice-activated functions by passing two arguments to `vuic.regist
 
 1. `functionSignatures` is an array of objects.
 2. `functionReferences` is an array of function references.
-
-Example:
 
 ```js
 const vuic = useVuic();
@@ -150,7 +148,6 @@ This registration should be done inside a `useEffect` hook to ensure it only run
 #### Todo App Example
 
 In a todo app, users could add and remove tasks with their voice. Here's how to set this up:
-
 
 # Example 
 

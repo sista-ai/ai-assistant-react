@@ -51,6 +51,7 @@ const Button = styled.button`
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
     transition: background-color 0.3s ease-in-out;
     background-color: ${(props) => props.color};
+    z-index: 9999;
     
     &:hover {
         border: 1.5px solid #fff;
