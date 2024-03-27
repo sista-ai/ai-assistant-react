@@ -69,21 +69,22 @@ const Button = styled.button`
         animation: ${pulse} 1.5s infinite;
     }
 `;
-const VuicButton = ({ buttonText = 'Record', stateToColor, ...props }) => {
+
+const VuicButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
     const vuic = useVuic();
     const [recordingState, setRecordingState] = useState('STATE_IDLE');
     const [isButtonDisabled, setButtonDisabled] = useState(false);
 
-    // Default stateToColor object
-    const defaultStateToColor = {
-        STATE_IDLE: '#4a6cf6', // Default color
-        STATE_LISTENING_START: '#ff0000', // Red
-        STATE_THINKING_START: '#0000ff', // Blue
-        STATE_SPEAKING_START: '#008000', // Green
+    // Default buttonColors object
+    const defaultButtonColors = {
+        STATE_IDLE: '#4a6cf6', // Original color
+        STATE_LISTENING_START: '#F64A7B', // Red
+        STATE_THINKING_START: '#4ac2f6', // Blue
+        STATE_SPEAKING_START: '#4af67f', // Green
     };
 
-    // Use the provided stateToColor prop if it's defined, otherwise use the default
-    const colors = stateToColor || defaultStateToColor;
+    // Merge the provided buttonColors prop with the default colors
+    const colors = { ...defaultButtonColors, ...buttonColors };
 
     const handleButtonClick = () => {
         if (vuic) {

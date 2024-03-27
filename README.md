@@ -87,22 +87,18 @@ function MyComponent() {
 
 #### Customize the button 
 
-```js
-    // InteractiveColors object
-    const InteractiveColors = {
+To change colors:
 
+```js
+    const colors = {
+        STATE_IDLE: '#4a6cf6', // Default
+        STATE_LISTENING_START: '#F64A7B', // Red
+        STATE_THINKING_START: '#4ac2f6', // Blue
+        STATE_SPEAKING_START: '#4af67f', // Green
     };
 
-  <VuicButton stateToColor={customStateToColor} />
+  <VuicButton buttonColors={colors} />
 ```
-
-STATE_IDLE
-STATE_LISTENING_START
-STATE_LISTENING_END
-STATE_THINKING_START
-STATE_THINKING_END
-STATE_SPEAKING_START
-STATE_SPEAKING_END
 
 ### 3. Configuration: Control Your UI
 
