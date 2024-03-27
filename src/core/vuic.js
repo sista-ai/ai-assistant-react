@@ -23,10 +23,10 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- Registered KEY:', this.key);
 
         this.functionSignatures = [];
-        
+
 
         this.functionReferences = {};
-        
+
 
         try {
             // Preload the start and end sounds
@@ -39,10 +39,10 @@ class Vuic extends EventEmitter {
 
     registerFunctions(functionSignatures, functionReferences) {
         console.log('--[VUIC]-- registerFunctions');
-    
+
         this.functionSignatures = functionSignatures;
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
-    
+
         // Convert array to object
         this.functionReferences = functionReferences.reduce((obj, func) => {
             obj[func.name] = func;
@@ -114,6 +114,7 @@ class Vuic extends EventEmitter {
                 stream.getTracks().forEach((track) => track.stop());
             }
 
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             resolveRecordingPromise();
         }
 
@@ -146,8 +147,14 @@ class Vuic extends EventEmitter {
             body: formData,
         })
             .then((response) => response.json())
-            .then((data) => this._handleProcessedVoiceCommandResponse(data))
-            .catch((error) => console.error('API Error:', error));
+            .then((data) => {
+                this._handleProcessedVoiceCommandResponse(data);
+                this.emitStateChange(EventEmitter.STATE_IDLE);
+            })
+            .catch((error) => {
+                console.error('API Error:', error);
+                this.emitStateChange(EventEmitter.STATE_IDLE);
+            });
     };
 
     _handleProcessedVoiceCommandResponse = (response) => {
@@ -178,6 +185,7 @@ class Vuic extends EventEmitter {
         } else if (message.content !== null) {
             this._executeTextReply(message.content);
         } else {
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('Response does not match expected formats:', response);
         }
     };
@@ -185,6 +193,7 @@ class Vuic extends EventEmitter {
     _executeAudioReply = (aiReplyAudioFileUrl) => {
         // Check if the browser supports the Audio API
         if (!window.Audio) {
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('This browser does not support the Audio API');
             return;
         }
@@ -193,6 +202,7 @@ class Vuic extends EventEmitter {
         try {
             audio = this.playSound(new Audio(aiReplyAudioFileUrl), 1.0);
         } catch (error) {
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('Failed to load and play audio file:', error);
             return;
         }
@@ -203,10 +213,11 @@ class Vuic extends EventEmitter {
         };
         // Emit AUDIO_END state when the audio ends
         audio.onended = () => {
-            this.emitStateChange(EventEmitter.STATE_SPEAKING_END);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
         };
         // Handle errors when loading the audio file
         audio.onerror = function () {
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('An error occurred while trying to load the audio file:', aiReplyAudioFileUrl);
         };
 

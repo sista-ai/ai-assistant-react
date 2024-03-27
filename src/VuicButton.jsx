@@ -69,37 +69,10 @@ const Button = styled.button`
         animation: ${pulse} 1.5s infinite;
     }
 `;
-
 const VuicButton = ({ buttonText = 'Record', stateToColor, ...props }) => {
     const vuic = useVuic();
     const [recordingState, setRecordingState] = useState('STATE_IDLE');
     const [isButtonDisabled, setButtonDisabled] = useState(false);
-
-    useEffect(() => {
-        if (vuic) {
-            const handleStateChange = (newState) => {
-                setRecordingState((prevState) => {
-                    if (newState === 'STATE_SPEAKING_END') {
-                        newState = 'STATE_IDLE';
-                    }
-                    setButtonDisabled(newState !== 'STATE_IDLE');
-                    return newState;
-                });
-            };
-
-            vuic.on('stateChange', handleStateChange);
-
-            return () => {
-                vuic.off('stateChange', handleStateChange);
-            };
-        }
-    }, [vuic]);
-
-    const handleButtonClick = () => {
-        if (vuic) {
-            vuic.startVoiceRecording();
-        }
-    };
 
     // Default stateToColor object
     const defaultStateToColor = {
@@ -111,6 +84,30 @@ const VuicButton = ({ buttonText = 'Record', stateToColor, ...props }) => {
 
     // Use the provided stateToColor prop if it's defined, otherwise use the default
     const colors = stateToColor || defaultStateToColor;
+
+    const handleButtonClick = () => {
+        if (vuic) {
+            vuic.startVoiceRecording();
+        }
+    };
+
+    useEffect(() => {
+        if (vuic) {
+            const handleStateChange = (newState) => {
+                if (newState === 'STATE_SPEAKING_END') {
+                    newState = 'STATE_IDLE';
+                }
+                setRecordingState(newState);
+                setButtonDisabled(newState !== 'STATE_IDLE');
+            };
+
+            vuic.on('stateChange', handleStateChange);
+
+            return () => {
+                vuic.off('stateChange', handleStateChange);
+            };
+        }
+    }, [vuic]);
 
     return (
         <Button
