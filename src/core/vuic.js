@@ -35,6 +35,13 @@ class Vuic extends EventEmitter {
         }
     }
 
+    registerFunctions(functionSignatures, functionReferences) {
+        console.log('--[VUIC]-- registerFunctions');
+
+        this.functionSignatures = functionSignatures;
+        this.functionReferences = functionReferences;
+    }
+
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
 
