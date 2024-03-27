@@ -94,6 +94,7 @@ Let's define what your AI voice assistant can do!
 
 The `functionSignature` object outlines the functions your app can perform. Each function has a name, description, and parameters.
 
+_You can auto-generated this config file in the [admin dashboard](https://admin.sista.ai)_.
 
 ```js
 const functionSignatures = [
