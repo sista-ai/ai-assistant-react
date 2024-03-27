@@ -220,15 +220,6 @@ function TodoApp() {
 }
 ```
 
-## Basic Usage
-
-The basic usage involves three key steps:
-
-1. **Initiate the SDK (`VuicProvider`):** Wrap your app with `VuicProvider` and provide your API key to initialize the voice functionality.
-2. **Import Voice Button (`<VuicButton />`):** Use the `VuicButton` component in your UI to give users the ability to interact with voice commands.
-3. **Write Your Config File:** Define and register your voice-activated functions using `vuic.registerFunctions(functionSignatures, functionReferences);` to make them accessible through voice commands.
-
-
 ## Contributing
 
 We welcome contributions to Sista Voice UI Controller! Please see our [contributing guide](LINK_TO_CONTRIBUTING_GUIDE).

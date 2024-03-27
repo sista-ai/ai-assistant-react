@@ -37,8 +37,8 @@ const bounce = keyframes`
 
 const Button = styled.button`
     position: fixed;
-    bottom: 220px;
-    right: 220px;
+    bottom: 100px;
+    right: 100px;
     border-radius: 50%;
     width: 80px;
     height: 80px;
