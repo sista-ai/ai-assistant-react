@@ -84,31 +84,33 @@ function MyComponent() {
 }
 ```
 
-### 3. Configuration
+🎉 Congratulations! Almost done. Now you can start talking with your app. Just press the button and enjoy the experience. 😊👍
 
-Lastly you'll need to define voice-activated functions by registering their signatures. This setup is vital for the voice UI to understand and execute commands.
+### 3. Configuration: Control Your UI
 
+Let's define what your AI voice assistant can do!
 
 #### Function Signature Structure
 
-Before diving into an example, let's understand the structure of a functionSignatures object. This object describes the functions that your application can execute through voice commands, including their names, descriptions, parameters, and any other necessary details. Here’s the basic structure:
+The `functionSignature` object outlines the functions your app can perform. Each function has a name, description, and parameters.
+
 
 ```js
 const functionSignatures = [
   {
-    type: 'function', // Indicates the type of signature
+    type: 'function',
     function: {
-      name: 'functionName', // The name of the function
-      description: 'A brief description of what the function does',
+      name: 'functionName',
+      description: 'What the function does',
       parameters: {
-        type: 'object', // Parameters are passed as an object
+        type: 'object',
         properties: {
-          paramName: { // Each parameter's name
-            type: 'string', // The type of the parameter (string, number, etc.)
-            description: 'Description of the parameter', // A brief description of the parameter
+          paramName: {
+            type: 'string',
+            description: 'What the parameter does',
           },
         },
-        required: ['paramName'], // List of required parameters
+        required: ['paramName'],
       },
     },
   },
@@ -117,55 +119,88 @@ const functionSignatures = [
 
 ```
 
+Register your voice-activated functions by passing two arguments to `vuic.registerFunctions`:
 
-#### Example: using a Todo App
+1. `functionSignatures` is an array of objects, each representing a voice command. 
+2. `functionReferences` is an object containing references to the functions.
 
-In a todo application, you might want to allow users to add tasks through voice commands. Below is a streamlined example that includes defining the `addTask` function and registering it along with its signature:
+
+Here's an example:
+
+```js
+const vuic = useVuic();
+vuic.registerFunctions(functionSignatures, { functionReference });
+```
+
+This registration should be done inside a `useEffect` hook to ensure it only runs once after the component mounts.
+
+#### Todo App Example
+
+In a todo app, users could add and remove tasks with their voice. Here's how to set this up:
+
+
+# Example 
 
 ```js
 // ...
 import { useVuic, useEffect } from '@sista/vuic-react';
 
 function TodoApp() {
-    // function to be voice activated by VUID
-    const addTask = (taskDescription) => {
-        console.log(`Added task: ${taskDescription}`);
-    };
+  const addTask = (taskDescription) => {
+    console.log(`Added task: ${taskDescription}`);
+  };
 
-    // ...
+  const removeTask = (taskDescription) => {
+    console.log(`Removed task: ${taskDescription}`);
+  };
 
-    const vuic = useVuic();
-    useEffect(() => {
-        const functionSignatures = [
-            {
-                type: 'function',
-                function: {
-                    name: 'addTask',
-                    description:
-                        'Adds a task to the todo list with a given description.',
-                    parameters: {
-                        type: 'object',
-                        properties: {
-                            taskDescription: {
-                                type: 'string',
-                                description: 'The task description.',
-                            },
-                        },
-                        required: ['taskDescription'],
-                    },
-                },
+  const functionSignatures = [
+    {
+      type: 'function',
+      function: {
+        name: 'addTask',
+        description: 'Adds a task to the todo list.',
+        parameters: {
+          type: 'object',
+          properties: {
+            taskDescription: {
+              type: 'string',
+              description: 'The task description.',
             },
-        ];
+          },
+          required: ['taskDescription'],
+        },
+      },
+    },
+    {
+      type: 'function',
+      function: {
+        name: 'removeTask',
+        description: 'Removes a task from the todo list.',
+        parameters: {
+          type: 'object',
+          properties: {
+            taskDescription: {
+              type: 'string',
+              description: 'The task description.',
+            },
+          },
+          required: ['taskDescription'],
+        },
+      },
+    },
+  ];
 
-        if (vuic) {
-            vuic.registerFunctions(functionSignatures, { addTask });
-        }
-    }, [vuic]);
+  const vuic = useVuic();
+  useEffect(() => {
+    if (vuic) {
+      vuic.registerFunctions(functionSignatures, { addTask, removeTask });
+    }
+  }, [vuic]);
 
-    return <div>{/* TodoApp UI elements here */}</div>;
+  return <div>{/* TodoApp UI elements here */}</div>;
+}
 ```
-
- The `functionSignatures` object defines how `addTask` should be recognized and executed via voice commands. This function, along with its signature, is registered with the VUIC SDK using `useEffect` to ensure it's done once the component mounts.
 
 ## Basic Usage
 
@@ -178,7 +213,7 @@ The basic usage involves three key steps:
 
 ## Contributing
 
-We welcome contributions to Sista Voice UI Controller! Please see our [contributing guide](LINK_TO_CONTRIBUTING_GUIDE) for more details.
+We welcome contributions to Sista Voice UI Controller! Please see our [contributing guide](LINK_TO_CONTRIBUTING_GUIDE).
 
 ## License
 
