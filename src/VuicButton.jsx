@@ -37,8 +37,8 @@ const bounce = keyframes`
 
 const Button = styled.button`
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 220px;
+    right: 220px;
     border-radius: 50%;
     width: 80px;
     height: 80px;
@@ -51,6 +51,10 @@ const Button = styled.button`
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
     transition: background-color 0.3s ease-in-out;
     background-color: ${(props) => props.color};
+    
+    &:hover {
+        border: 1.5px solid #fff;
+    }
 
     &.STATE_RECORDING_START {
         animation: ${spin} 2s infinite;
