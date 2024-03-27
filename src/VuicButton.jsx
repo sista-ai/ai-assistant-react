@@ -90,13 +90,9 @@ const VuicButton = ({ buttonText = 'Record', stateToColor, ...props }) => {
             vuic.startVoiceRecording();
         }
     };
-
     useEffect(() => {
         if (vuic) {
             const handleStateChange = (newState) => {
-                if (newState === 'STATE_SPEAKING_END') {
-                    newState = 'STATE_IDLE';
-                }
                 setRecordingState(newState);
                 setButtonDisabled(newState !== 'STATE_IDLE');
             };

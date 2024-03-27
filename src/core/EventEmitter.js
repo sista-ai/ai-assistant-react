@@ -25,22 +25,14 @@ class EventEmitter {
     emitStateChange(eventName, ...args) {
         this.emit('stateChange', eventName, ...args);
     }
-  
-    
+
+
     static get STATE_IDLE() {
         return 'STATE_IDLE';
     }
 
     static get STATE_LISTENING_START() {
         return 'STATE_LISTENING_START';
-    }
-
-    static get STATE_LISTENING_END() {
-        return 'STATE_LISTENING_END';
-    }
-
-    static get STATE_THINKING_START() {
-        return 'STATE_PROCESSING_START';
     }
 
     static get STATE_THINKING_START() {
@@ -51,9 +43,6 @@ class EventEmitter {
         return 'STATE_SPEAKING_START';
     }
 
-    static get STATE_SPEAKING_END() {
-        return 'STATE_SPEAKING_END';
-    }
 }
 
 export default EventEmitter;

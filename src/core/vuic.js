@@ -2,7 +2,9 @@
 
 import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
+
 const config = require('./config');
+
 const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
 const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
