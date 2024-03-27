@@ -35,13 +35,6 @@ class Vuic extends EventEmitter {
         }
     }
 
-    registerFunctions(functionSignatures, functionReferences) {
-        console.log('--[VUIC]-- registerFunctions');
-
-        this.functionSignatures = functionSignatures;
-        this.functionReferences = functionReferences;
-    }
-
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
 
@@ -113,6 +106,10 @@ class Vuic extends EventEmitter {
 
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
+
+        if (!this.functionSignatures || this.functionSignatures.length === 0) {
+            throw new Error('functionSignatures array is empty. Please register your voice activated functions. See docs https://docs.sista.ai`');
+        }
 
         const formData = new FormData();
         formData.append('audio', audioBlob);
@@ -201,6 +198,10 @@ class Vuic extends EventEmitter {
 
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
+
+        if (!this.functionReferences || this.functionReferences.length === 0) {
+            throw new Error('functionReferences array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
+        }
 
         if (!message || !message.tool_calls) {
             console.error('E1: Invalid API response:', message);
