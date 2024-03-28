@@ -1,3 +1,5 @@
+![Sista Logo](./assets/sista-logo.png)
+
 # Sista: Voice UI Controller
 
 🔊 Unleash the power of voice 🎤 in your React apps with `@sista/vuic-react` 🚀
@@ -72,12 +74,13 @@ Import `VuicButton` from `@sista/vuic-react` and add it to your component.
 import { VuicButton } from "@sista/vuic-react";
 
 // ...
-
 function MyComponent() {
   return (
     <div>
       {/* Other UI elements */}
+
       <VuicButton />
+
     </div>
   );
 }
@@ -215,7 +218,9 @@ function TodoApp() {
     }
   }, [vuic]);
 
-  return <div>{/* TodoApp UI elements here */}</div>;
+  return  <div>
+              {/* UI elements here */}
+          </div>;
 }
 ```
 
@@ -248,3 +253,5 @@ Sista Voice UI Controller is [MIT licensed](./LICENSE).
 ## Support
 
 If you're having a problem with this package, please raise an issue on Github or contact us at [support@sista.ai](mailto:support@sista.ai).
+
+![Sista Logo](./assets/sista-icon.png)
