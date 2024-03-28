@@ -1,3 +1,4 @@
+// src/VuicButton.jsx
 import React, { useState, useEffect } from 'react';
 import { useVuic } from './VuicContext';
 import { FaMicrophone } from 'react-icons/fa';

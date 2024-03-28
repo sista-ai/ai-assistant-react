@@ -159,10 +159,12 @@ In a todo app, users could add and remove tasks with their voice. Here's how to 
 <details><summary><strong>Example:</strong></summary><p>
 
 ```js
+import React, { useEffect } from 'react';
 // ...
-import { useVuic, useEffect } from '@sista/vuic-react';
+import { useVuic } from '@sista/vuic-react';
 
 function TodoApp() {
+
   const addTask = (taskDescription) => {
     console.log(`Added task: ${taskDescription}`);
   };
@@ -171,61 +173,66 @@ function TodoApp() {
     console.log(`Removed task: ${taskDescription}`);
   };
 
-  // Define function signatures
-  const functionSignatures = [
-    {
-      type: 'function',
-      function: {
-        name: 'addTask',
-        description: 'Adds a task to the todo list.',
-        parameters: {
-          type: 'object',
-          properties: {
-            taskDescription: {
-              type: 'string',
-              description: 'The task description.',
-            },
-          },
-          required: ['taskDescription'],
-        },
-      },
-    },
-    {
-      type: 'function',
-      function: {
-        name: 'removeTask',
-        description: 'Removes a task from the todo list.',
-        parameters: {
-          type: 'object',
-          properties: {
-            taskDescription: {
-              type: 'string',
-              description: 'The task description.',
-            },
-          },
-          required: ['taskDescription'],
-        },
-      },
-    },
-  ];
-
-  // Define function references
-  const functionReferences = [
-    addTask,
-    removeTask,
-  ];
+  // ...
 
   const vuic = useVuic();
+  
   useEffect(() => {
-    if (vuic) {
-    vuic.registerFunctions(functionSignatures, functionReferences);
-    }
-  }, [vuic]);
+    // Define function signatures
+    const functionSignatures = [
+      {
+        type: 'function',
+        function: {
+          name: 'addTask',
+          description: 'Adds a task to the todo list.',
+          parameters: {
+            type: 'object',
+            properties: {
+              taskDescription: {
+                type: 'string',
+                description: 'The task description.',
+              },
+            },
+            required: ['taskDescription'],
+          },
+        },
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'removeTask',
+          description: 'Removes a task from the todo list.',
+          parameters: {
+            type: 'object',
+            properties: {
+              taskDescription: {
+                type: 'string',
+                description: 'The task description.',
+              },
+            },
+            required: ['taskDescription'],
+          },
+        },
+      },
+    ];
 
-  return  <div>
-              {/* UI elements here */}
-          </div>;
+    // Define function references
+    const functionReferences = [
+      addTask,
+      removeTask,
+    ];
+
+    if (vuic) {
+      vuic.registerFunctions(functionSignatures, functionReferences);
+    }
+  }, [vuic]); // Dependencies array ensures this effect runs once vuic is available
+
+  return <div>
+            {/* UI elements here */}
+         </div>;
 }
+
+export default TodoApp;
 
 ```
 
