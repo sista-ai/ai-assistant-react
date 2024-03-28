@@ -4,20 +4,20 @@ import { useVuic } from './VuicContext';
 import { FaMicrophone } from 'react-icons/fa';
 import { FaVolumeUp } from 'react-icons/fa';
 import { FaSatelliteDish } from 'react-icons/fa';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const pulse = keyframes`
   0% {
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
   }
-  50% {
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.3);
-  }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 30px rgba(255, 255, 255, 0);
   }
 `;
 
+const PulseAnimation = css`
+  animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+`;
 const spin = keyframes`
   0% {
     transform: rotate(0deg);
@@ -29,7 +29,7 @@ const spin = keyframes`
 
 const bounce = keyframes`
   0%, 100% {
-    transform: scale(1.0);
+    transform: scale(0.7);
   }
   50% {
     transform: scale(1.2);
