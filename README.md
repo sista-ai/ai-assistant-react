@@ -1,5 +1,3 @@
-![Sista Logo](./assets/sista-logo.png)
-
 # Sista: Voice UI Controller
 
 🔊 Unleash the power of voice 🎤 in your React apps with `@sista/vuic-react` 🚀
@@ -10,6 +8,7 @@ This tiny, AI-powered library lets you build voice-enabled apps without any code
 
 Dive into this mini guide and discover how to integrate voice functionality seamlessly into your React projects in **less than 10 min**!
 
+![Sista Logo](./assets/sista-logo.png)
 
 ## Installation
 
@@ -254,4 +253,6 @@ Sista Voice UI Controller is [MIT licensed](./LICENSE).
 
 If you're having a problem with this package, please raise an issue on Github or contact us at [support@sista.ai](mailto:support@sista.ai).
 
-![Sista Logo](./assets/sista-icon.png)
+<a href="https://vuic.sista.ai">
+  <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
+</a>
