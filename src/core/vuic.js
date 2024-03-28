@@ -10,7 +10,7 @@ const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.co
 
 class Vuic extends EventEmitter {
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
-        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
+        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + Local + 8`);
         super();
 
         if (!key) {
@@ -25,10 +25,7 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- Registered KEY:', this.key);
 
         this.functionSignatures = [];
-
-
         this.functionReferences = {};
-
 
         try {
             // Preload the start and end sounds
@@ -41,16 +38,16 @@ class Vuic extends EventEmitter {
 
     registerFunctions(functionSignatures, functionReferences) {
         console.log('--[VUIC]-- registerFunctions');
-
-        this.functionSignatures = functionSignatures;
-        console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
-
-        // Convert array to object
+        // TODO: work with array in the first place to avoid this convertion
+        // Convert array to object. 
         this.functionReferences = functionReferences.reduce((obj, func) => {
             obj[func.name] = func;
             return obj;
         }, {});
         console.log('--[VUIC]-- Function References:', this.functionReferences);
+
+        this.functionSignatures = functionSignatures;
+        console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
 
     startVoiceRecording = async () => {
@@ -126,14 +123,6 @@ class Vuic extends EventEmitter {
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
 
-        if (!this.functionSignatures || this.functionSignatures.length === 0) {
-            throw new Error('functionSignatures array is empty. Please register your voice activated functions. See docs https://docs.sista.ai`');
-        }
-
-        if (!this.functionReferences || Object.keys(this.functionReferences).length === 0) {
-            throw new Error('functionReferences array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
-        }
-
         const formData = new FormData();
         formData.append('audio', audioBlob);
         formData.append(
@@ -160,8 +149,7 @@ class Vuic extends EventEmitter {
     };
 
     _handleProcessedVoiceCommandResponse = (response) => {
-        console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse');
-        console.log('--[VUIC]-- RAW RESPONSE:', response);
+        console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse:', response);
 
         if (!response || !response.executableFunctions) {
             console.error('Invalid response format:', response);
@@ -232,6 +220,14 @@ class Vuic extends EventEmitter {
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
 
+        if (!this.functionSignatures || this.functionSignatures.length === 0) {
+            throw new Error('functionSignatures array is empty. Please register your voice activated functions. See docs https://docs.sista.ai`');
+        }
+
+        if (!this.functionReferences || Object.keys(this.functionReferences).length === 0) {
+            throw new Error('functionReferences array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
+        }
+
         if (!message || !message.tool_calls) {
             console.error('E1: Invalid API response:', message);
             return;
@@ -270,8 +266,7 @@ class Vuic extends EventEmitter {
     };
 
     _executeTextReply = (content) => {
-        console.log('--[VUIC]-- _executeTextReply');
-        console.log('AI Reply:', content);
+        console.log('--[VUIC]-- _executeTextReply:', content);
     };
 
     playSound(sound, volume = 0.20) {
