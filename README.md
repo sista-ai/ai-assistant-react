@@ -47,7 +47,8 @@ Replace `"YOUR_API_KEY"` with your actual API key.
 
 Obtain your FREE API key from the [admin dashboard](https://admin.sista.ai/applications). _(or visit admin.sista.ai)_
 
-Example:
+
+<details><summary><strong>Example:</strong></summary><p>
 
 ```jsx
 // ...
@@ -62,6 +63,10 @@ ReactDOM.render(
   // ...
 );
 ```
+
+</p></details>
+
+
 
 
 ### 2. Import and Use the Voice Button
@@ -151,7 +156,7 @@ This registration should be done inside a `useEffect` hook to ensure it only run
 
 In a todo app, users could add and remove tasks with their voice. Here's how to set this up:
 
-# Example 
+<details><summary><strong>Example:</strong></summary><p>
 
 ```js
 // ...
@@ -221,7 +226,12 @@ function TodoApp() {
               {/* UI elements here */}
           </div>;
 }
+
 ```
+
+</p></details>
+
+
 
 ## Customization
 
