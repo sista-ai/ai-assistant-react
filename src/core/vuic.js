@@ -10,7 +10,7 @@ const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.co
 
 class Vuic extends EventEmitter {
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
-        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + Local + 8`);
+        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + Local + 7`);
         super();
 
         if (!key) {
@@ -216,38 +216,41 @@ class Vuic extends EventEmitter {
             console.error('An error occurred while trying to play the audio:', error);
         });
     };
-
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
-
+    
         if (!this.functionSignatures || this.functionSignatures.length === 0) {
-            throw new Error('functionSignatures array is empty. Please register your voice activated functions. See docs https://docs.sista.ai`');
+            throw new Error('functionSignatures array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }
-
+    
         if (!this.functionReferences || Object.keys(this.functionReferences).length === 0) {
             throw new Error('functionReferences array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }
-
+    
         if (!message || !message.tool_calls) {
             console.error('E1: Invalid API response:', message);
             return;
         }
-
+    
         message.tool_calls.forEach((toolCall) => {
-
             if (!toolCall.function || !toolCall.function.name) {
                 console.error('E2: Invalid API response:', toolCall);
                 return;
             }
-
+    
             const functionName = toolCall.function.name;
-            const functionToCall = this.functionReferences[functionName];
-
+            let functionToCall = this.functionReferences[functionName];
+    
+            // Try to get the function from the window object if not found in references
+            if (!functionToCall) {
+                functionToCall = window[functionName] || window[functionName.charAt(0)];
+            }
+    
             if (!functionToCall) {
                 console.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
                 return;
             }
-
+    
             let functionArgs = {};
             try {
                 functionArgs = JSON.parse(toolCall.function.arguments);
@@ -255,7 +258,7 @@ class Vuic extends EventEmitter {
                 console.error('E3: Invalid API response:', error);
                 return;
             }
-
+    
             const functionArgsArray = Object.values(functionArgs);
             try {
                 functionToCall(...functionArgsArray);
@@ -264,6 +267,7 @@ class Vuic extends EventEmitter {
             }
         });
     };
+    
 
     _executeTextReply = (content) => {
         console.log('--[VUIC]-- _executeTextReply:', content);
