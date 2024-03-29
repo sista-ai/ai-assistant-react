@@ -27,8 +27,6 @@ pnpm add @sista/vuic-react
 
 ## Setup
 
----
-
 ### 1. Import the Provider
 
 a. Import `VuicProvider`:
@@ -105,22 +103,27 @@ That's all it takes for users to start interacting with your app via voice comma
 
 
 ```javascript
+// Regular function
+const sayHello = (name) => {
+  console.log(`Hello ${name}!`);
+};
+
 // Define the functions to be voice-controller
 const voiceControlledFunctions = [
   {
     function: {
-      handler: sayHello,
-      name: "sayHello",
-      description: "Greets the user with their name.",
+      handler: sayHello, // Function to be called
+      name: "sayHello", // Function name
+      description: "Greets the user with their name.", // Function description
       parameters: {
-        type: "object",
+        type: "object", // Parameters type
         properties: {
           name: { 
-            type: "string", 
-            description: "User's name." 
+            type: "string", // 'name' property type
+            description: "User's name." // 'name' property description
           },
         },
-        required: ["name"],
+        required: ["name"], // Required properties
       },
     },
   },
@@ -128,16 +131,19 @@ const voiceControlledFunctions = [
 ];
 ```
 
-The `voiceControlledFunctions` array contains objects, each representing a function that can be activated by a voice command. Each object has a `function` property that contains:
-
-- `handler`: The actual function that will be called.
-- `name`: The name of the function.
-- `description`: A description of what the function does.
-- `parameters`: An object describing the parameters that the function requires.
+The `voiceControlledFunctions` array contains objects, each representing a function that can be activated by a voice command.
 
 
-To register these functions, use the `vuic.registerFunctions(voiceControlledFunctions);` inside a `useEffect` hook to ensure it's done once the component is loaded. See full example below
+To register these functions, use the `vuic.registerFunctions(voiceControlledFunctions);` inside a `useEffect` hook to ensure it's done once the component is loaded.
 
+```js
+  const vuic = useVuic();
+  useEffect(() => {
+    if (vuic) {
+      vuic.registerFunctions(voiceControlledFunctions);
+    }
+  }, [vuic]);
+```
 
 #### Example: Simple Todo App
 
@@ -166,15 +172,15 @@ function TodoApp() {
     const voiceControlledFunctions = [
       {
         function: {
-          handler: addTask, // The function to be called
-          name: 'addTask', // The name of the function
-          description: 'Adds a new task.', // A clear description of what the function does, for the AI to know which function to call
+          handler: addTask,
+          name: 'addTask',
+          description: 'Adds a new task.',
           parameters: {
             type: 'object',
             properties: {
               task: { type: 'string', description: 'Description of the task.' },
             },
-            required: ['task'], // The parameters that the function requires
+            required: ['task'],
           },
         },
       },
