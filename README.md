@@ -69,9 +69,9 @@ ReactDOM.render(
 
 
 
-### 2. Import and Use the Voice Button
+### 2. Import the Button
 
-Import `VuicButton` from `@sista/vuic-react` and add it to your component.
+Import `VuicButton` and add it wherever you want in your component.
 
 ```js
 // ...
@@ -81,10 +81,9 @@ import { VuicButton } from "@sista/vuic-react";
 function MyComponent() {
   return (
     <div>
-      {/* Other UI elements */}
-
+      {/* ... */}
       <VuicButton />
-
+      {/* ... */}
     </div>
   );
 }
@@ -93,9 +92,9 @@ function MyComponent() {
 🎉 Congratulations! Almost done. Now you can start talking with your app. Just press the button and enjoy the experience. 😊👍
 
 
-### 3. Register voice activated functions
+### 3. Enable AI to controller your app
 
-To allow your app to be voice controlled, simply define which functions the AI can call, in a simple config file.
+To voice-control your app, just specify callable functions in a config file.
 
 That's all it takes for users to start interacting with your app via voice commands. It works like magic :sparkles:
 
@@ -140,33 +139,36 @@ Consider a todo app where users can add or remove tasks using voice commands. Th
 
 ```javascript
 import React, { useEffect } from 'react';
+// Import the useVuic hook from the vuic-react package
 import { useVuic } from '@sista/vuic-react';
 
 function TodoApp() {
 
-  const addTask = (taskDescription) => {
-    console.log(`Task added: ${taskDescription}`);
+  const addTask = (task) => {
+    console.log(`Task added: ${task}`);
   };
 
-  const removeTask = (taskDescription) => {
-    console.log(`Task removed: ${taskDescription}`);
+  const removeTask = (task) => {
+    console.log(`Task removed: ${task}`);
   };
 
+  // Initialize the vuic instance
   const vuic = useVuic();
 
   useEffect(() => {
+    // Define the voice-controlled functions
     const voiceControlledFunctions = [
       {
         function: {
-          handler: addTask,
-          name: 'addTask',
-          description: 'Adds a new task.',
+          handler: addTask, // The function to be called
+          name: 'addTask', // The name of the function
+          description: 'Adds a new task.', // A clear description of what the function does, for the AI to know which function to call
           parameters: {
             type: 'object',
             properties: {
-              taskDescription: { type: 'string', description: 'Description of the task.' },
+              task: { type: 'string', description: 'Description of the task.' },
             },
-            required: ['taskDescription'],
+            required: ['task'], // The parameters that the function requires
           },
         },
       },
@@ -178,14 +180,15 @@ function TodoApp() {
           parameters: {
             type: 'object',
             properties: {
-              taskDescription: { type: 'string', description: 'Description of the task.' },
+              task: { type: 'string', description: 'Description of the task.' },
             },
-            required: ['taskDescription'],
+            required: ['task'],
           },
         },
       },
     ];
 
+    // Register the voice-controlled functions with the vuic instance
     if (vuic) {
       vuic.registerFunctions(voiceControlledFunctions);
     }
