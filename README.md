@@ -27,13 +27,17 @@ pnpm add @sista/vuic-react
 
 ## Setup
 
-1. Import `VuicProvider`:
+---
+
+### 1. Import the Provider
+
+a. Import `VuicProvider`:
 
 ```jsx
 import { VuicProvider } from "@sista/vuic-react";
 ```
 
-2. Wrap your main component:
+b. Wrap your main component:
 
 ```jsx
 <VuicProvider apiKey="YOUR_API_KEY">
@@ -41,7 +45,7 @@ import { VuicProvider } from "@sista/vuic-react";
 </VuicProvider>
 ```
 
-3. Add your API KEY
+c. Add your API KEY
 
 Replace `"YOUR_API_KEY"` with your actual API key. 
 
@@ -67,7 +71,7 @@ ReactDOM.render(
 </p></details>
 
 
-
+---
 
 ### 2. Import the Button
 
@@ -91,16 +95,17 @@ function MyComponent() {
 
 🎉 Congratulations! Almost done. Now you can start talking with your app. Just press the button and enjoy the experience. 😊👍
 
+---
 
-### 3. Enable AI to controller your app
+### 3. Register Voice Controlled Functions
 
-To voice-control your app, just specify callable functions in a config file.
+To voice-control your app, just specify the callable functions in a simple config object.
 
 That's all it takes for users to start interacting with your app via voice commands. It works like magic :sparkles:
 
 
 ```javascript
-// Define the functions to be voice-activated
+// Define the functions to be voice-controller
 const voiceControlledFunctions = [
   {
     function: {
@@ -132,6 +137,7 @@ The `voiceControlledFunctions` array contains objects, each representing a funct
 
 
 To register these functions, use the `vuic.registerFunctions(voiceControlledFunctions);` inside a `useEffect` hook to ensure it's done once the component is loaded. See full example below
+
 
 #### Example: Simple Todo App
 
@@ -200,6 +206,7 @@ function TodoApp() {
 export default TodoApp;
 ```
 
+---
 
 ## Customization
 
