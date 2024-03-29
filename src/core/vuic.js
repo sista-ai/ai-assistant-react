@@ -25,7 +25,7 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- Registered KEY:', this.key);
 
         this.functionSignatures = [];
-        this.functionReferences = new Map();
+        this.functionHandlers = new Map();
 
         try {
             // Preload the start and end sounds
@@ -106,33 +106,34 @@ class Vuic extends EventEmitter {
         return recordingPromise;
     };
 
-    registerFunctions(functionSignatures, functionReferences) {
+    registerFunctions(functionSignatures, functionHandlers) {
         console.log('--[VUIC]-- registerFunctions');
         
-        const functionReferencesMap = new Map();
-        functionReferences.forEach(({ name, func }) => {
-            functionReferencesMap.set(Symbol(name), func);
+        const functionHandlersMap = new Map();
+        functionHandlers.forEach(({ name, handler }) => {
+            functionHandlersMap.set(Symbol(name), handler);
         });
     
-        this.functionReferences = functionReferencesMap;
-        console.log('--[VUIC]-- Function References:', this.functionReferences);
+        this.functionHandlers = functionHandlersMap;
+        console.log('--[VUIC]-- Function References:', this.functionHandlers);
     
         this.functionSignatures = functionSignatures;
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
+
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
     
         console.log('--[VUIC]-- -----------------');
-        console.dir(this.functionReferences, { depth: null });
+        console.dir(this.functionHandlers, { depth: null });
         console.log('--[VUIC]-- -----------------');
 
         if (!this.functionSignatures || this.functionSignatures.length === 0) {
             throw new Error('functionSignatures is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }        
     
-        if (!this.functionReferences || this.functionReferences.size === 0) {
-            throw new Error('functionReferences is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
+        if (!this.functionHandlers || this.functionHandlers.size === 0) {
+            throw new Error('functionHandlers is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }
     
         if (!message || !message.tool_calls) {
@@ -151,7 +152,7 @@ class Vuic extends EventEmitter {
             let functionToCall;
         
             // Iterate over Map to find the function by its name
-            for (let [key, value] of this.functionReferences.entries()) {
+            for (let [key, value] of this.functionHandlers.entries()) {
                 if (key.description === functionName) {
                     functionToCall = value;
                     break;
