@@ -2,6 +2,7 @@
 
 import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
+import Recorder from 'recorder-js';
 
 const config = require('./config');
 
@@ -39,75 +40,52 @@ class Vuic extends EventEmitter {
         }
     }
 
+    // The first step in the voice interaction process is to start recording the user's voice
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
-
-        // Play the start sound
         this._playSound(this.startSound);
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
-        if (!window.MediaRecorder) {
-            console.error('MediaRecorder is not supported by this browser.');
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error('getUserMedia is not supported by this browser.');
             this.emitStateChange(EventEmitter.STATE_IDLE);
-
             return;
         }
 
-        let stream;
-        let resolveRecordingPromise;
-
-        const recordingPromise = new Promise(resolve => {
-            resolveRecordingPromise = resolve;
-        });
+        let stream = null;
+        let recorder = null;
 
         try {
-            const getUserMedia = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
-                ? navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)
-                : (constraints) => new Promise((resolve, reject) =>
-                    navigator.getUserMedia(constraints, resolve, reject));
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            recorder = new Recorder(audioContext);
+            recorder.init(stream);
 
-            stream = await getUserMedia({ audio: true });
+            recorder.start()
+                .then(() => {
+                    // Consider making the recording duration configurable or adaptive
+                    setTimeout(() => {
+                        recorder.stop()
+                            .then(({ blob, buffer }) => {
+                                this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
-            let mimeType = 'audio/webm';
-            if (!MediaRecorder.isTypeSupported(mimeType)) {
-                mimeType = 'audio/wav';
-            }
+                                // Process the audio blob here
+                                this._processVoiceCommand(blob);
 
-            const mediaRecorder = new MediaRecorder(stream, { mimeType });
-            const audioChunks = [];
-
-            mediaRecorder.ondataavailable = (event) =>
-                audioChunks.push(event.data);
-
-            mediaRecorder.onstop = async () => {
-                this.emitStateChange(EventEmitter.STATE_THINKING_START);
-
-                const audioBlob = new Blob(audioChunks, { type: mimeType });
-
-                await this._processVoiceCommand(audioBlob);
-                // Stop all tracks in the stream to turn off the microphone
-                stream.getTracks().forEach((track) => track.stop());
-
-                this.emitStateChange(EventEmitter.STATE_IDLE);
-
-                resolveRecordingPromise();
-            };
-
-            mediaRecorder.start();
-            setTimeout(() => mediaRecorder.stop(), 3500);
+                                stream.getTracks().forEach(track => track.stop());
+                                this.emitStateChange(EventEmitter.STATE_IDLE);
+                            });
+                    }, 3500); // Stop recording after 3.5 seconds
+                });
         } catch (err) {
-            console.error('Error getting media stream:', err);
-            // If an error occurs, stop all tracks in the stream
+            console.error('Error accessing the microphone:', err);
             if (stream) {
-                stream.getTracks().forEach((track) => track.stop());
+                stream.getTracks().forEach(track => track.stop();
             }
-
             this.emitStateChange(EventEmitter.STATE_IDLE);
-            resolveRecordingPromise();
         }
-
-        return recordingPromise;
     };
+
 
     registerFunctions(voiceFunctions) {
         console.log('--[VUIC]-- registerFunctions');
