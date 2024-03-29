@@ -9,8 +9,11 @@ const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.
 const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
 class Vuic extends EventEmitter {
+
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
+
         console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + Local = M7`);
+
         super();
 
         if (!key) {
@@ -106,51 +109,56 @@ class Vuic extends EventEmitter {
         return recordingPromise;
     };
 
-    registerFunctions(functionSignatures, functionHandlers) {
+    registerFunctions(voiceFunctions) {
         console.log('--[VUIC]-- registerFunctions');
-        
-        const functionHandlersMap = new Map();
-        functionHandlers.forEach(({ name, handler }) => {
-            functionHandlersMap.set(Symbol(name), handler);
+
+        // Iterate over each voice function passed in and extract the name and handler to build functionHandlersMap
+        voiceFunctions.forEach(({ function: { name, handler } }) => {
+            this.functionHandlers.set(Symbol(name), handler);
         });
-    
-        this.functionHandlers = functionHandlersMap;
+
         console.log('--[VUIC]-- Function References:', this.functionHandlers);
-    
-        this.functionSignatures = functionSignatures;
+
+        // Create the functionSignatures array by mapping over the voiceFunctions and removing the handler: xxx then add type: 'function'
+        this.functionSignatures = voiceFunctions.map(({ function: { handler, ...rest } }) => ({
+            type: "function",
+            function: rest
+        }));
+
+        // Log the function signatures for debugging purposes
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
 
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
-    
+
         console.log('--[VUIC]-- -----------------');
         console.dir(this.functionHandlers, { depth: null });
         console.log('--[VUIC]-- -----------------');
 
         if (!this.functionSignatures || this.functionSignatures.length === 0) {
             throw new Error('functionSignatures is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
-        }        
-    
+        }
+
         if (!this.functionHandlers || this.functionHandlers.size === 0) {
             throw new Error('functionHandlers is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }
-    
+
         if (!message || !message.tool_calls) {
             console.error('E1: Invalid API response:', message);
             return;
         }
-    
+
 
         message.tool_calls.forEach((toolCall) => {
             if (!toolCall.function || !toolCall.function.name) {
                 console.error('E2: Invalid API response:', toolCall);
                 return;
             }
-        
+
             const functionName = toolCall.function.name;
             let functionToCall;
-        
+
             // Iterate over Map to find the function by its name
             for (let [key, value] of this.functionHandlers.entries()) {
                 if (key.description === functionName) {
@@ -158,12 +166,12 @@ class Vuic extends EventEmitter {
                     break;
                 }
             }
-        
+
             if (!functionToCall) {
                 console.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
                 return;
             }
-        
+
             let functionArgs = {};
             try {
                 functionArgs = JSON.parse(toolCall.function.arguments);
@@ -171,7 +179,7 @@ class Vuic extends EventEmitter {
                 console.error('E3: Invalid API response:', error);
                 return;
             }
-        
+
             const functionArgsArray = Object.values(functionArgs);
             try {
                 functionToCall(...functionArgsArray);
