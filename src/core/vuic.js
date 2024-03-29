@@ -12,7 +12,7 @@ class Vuic extends EventEmitter {
 
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
 
-        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + Local = M7`);
+        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
 
         super();
 
@@ -122,7 +122,7 @@ class Vuic extends EventEmitter {
                 function: { name, ...rest }
             });
         });
-    
+
         console.log('--[VUIC]-- Function References:', this.functionHandlers);
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
@@ -130,9 +130,7 @@ class Vuic extends EventEmitter {
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
 
-        console.log('--[VUIC]-- -----------------');
         console.dir(this.functionHandlers, { depth: null });
-        console.log('--[VUIC]-- -----------------');
 
         if (!this.functionSignatures || this.functionSignatures.length === 0) {
             throw new Error('functionSignatures is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
@@ -180,6 +178,7 @@ class Vuic extends EventEmitter {
 
             const functionArgsArray = Object.values(functionArgs);
             try {
+                console.log(`--[VUIC]-- Calling function ${functionName} with arguments:`, functionArgsArray);
                 functionToCall(...functionArgsArray);
             } catch (error) {
                 console.error(`Error calling function ${functionName}:`, error);
@@ -291,7 +290,7 @@ class Vuic extends EventEmitter {
     };
 
     _playSound(sound, volume = 0.20) {
-        console.log('--[VUIC]-- playSound');
+        console.log('--[VUIC]-- _playSound');
 
         try {
             sound.volume = volume;

@@ -50,7 +50,7 @@ Replace `"YOUR_API_KEY"` with your actual API key.
 Obtain your FREE API key from the [admin dashboard](https://admin.sista.ai/applications). _(or visit admin.sista.ai)_
 
 
-<details><summary><strong>Example:</strong></summary><p>
+Example:
 
 ```jsx
 // ...
@@ -65,9 +65,6 @@ ReactDOM.render(
   // ...
 );
 ```
-
-</p></details>
-
 
 ---
 
@@ -102,7 +99,7 @@ To voice-control your app, just specify the callable functions in a simple confi
 That's all it takes for users to start interacting with your app via voice commands. It works like magic :sparkles:
 
 
-```javascript
+```js
 // Regular function
 const sayHello = (name) => {
   console.log(`Hello ${name}!`);
@@ -145,11 +142,11 @@ To register these functions, use the `vuic.registerFunctions(voiceControlledFunc
   }, [vuic]);
 ```
 
-#### Example: Simple Todo App
+#### Full Example: Todo App
 
 Consider a todo app where users can add or remove tasks using voice commands. The setup would look like this:
 
-```javascript
+```js
 import React, { useEffect } from 'react';
 // Import the useVuic hook from the vuic-react package
 import { useVuic } from '@sista/vuic-react';
