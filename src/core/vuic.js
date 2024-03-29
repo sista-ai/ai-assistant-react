@@ -109,13 +109,17 @@ class Vuic extends EventEmitter {
     registerFunctions(functionSignatures, functionReferences) {
         console.log('--[VUIC]-- registerFunctions');
         
-        this.functionReferences = functionReferences;
+        const functionReferencesMap = new Map();
+        functionReferences.forEach(({ name, func }) => {
+            functionReferencesMap.set(Symbol(name), func);
+        });
+    
+        this.functionReferences = functionReferencesMap;
         console.log('--[VUIC]-- Function References:', this.functionReferences);
-
+    
         this.functionSignatures = functionSignatures;
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
-
     _executeFunctions = (message) => {
         console.log('--[VUIC]-- _executeFunctions');
     
@@ -124,12 +128,12 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- -----------------');
 
         if (!this.functionSignatures || this.functionSignatures.length === 0) {
-            throw new Error('functionSignatures array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
+            throw new Error('functionSignatures is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }        
     
-        // if (!this.functionReferences || Object.keys(this.functionReferences).length === 0) {
-        //     throw new Error('functionReferences array is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
-        // }
+        if (!this.functionReferences || this.functionReferences.size === 0) {
+            throw new Error('functionReferences is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
+        }
     
         if (!message || !message.tool_calls) {
             console.error('E1: Invalid API response:', message);
