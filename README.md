@@ -10,9 +10,26 @@ Dive into this mini guide and discover how to integrate voice functionality seam
 
 ![Sista Logo](./assets/sista-logo.png)
 
+## Supported Projects
+
+This package can be integrated into a wide range of React-based projects, including:
+
+- Create React App
+- React Native
+- Next.js
+- Gatsby
+- Electron
+- Meteor
+- Parcel
+- Expo
+- Remix
+- Storybook
+- RedwoodJS
+- Blitz.js
+
 ## Installation
 
-To use [@sista/vuic-react](https://www.npmjs.com/package/@sista/vuic-react), install it via `npm` or `yarn` or `pnpm` in your React App.
+To use [@sista/vutic-reac](https://www.npmjs.com/package/@sista/vuic-react), install it via `npm` or `yarn` or `pnpm` in your React App.
 
 ```bash
 # install with npm
