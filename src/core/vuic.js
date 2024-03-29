@@ -112,20 +112,18 @@ class Vuic extends EventEmitter {
     registerFunctions(voiceFunctions) {
         console.log('--[VUIC]-- registerFunctions');
 
-        // Iterate over each voice function passed in and extract the name and handler to build functionHandlersMap
-        voiceFunctions.forEach(({ function: { name, handler } }) => {
+        // 1) extract the name and handler to build functionHandlersMap
+        // 2) edit functionSignatures by removing the handler and adding the type
+        voiceFunctions.forEach(({ function: func }) => {
+            const { name, handler, ...rest } = func;
             this.functionHandlers.set(Symbol(name), handler);
+            this.functionSignatures.push({
+                type: "function",
+                function: { name, ...rest }
+            });
         });
-
+    
         console.log('--[VUIC]-- Function References:', this.functionHandlers);
-
-        // Create the functionSignatures array by mapping over the voiceFunctions and removing the handler: xxx then add type: 'function'
-        this.functionSignatures = voiceFunctions.map(({ function: { handler, ...rest } }) => ({
-            type: "function",
-            function: rest
-        }));
-
-        // Log the function signatures for debugging purposes
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
 
