@@ -80,8 +80,8 @@ const VuicButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
     const defaultButtonColors = {
         STATE_IDLE: '#4a6cf6', // Original color
         STATE_LISTENING_START: '#F64A7B', // Red
-        STATE_THINKING_START: '#4ac2f6', // Blue
-        STATE_SPEAKING_START: '#4af67f', // Green
+        STATE_THINKING_START: '#015589', // Blue
+        STATE_SPEAKING_START: '#019a9a', // Green
     };
 
     // Merge the provided buttonColors prop with the default colors
