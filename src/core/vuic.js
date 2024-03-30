@@ -73,7 +73,7 @@ class Vuic extends EventEmitter {
                                 this._processVoiceCommand(blob);
 
                                 stream.getTracks().forEach(track => track.stop());
-                                this.emitStateChange(EventEmitter.STATE_IDLE);
+                                
                             });
                     }, 3500); // Stop recording after 3.5 seconds
                 });
