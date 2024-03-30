@@ -4,6 +4,8 @@ import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
 import Recorder from 'recorder-js';
 import AudioManager from './AudioManager';
+import VoiceCommandProcessor from './VoiceCommandProcessor';
+
 const config = require('./config');
 
 class Vuic extends EventEmitter {
@@ -16,6 +18,7 @@ class Vuic extends EventEmitter {
 
 
         this.audioManager = new AudioManager();
+        this.voiceCommandProcessor = new VoiceCommandProcessor();
 
         if (!key) {
             console.error('Missing API Key for VuicProvider.');
@@ -27,9 +30,6 @@ class Vuic extends EventEmitter {
 
         this.key = key;
         console.log('--[VUIC]-- Registered KEY:', this.key);
-
-        this.functionSignatures = [];
-        this.functionHandlers = new Map();
 
 
     }
@@ -83,83 +83,9 @@ class Vuic extends EventEmitter {
 
 
     registerFunctions(voiceFunctions) {
-        console.log('--[VUIC]-- registerFunctions');
-
-        // 1) extract the name and handler to build functionHandlersMap
-        // 2) edit functionSignatures by removing the handler and adding the type
-        voiceFunctions.forEach(({ function: func }) => {
-            const { name, handler, ...rest } = func;
-            this.functionHandlers.set(Symbol(name), handler);
-            this.functionSignatures.push({
-                type: "function",
-                function: { name, ...rest }
-            });
-        });
-
-        console.log('--[VUIC]-- Function References:', this.functionHandlers);
-        console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
+        console.log('sdsdsds');
+        this.voiceCommandProcessor.registerFunctions(voiceFunctions);
     }
-
-    _executeFunctions = (message) => {
-        console.log('--[VUIC]-- _executeFunctions');
-
-        console.dir(this.functionHandlers, { depth: null });
-
-        if (!this.functionSignatures || this.functionSignatures.length === 0) {
-            throw new Error('functionSignatures is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
-        }
-
-        if (!this.functionHandlers || this.functionHandlers.size === 0) {
-            throw new Error('functionHandlers is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
-        }
-
-        if (!message || !message.tool_calls) {
-            console.error('E1: Invalid API response:', message);
-            return;
-        }
-
-
-        message.tool_calls.forEach((toolCall) => {
-            if (!toolCall.function || !toolCall.function.name) {
-                console.error('E2: Invalid API response:', toolCall);
-                return;
-            }
-
-            const functionName = toolCall.function.name;
-            let functionToCall;
-
-            // Iterate over Map to find the function by its name
-            for (let [key, value] of this.functionHandlers.entries()) {
-                if (key.description === functionName) {
-                    functionToCall = value;
-                    break;
-                }
-            }
-
-            if (!functionToCall) {
-                console.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
-                return;
-            }
-
-            let functionArgs = {};
-            try {
-                functionArgs = JSON.parse(toolCall.function.arguments);
-            } catch (error) {
-                console.error('E3: Invalid API response:', error);
-                return;
-            }
-
-            const functionArgsArray = Object.values(functionArgs);
-            try {
-                console.log(`--[VUIC]-- Calling function ${functionName} with arguments:`, functionArgsArray);
-                functionToCall(...functionArgsArray);
-            } catch (error) {
-                console.error(`Error calling function ${functionName}:`, error);
-            }
-        });
-
-
-    };
 
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
@@ -168,7 +94,7 @@ class Vuic extends EventEmitter {
         formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
-            JSON.stringify(this.functionSignatures),
+            JSON.stringify(this.voiceCommandProcessor.functionSignatures),
         );
 
         await fetch(`${this.vuicBaseURL}/processor/run`, {
@@ -212,7 +138,7 @@ class Vuic extends EventEmitter {
         }
 
         if (message.tool_calls) {
-            this._executeFunctions(message);
+            this.voiceCommandProcessor._executeFunctions(message);
         } else if (message.content !== null) {
             this._executeTextReply(message.content);
         } else {
