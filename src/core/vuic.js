@@ -3,11 +3,8 @@
 import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
 import Recorder from 'recorder-js';
-
+import AudioManager from './AudioManager';
 const config = require('./config');
-
-const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
-const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
 class Vuic extends EventEmitter {
 
@@ -16,6 +13,9 @@ class Vuic extends EventEmitter {
         console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
 
         super();
+
+
+        this.audioManager = new AudioManager();
 
         if (!key) {
             console.error('Missing API Key for VuicProvider.');
@@ -31,19 +31,14 @@ class Vuic extends EventEmitter {
         this.functionSignatures = [];
         this.functionHandlers = new Map();
 
-        try {
-            // Preload the start and end sounds
-            this.startSound = new Audio(startProcessingAudioFileUrl);
-            this.endSound = new Audio(endProcessingAudioFileUrl);
-        } catch (error) {
-            console.error('Failed to load audio files:', error);
-        }
+
     }
 
     // The first step in the voice interaction process is to start recording the user's voice
+    // TODO: rename to start executib or something
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
-        this._playSound(this.startSound);
+        this.audioManager._playSound(this.audioManager.startSound);
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -210,10 +205,10 @@ class Vuic extends EventEmitter {
         }
 
         if (response.audioFile) {
-            this._executeAudioReply(response.audioFile);
+            this.audioManager._executeAudioReply(response.audioFile);
         } else {
             // Play the end sound, only when no audio will be returned and just actions to be executed 
-            this._playSound(this.endSound);
+            this.audioManager._playSound(this.audioManager.endSound);
         }
 
         if (message.tool_calls) {
@@ -226,60 +221,11 @@ class Vuic extends EventEmitter {
         }
     };
 
-    _executeAudioReply = (aiReplyAudioFileUrl) => {
-        // Check if the browser supports the Audio API
-        if (!window.Audio) {
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('This browser does not support the Audio API');
-            return;
-        }
-
-        let audio;
-        try {
-            audio = this._playSound(new Audio(aiReplyAudioFileUrl), 1.0);
-        } catch (error) {
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('Failed to load and play audio file:', error);
-            return;
-        }
-
-        // Emit AUDIO_START state when the audio starts
-        audio.onplay = () => {
-            this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
-        };
-        // Emit AUDIO_END state when the audio ends
-        audio.onended = () => {
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-        };
-        // Handle errors when loading the audio file
-        audio.onerror = function () {
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('An error occurred while trying to load the audio file:', aiReplyAudioFileUrl);
-        };
-
-        // Handle errors when trying to play the audio
-        audio.play().catch(function (error) {
-            console.error('An error occurred while trying to play the audio:', error);
-        });
-    };
-
     _executeTextReply = (content) => {
         console.log('--[VUIC]-- _executeTextReply:', content);
     };
 
-    _playSound(sound, volume = 0.20) {
-        console.log('--[VUIC]-- _playSound');
-
-        try {
-            sound.volume = volume;
-            sound.play();
-        } catch (error) {
-            console.error('Failed to play sound:', error);
-        }
-
-        return sound;
-    }
-
+    
     static init(key, vuicBaseURL) {
         return new Vuic(key, vuicBaseURL);
     }
