@@ -80,7 +80,7 @@ class Vuic extends EventEmitter {
         } catch (err) {
             console.error('Error accessing the microphone:', err);
             if (stream) {
-                stream.getTracks().forEach(track => track.stop();
+                stream.getTracks().forEach(track => track.stop());
             }
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
