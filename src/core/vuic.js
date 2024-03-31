@@ -119,7 +119,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
     _handleApiResponse = (response) => {
         console.log('--[VUIC]-- _handleApiResponse:', response);
 
-        if (!response || !response.executableFunctions) {
+        if (!response && response.executableFunctions) {
             console.error('Invalid response format:', response);
             return;
         }
@@ -131,13 +131,21 @@ class Vuic extends EventEmitter { // TODO: do not extend
             return;
         }
 
+        this._handleAudioResponse(response);
+        this._handleExecutableFunctionsResponse(message);
+    };
+
+
+    _handleAudioResponse = (response) => {
         if (response.audioFile) {
             this.audioManager.playAiReply(response.audioFile);
         } else {
             // Play the end sound, only when no audio will be returned and just actions to be executed 
             this.audioManager.playRecordingTone(this.audioManager.endSound);
         }
+    };
 
+    _handleExecutableFunctionsResponse = (message) => {
         if (message.tool_calls) {
             this.functionExecutor.executeFunctions(message);
         } else if (message.content !== null) {
