@@ -92,24 +92,29 @@ class Vuic extends EventEmitter { // TODO: do not extend
             JSON.stringify(this.functionExecutor.functionSignatures),
         );
 
-        // TODO: this should remain on this class but as its own method for making the API calls. should be named something like _makeAPIRequest
-        await fetch(`${this.vuicBaseURL}/processor/run`, {
-            method: 'POST',
-            headers: {
-                'x-api-key': this.key,
-            },
-            body: formData,
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                this._handleApiResponse(data);
-                this.emitStateChange(EventEmitter.STATE_IDLE);
-            })
-            .catch((error) => {
-                console.error('API Error:', error);
-                this.emitStateChange(EventEmitter.STATE_IDLE);
-            });
+        await this._makeAPIRequest(formData);
     };
+
+
+    _makeAPIRequest = async (formData) => {
+        try {
+            const response = await fetch(`${this.vuicBaseURL}/processor/run`, {
+                method: 'POST',
+                headers: {
+                    'x-api-key': this.key,
+                },
+                body: formData,
+            });
+
+            const data = await response.json();
+            this._handleApiResponse(data);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+        } catch (error) {
+            console.error('API Error:', error);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+        }
+    };
+
 
     _handleApiResponse = (response) => {
         console.log('--[VUIC]-- _handleApiResponse:', response);
