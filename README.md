@@ -165,8 +165,7 @@ For a todo app with voice commands to add or remove tasks, the setup is:
 
 ```js
 import React, { useEffect } from 'react';
-// Import the useVuic hook from the vuic-react package
-import { useVuic } from '@sista/vuic-react';
+import { useVuic, VuicButton } from '@sista/vuic-react';
 
 function TodoApp() {
 
@@ -218,13 +217,18 @@ function TodoApp() {
       },
     ];
 
-    // Register the voice-controlled functions with the vuic instance
+    // Register the voice-controlled functions
     if (vuic) {
       vuic.registerFunctions(voiceControlledFunctions);
     }
   }, [vuic]);
 
-  return <div>{/* UI components */}</div>;
+  return (
+    <div>
+      {/* Other UI Components */}
+      <VuicButton />  // Add the magic button anywhere
+    </div>
+  );
 }
 
 export default TodoApp;
