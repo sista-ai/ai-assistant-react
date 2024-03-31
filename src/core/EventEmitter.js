@@ -27,7 +27,6 @@ class EventEmitter {
         this.emit('stateChange', eventName, ...args);
     }
 
-
     static get STATE_IDLE() {
         return 'STATE_IDLE';
     }

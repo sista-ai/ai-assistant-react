@@ -135,7 +135,6 @@ class Vuic extends EventEmitter {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReply(audioFile, () => {
             console.log('--[VUIC]-- Audio reply has finished playing.');
-            // When the audio reply has finished playing, set the state back to idle
             this.emitStateChange(EventEmitter.STATE_IDLE);
         });
     };
