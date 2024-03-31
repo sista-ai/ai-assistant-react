@@ -286,9 +286,15 @@ For custom AI responses, go to the [Admin Panel](https://admin.sista.ai/applicat
 
 ### Customizing Voice
 
-To personalize the AI assistant's voice, visit the [Admin Panel](https://admin.sista.ai/applications) and choose your preferred voice in the application settings.
+To personalize the AI assistant's voice, visit the [Admin Panel](https://admin.sista.ai/applications) and choose your preferred voice in the **application settings**.
 
 ---
+
+
+
+<a href="https://vuic.sista.ai">
+  <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
+</a>
 
 
 
@@ -303,9 +309,3 @@ The Sista AI - Voice UI Controller is licensed under [CC BY-NC-ND 3.0](./LICENSE
 ## Support
 
 For issues, raise on Github or contact [support@sista.ai](mailto:support@sista.ai).
-
-
-
-<a href="https://vuic.sista.ai">
-  <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
-</a>
