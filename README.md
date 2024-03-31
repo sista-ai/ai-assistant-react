@@ -108,7 +108,7 @@ function MyComponent() {
 }
 ```
 
-🎉 Congratulations! Almost done. Now you can start talking with your app. Just press the button and enjoy the experience. 😊👍
+> 🎉 Congrats! Press the button, start talking, and enjoy!
 
 ---
 
@@ -116,8 +116,25 @@ function MyComponent() {
 
 To voice-control your app, just specify the callable functions in a simple config object.
 
-> Just like that, your app is voice-interactive. Magic! :sparkles:
+```js
+// Regular function
+const sayHelloWorld = () => {
+  console.log("Hello, World!");
+};
 
+// Define the functions to be voice-controlled
+const voiceControlledFunctions = [
+  {
+    function: {
+      handler: sayHelloWorld, // pass your function
+      description: "Greets the user with 'Hello, World!'.", // add function description
+    },
+  },
+  // ... include additional functions here
+];
+```
+
+For functions that require parameters:
 
 ```js
 // Regular function
@@ -129,8 +146,8 @@ const sayHello = (name) => {
 const voiceControlledFunctions = [
   {
     function: {
-      handler: sayHello, // pass your function
-      description: "Greets the user with their name.", // add function description
+      handler: sayHello,
+      description: "Greets the user with their name.",
       // In case your function accepts paraemters:
       parameters: {
         type: "object",
@@ -144,7 +161,6 @@ const voiceControlledFunctions = [
       },
     },
   },
-  // ... include additional functions here
 ];
 ```
 
@@ -158,6 +174,8 @@ Register the functions with `vuic.registerFunctions(voiceControlledFunctions);` 
     }
   }, [vuic]);
 ```
+
+> Just like that, your app is voice-interactive. Magic! :sparkles:
 
 ## Full Example: (Todo App)
 
