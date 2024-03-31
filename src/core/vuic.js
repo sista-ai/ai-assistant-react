@@ -96,6 +96,12 @@ class Vuic extends EventEmitter { // TODO: do not extend
     };
 
 
+
+
+
+
+
+    
     _makeAPIRequest = async (formData) => {
         try {
             const response = await fetch(`${this.vuicBaseURL}/processor/run`, {
@@ -124,45 +130,45 @@ class Vuic extends EventEmitter { // TODO: do not extend
 
     _handleApiResponse = (response) => {
         console.log('--[VUIC]-- _handleApiResponse:', response);
-    
+
         // Check if the response is valid
         if (!response || !response.executableFunctions) {
             console.error('Invalid response format:', response);
             return;
         }
-    
+
         const { message } = response.executableFunctions;
-    
+
         // Check if the message exists
         if (!message) {
             console.error('Response does not contain a message:', response);
             return;
         }
-    
+
         // Handle audio response if it exists
         if (response.audioFile) {
             this._handleAudioResponse(response.audioFile);
         }
-    
+
         // Handle executable functions if they exist
         if (message.tool_calls) {
             this._handleExecutableFunctionsResponse(message);
         }
-    
+
         // If no audio or executable functions, handle text response
         if (message.content !== null) {
             this._handleTextResponse(message.content);
         }
     };
-    
+
     _handleAudioResponse = (audioFile) => {
         this.audioManager.playAiReply(audioFile);
     };
-    
+
     _handleExecutableFunctionsResponse = (message) => {
         this.functionExecutor.executeFunctions(message);
     };
-    
+
     _handleTextResponse = (content) => {
         console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
     };
