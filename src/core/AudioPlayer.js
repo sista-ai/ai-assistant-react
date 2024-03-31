@@ -17,6 +17,7 @@ class AudioPlayer {
 
     playAiReply = (audioFileUrl) => {
         console.log('--[VUIC]-- playAiReply');
+        this.eventEmitter.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this._checkAudioSupportAndPlayReply(audioFileUrl);
     };
 
@@ -68,7 +69,7 @@ class AudioPlayer {
         }
 
         this._loadAudio(audioFileUrl)
-            .then(this.playAudio)
+            .then(this._playAudio)
             .catch(error => {
                 this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
                 console.error('Failed to load and play audio file:', error);
@@ -81,7 +82,7 @@ class AudioPlayer {
             .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer));
     };
 
-    playAudio = (audioBuffer) => {
+    _playAudio = (audioBuffer) => {
         const source = this.audioContext.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(this.audioContext.destination);
