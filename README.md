@@ -59,7 +59,7 @@ import { VuicProvider } from "@sista/vuic-react";
 
 ReactDOM.render(
   <React.StrictMode>
-    <VuicProvider apiKey="YOUR_API_KEY"> // << Wrap your app with this
+    <VuicProvider apiKey="YOUR_API_KEY"> // << Wrap your app with this provider
       <App />
     </VuicProvider>
   </React.StrictMode>,
@@ -84,7 +84,7 @@ function MyComponent() {
   return (
     <div>
       {/* ... */}
-      <VuicButton />
+      <VuicButton />  // << Add the magic button anywhere
       {/* ... */}
     </div>
   );
