@@ -36,9 +36,21 @@ const bounce = keyframes`
   }
 `;
 
+// TODO: let user pass style object, and add the color to the initial colors prop
+// styles={{
+//   width: '75px',
+//   height: '75px',
+//   fontSize: '35px',
+//   bottom: '75px',
+//   right: '75px',
+//   mobileWidth: '65px',
+//   mobileHeight: '65px',
+//   mobileFontSize: '30px',
+//   mobileBottom: '25px',
+//   mobileRight: '25px',
+// }}
+
 const Button = styled.button`
-
-
     width: 75px;
     height: 75px;
 
@@ -60,14 +72,11 @@ const Button = styled.button`
 
     color: #ffffff;
 
-
-
     position: fixed;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-
     border: none;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
     transition: background-color 0.3s ease-in-out;
