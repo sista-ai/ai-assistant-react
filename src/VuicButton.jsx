@@ -37,19 +37,39 @@ const bounce = keyframes`
 `;
 
 const Button = styled.button`
+
+
+    width: 75px;
+    height: 75px;
+
+    font-size: 35px;
+
+    bottom: 75px;
+    right: 75px;
+
+    @media (max-width: 768px) {
+
+      width: 65px;
+      height: 65px;
+
+      font-size: 30px;
+
+      bottom: 25px;
+      right: 25px;
+    }
+
+    color: #ffffff;
+
+
+
     position: fixed;
-    bottom: 100px;
-    right: 100px;
     border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    font-size: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #ffffff;
+
     border: none;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
     transition: background-color 0.3s ease-in-out;
     background-color: ${(props) => props.color};
     z-index: 9999;
