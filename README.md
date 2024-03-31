@@ -49,28 +49,9 @@ pnpm add @sista/vuic-react
 
 ## Setup
 
-### 1. Import the Provider
+### 1. Import Provider
 
-a. Import `VuicProvider`:
-
-```jsx
-import { VuicProvider } from "@sista/vuic-react";
-```
-
-b. Wrap your main component:
-
-```jsx
-<VuicProvider apiKey="YOUR_API_KEY">
-  {/* Your main component */}
-</VuicProvider>
-```
-
-c. Add your API KEY
-
-Get your free `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
-
-
-Example:
+Import `VuicProvider` and wrap your App at the root level.
 
 ```jsx
 // ...
@@ -86,9 +67,11 @@ ReactDOM.render(
 );
 ```
 
+Get your free `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
+
 ---
 
-### 2. Import the Button
+### 2. Import Button
 
 Import `VuicButton` and add it wherever you want in your component.
 
@@ -176,6 +159,7 @@ Register the functions with `vuic.registerFunctions(voiceControlledFunctions);` 
 ```
 
 > Just like that, your app is voice-interactive. Magic! :sparkles:
+
 
 ## Full Example: (Todo App)
 
