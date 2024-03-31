@@ -35,9 +35,8 @@ class Vuic extends EventEmitter { // TODO: do not extend
     }
 
     // The first step in the voice interaction process is to start recording the user's voice
-    // TODO: rename to startProcessing
-    startVoiceRecording = async () => {
-        console.log('--[VUIC]-- startVoiceRecording');
+    startProcessing = async () => {
+        console.log('--[VUIC]-- startProcessing');
 
         this.audioManager.playRecordingTone(this.audioManager.startSound);
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
@@ -83,13 +82,6 @@ class Vuic extends EventEmitter { // TODO: do not extend
         }
     };
 
-    // proxy: to register voice functions 
-    registerFunctions(voiceFunctions) {
-        console.log('sdsdsds');
-        this.functionExecutor.registerFunctions(voiceFunctions);
-    }
-
-    // TODO this should go in voice command processor
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
 
@@ -110,7 +102,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
         })
             .then((response) => response.json())
             .then((data) => {
-                this._handleProcessedVoiceCommandResponse(data);
+                this._handleApiResponse(data);
                 this.emitStateChange(EventEmitter.STATE_IDLE);
             })
             .catch((error) => {
@@ -119,9 +111,8 @@ class Vuic extends EventEmitter { // TODO: do not extend
             });
     };
 
-    // TODO: this should be renamed to _handle API Response
-    _handleProcessedVoiceCommandResponse = (response) => {
-        console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse:', response);
+    _handleApiResponse = (response) => {
+        console.log('--[VUIC]-- _handleApiResponse:', response);
 
         if (!response || !response.executableFunctions) {
             console.error('Invalid response format:', response);
@@ -151,6 +142,25 @@ class Vuic extends EventEmitter { // TODO: do not extend
             console.error('Response does not match expected formats:', response);
         }
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // proxy: to register voice functions 
+    registerFunctions(voiceFunctions) {
+        this.functionExecutor.registerFunctions(voiceFunctions);
+    }
 
 
     static init(key, vuicBaseURL) {

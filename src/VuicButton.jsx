@@ -89,7 +89,7 @@ const VuicButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
 
     const handleButtonClick = () => {
         if (vuic) {
-            vuic.startVoiceRecording();
+            vuic.startProcessing();
         }
     };
     useEffect(() => {
