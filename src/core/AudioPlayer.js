@@ -21,9 +21,7 @@ class AudioPlayer {
 
     }
 
-
-    // todo: should be renamed to Play AI Reply
-    _executeAudioReply = (aiReplyAudioFileUrl) => {
+    playAiReply = (audioFileUrl) => {
         // Check if the browser supports the Audio API
         if (!window.Audio) {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
@@ -33,7 +31,7 @@ class AudioPlayer {
 
         let audio;
         try {
-            audio = this._playSound(new Audio(aiReplyAudioFileUrl), 1.0);
+            audio = this.playRecordingTone(new Audio(audioFileUrl), 1.0);
         } catch (error) {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('Failed to load and play audio file:', error);
@@ -51,7 +49,7 @@ class AudioPlayer {
         // Handle errors when loading the audio file
         audio.onerror = function () {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('An error occurred while trying to load the audio file:', aiReplyAudioFileUrl);
+            console.error('An error occurred while trying to load the audio file:', audioFileUrl);
         };
 
         // Handle errors when trying to play the audio
@@ -61,18 +59,17 @@ class AudioPlayer {
     };
 
 
-    // todo: should be renamed to play Ringtone
-    _playSound(sound, volume = 0.20) {
+    playRecordingTone(audioObj, volume = 0.20) {
         console.log('--[VUIC]-- _playSound');
 
         try {
-            sound.volume = volume;
-            sound.play();
+            audioObj.volume = volume;
+            audioObj.play();
         } catch (error) {
             console.error('Failed to play sound:', error);
         }
 
-        return sound;
+        return audioObj;
     }
 
 

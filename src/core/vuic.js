@@ -39,7 +39,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
 
-        this.audioManager._playSound(this.audioManager.startSound);
+        this.audioManager.playRecordingTone(this.audioManager.startSound);
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
         // TODO: this audio related stuff should be in the AudioRecorder
@@ -136,10 +136,10 @@ class Vuic extends EventEmitter { // TODO: do not extend
         }
 
         if (response.audioFile) {
-            this.audioManager._executeAudioReply(response.audioFile);
+            this.audioManager.playAiReply(response.audioFile);
         } else {
             // Play the end sound, only when no audio will be returned and just actions to be executed 
-            this.audioManager._playSound(this.audioManager.endSound);
+            this.audioManager.playRecordingTone(this.audioManager.endSound);
         }
 
         if (message.tool_calls) {
