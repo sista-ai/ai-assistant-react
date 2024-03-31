@@ -1,19 +1,13 @@
 // src/core/AudioRecorder.js
 
-import EventEmitter from './EventEmitter';
 import Recorder from 'recorder-js';
 
 class AudioRecorder {
 
-    constructor() {
-
-    }
-
-    _recordAudio = async () => {
+    startRecording = async () => {
 
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.error('getUserMedia is not supported by this browser.');
-            this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
@@ -24,7 +18,6 @@ class AudioRecorder {
 
         await recorder.start();
 
-        // Consider making the recording duration configurable or adaptive
         return new Promise((resolve) => {
             setTimeout(() => {
                 recorder.stop()
@@ -35,8 +28,6 @@ class AudioRecorder {
             }, 3500); // Stop recording after 3.5 seconds
         });
     };
-
-
 
 }
 

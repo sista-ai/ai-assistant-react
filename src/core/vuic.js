@@ -9,7 +9,7 @@ import FunctionExecutor from './FunctionExecutor';
 const config = require('./config');
 
 // This is the main Processor. The only public inerface.
-class Vuic extends EventEmitter { // TODO: do not extend 
+class Vuic extends EventEmitter {
 
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
 
@@ -34,7 +34,25 @@ class Vuic extends EventEmitter { // TODO: do not extend
     }
 
 
-    // The first step in the voice interaction process is to start recording the user's voice
+    static init(key, vuicBaseURL) {
+        return new Vuic(key, vuicBaseURL);
+    }
+
+    /**
+     * Registers the given voice activated functions.
+     *
+     * @param {Object[]} voiceFunctions - An array of voice functions to register.
+     */
+    registerFunctions(voiceFunctions) {
+        this.functionExecutor.registerFunctions(voiceFunctions);
+    }
+
+    /**
+     * Handle the full voice interaction process from start to finish.
+     *
+     * @async
+     * @throws Will throw an error if there's an issue accessing the microphone.
+     */
     startProcessing = async () => {
         console.log('--[VUIC]-- startProcessing');
 
@@ -43,7 +61,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
         this.audioManager.playRecordingTone(this.audioManager.startSound);
 
         try {
-            const userAudioCommand = await this.audioRecorder._recordAudio();
+            const userAudioCommand = await this.audioRecorder.startRecording();
 
             await this._makeAPIRequest(userAudioCommand);
         } catch (err) {
@@ -51,8 +69,6 @@ class Vuic extends EventEmitter { // TODO: do not extend
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
-
-
 
     _makeAPIRequest = async (audioBlob) => {
         console.log('--[VUIC]-- _makeAPIRequest');
@@ -84,13 +100,6 @@ class Vuic extends EventEmitter { // TODO: do not extend
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
-
-
-
-
-
-
-
 
     _handleApiResponse = (response) => {
         console.log('--[VUIC]-- _handleApiResponse:', response);
@@ -137,28 +146,6 @@ class Vuic extends EventEmitter { // TODO: do not extend
         console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // proxy: to register voice functions 
-    registerFunctions(voiceFunctions) {
-        this.functionExecutor.registerFunctions(voiceFunctions);
-    }
-
-
-    static init(key, vuicBaseURL) {
-        return new Vuic(key, vuicBaseURL);
-    }
 }
 
 export default Vuic;
