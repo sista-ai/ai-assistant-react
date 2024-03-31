@@ -4,11 +4,13 @@ import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
 import Recorder from 'recorder-js';
 import AudioManager from './AudioManager';
+import AudioRecorder from './AudioRecorder';
 import VoiceCommandProcessor from './VoiceCommandProcessor';
 
 const config = require('./config');
 
-class Vuic extends EventEmitter {
+// This is the main Processor. The only public inerface.
+class Vuic extends EventEmitter { // TODO: do not extend 
 
     constructor(key, vuicBaseURL = config.vuicBaseURL) {
 
@@ -16,8 +18,8 @@ class Vuic extends EventEmitter {
 
         super();
 
-
         this.audioManager = new AudioManager();
+        this.audioRecorder = new AudioRecorder();
         this.voiceCommandProcessor = new VoiceCommandProcessor();
 
         if (!key) {
@@ -30,17 +32,17 @@ class Vuic extends EventEmitter {
 
         this.key = key;
         console.log('--[VUIC]-- Registered KEY:', this.key);
-
-
     }
 
     // The first step in the voice interaction process is to start recording the user's voice
-    // TODO: rename to start executib or something
+    // TODO: rename to startProcessing
     startVoiceRecording = async () => {
         console.log('--[VUIC]-- startVoiceRecording');
+
         this.audioManager._playSound(this.audioManager.startSound);
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
+        // TODO: this audio related stuff should be in the AudioRecorder
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.error('getUserMedia is not supported by this browser.');
             this.emitStateChange(EventEmitter.STATE_IDLE);
@@ -68,7 +70,7 @@ class Vuic extends EventEmitter {
                                 this._processVoiceCommand(blob);
 
                                 stream.getTracks().forEach(track => track.stop());
-                                
+
                             });
                     }, 3500); // Stop recording after 3.5 seconds
                 });
@@ -81,12 +83,13 @@ class Vuic extends EventEmitter {
         }
     };
 
-
+    // proxy: to register voice functions 
     registerFunctions(voiceFunctions) {
         console.log('sdsdsds');
         this.voiceCommandProcessor.registerFunctions(voiceFunctions);
     }
 
+    // TODO this should go in voice command processor
     _processVoiceCommand = async (audioBlob) => {
         console.log('--[VUIC]-- _processVoiceCommand');
 
@@ -97,6 +100,7 @@ class Vuic extends EventEmitter {
             JSON.stringify(this.voiceCommandProcessor.functionSignatures),
         );
 
+        // TODO: this should remain on this class but as its own method for making the API calls. should be named something like _makeAPIRequest
         await fetch(`${this.vuicBaseURL}/processor/run`, {
             method: 'POST',
             headers: {
@@ -115,6 +119,7 @@ class Vuic extends EventEmitter {
             });
     };
 
+    // TODO: this should be renamed to _handle API Response
     _handleProcessedVoiceCommandResponse = (response) => {
         console.log('--[VUIC]-- _handleProcessedVoiceCommandResponse:', response);
 
@@ -140,18 +145,14 @@ class Vuic extends EventEmitter {
         if (message.tool_calls) {
             this.voiceCommandProcessor._executeFunctions(message);
         } else if (message.content !== null) {
-            this._executeTextReply(message.content);
+            console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', message.content);
         } else {
             this.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('Response does not match expected formats:', response);
         }
     };
 
-    _executeTextReply = (content) => {
-        console.log('--[VUIC]-- _executeTextReply:', content);
-    };
 
-    
     static init(key, vuicBaseURL) {
         return new Vuic(key, vuicBaseURL);
     }

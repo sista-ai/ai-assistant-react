@@ -5,6 +5,7 @@ import EventEmitter from './EventEmitter';
 const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
 const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
+// Rename to ,,, 
 class AudioManager {
 
     constructor() {
@@ -22,6 +23,7 @@ class AudioManager {
     }
 
 
+    // todo: should be renamed to Play AI Reply
     _executeAudioReply = (aiReplyAudioFileUrl) => {
         // Check if the browser supports the Audio API
         if (!window.Audio) {
@@ -60,7 +62,7 @@ class AudioManager {
     };
 
 
-
+    // todo: should be renamed to play Ringtone
     _playSound(sound, volume = 0.20) {
         console.log('--[VUIC]-- _playSound');
 
