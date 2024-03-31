@@ -2,7 +2,7 @@
 
 Unleash the power of AI in your React App with `@sista/vuic-react` 🚀
 
-This tiny, powerful, AI-driven library enables you to make your React App 🎤 voice-interactive 🔊 in **less than 10 minutes**!
+This powerful, AI-driven library allows you to make your React App voice-interactive **in less than 10 minutes**!
 
 Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI assistant.
 
