@@ -1,6 +1,5 @@
 // VoiceCommandsProcessor.js
 
-// todo this class should be renamed to FunctionExecutor
 export default class FunctionExecutor {
     constructor() {
         this.functionSignatures = [];
@@ -23,10 +22,8 @@ export default class FunctionExecutor {
         console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
 
-
-    // TODO: this shouldn't be here
-    _executeFunctions = (message) => {
-        console.log('--[VUIC]-- _executeFunctions');
+    executeFunctions = (message) => {
+        console.log('--[VUIC]-- executeFunctions');
 
         console.dir(this.functionHandlers, { depth: null });
 

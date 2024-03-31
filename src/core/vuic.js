@@ -143,7 +143,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
         }
 
         if (message.tool_calls) {
-            this.functionExecutor._executeFunctions(message);
+            this.functionExecutor.executeFunctions(message);
         } else if (message.content !== null) {
             console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', message.content);
         } else {

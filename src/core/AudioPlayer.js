@@ -21,8 +21,7 @@ class AudioPlayer {
     }
 
     playRecordingTone(audioObj, volume = 0.20) {
-
-        console.log('--[VUIC]-- _playSound');
+        console.log('--[VUIC]-- playRecordingTone');
 
         try {
             audioObj.volume = volume;
@@ -35,6 +34,7 @@ class AudioPlayer {
     }
 
     playAiReply = (audioFileUrl) => {
+        console.log('--[VUIC]-- playAiReply');
         // Check if the browser supports the Audio API
         if (!window.Audio) {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
