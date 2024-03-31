@@ -12,7 +12,9 @@ Just inject `<VuicButton />` and define an array of simple `function signatures`
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
+## Demo
 
+Experience the power in action. Check out the [Demo](https://vuic.sista.ai).
 
 ## Supported Projects
 
@@ -261,10 +263,6 @@ export default TodoApp;
 
 ## Customization
 
-### Customizing AI Responses
-
-For custom AI responses, go to the [Admin Panel](https://admin.sista.ai/applications) and adjust the LLM settings. It's as simple as entering a prompt.
-
 ### Customizing Button Colors
 
 You can modify the colors of the `VuicButton` at different states:
@@ -279,6 +277,12 @@ You can modify the colors of the `VuicButton` at different states:
 
   <VuicButton buttonColors={colors} />
 ```
+
+### Customizing AI Responses
+
+For custom AI responses, go to the [Admin Panel](https://admin.sista.ai/applications) and adjust the **LLM settings**. It's as simple as entering a prompt.
+
+[![Sista Logo](./assets/sista-admin-panel-app.png)](https://sista.ai)
 
 ### Customizing Voice
 
