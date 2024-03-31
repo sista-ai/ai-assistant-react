@@ -2,13 +2,13 @@
 
 Unleash the power of AI in your React App with `@sista/vuic-react` 🚀
 
-This tiny, powerful, AI-driven library enables you to make your React App voice-interactive 🎤🔊 in **less than 10 minutes**!
+This tiny, powerful, AI-driven library enables you to make your React App 🎤 voice-interactive 🔊 in **less than 10 minutes**!
 
 Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI assistant.
 
 
 
-![Sista Logo](./assets/sista-logo.png)
+[![Sista Logo](./assets/sista-logo.png)](https://sista.ai)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
@@ -106,7 +106,7 @@ function MyComponent() {
 
 ### 3. Register Voice-Interactive Functions
 
-To make your UI voice-interactive, simply register an array of function signatures to the AI model.
+To make your UI voice-interactive, simply register an `array` of `function signatures` to the **Sista AI model**.
 
 ```js
 const sayHelloWorld = () => {
@@ -114,11 +114,11 @@ const sayHelloWorld = () => {
 };
 
 // Define the functions to be voice-controlled
-const voiceControlledFunctions = [
+const interactiveFunctions = [
   {
     function: {
       handler: sayHelloWorld, // pass a refference to your function
-      description: "Greets the user with 'Hello, World!'.", // add function description
+      description: "Greets the user with Hello World :)", // add function description
     },
   },
   // ... register additional functions here
@@ -127,7 +127,7 @@ const voiceControlledFunctions = [
 
 
 
-For functions that require parameters:
+For functions that accepts parameters:
 
 ```js
 const sayHello = (name) => {
@@ -135,7 +135,7 @@ const sayHello = (name) => {
 };
 
 // Define the functions to be voice-controlled
-const voiceControlledFunctions = [
+const interactiveFunctions = [
   {
     function: {
       handler: sayHello,
@@ -164,7 +164,7 @@ Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` h
   const vuic = useVuic();
   useEffect(() => {
     if (vuic) {
-      vuic.registerFunctions(voiceControlledFunctions);
+      vuic.registerFunctions(interactiveFunctions);
     }
   }, [vuic]);
 ```
@@ -191,12 +191,14 @@ function TodoApp() {
     console.log(`Task removed: ${task}`);
   };
 
+  // ...
+
   // Initialize the vuic instance
   const vuic = useVuic();
 
   useEffect(() => {
     // Define the voice-controlled functions
-    const voiceControlledFunctions = [
+    const interactiveFunctions = [
       {
         function: {
           handler: addTask,
@@ -231,15 +233,17 @@ function TodoApp() {
       },
     ];
 
-    // Register the voice-controlled functions
+    // Register the AI controlled functions
     if (vuic) {
-      vuic.registerFunctions(voiceControlledFunctions);
+      vuic.registerFunctions(interactiveFunctions);
     }
   }, [vuic]);
 
+  // ...
+
   return (
     <div>
-      {/* Other UI Components */}
+      // ...
       <VuicButton />
     </div>
   );
@@ -256,7 +260,7 @@ export default TodoApp;
 
 ### Change Button Colors
 
-You can modify the colors of the `VuicButton` for different states:
+You can modify the colors of the `VuicButton` at different states:
 
 ```js
     const colors = {
@@ -275,11 +279,11 @@ You can modify the colors of the `VuicButton` for different states:
 
 ## Contributing
 
-We welcome contributions!
+Your contributions are warmly welcomed! Let's collaborate 🤝
 
 ## License
 
-Sista Voice UI Controller is licensed under [CC BY-NC-ND 3.0](./LICENSE).
+The Sista AI - Voice UI Controller is licensed under [CC BY-NC-ND 3.0](./LICENSE).
 
 ## Support
 
