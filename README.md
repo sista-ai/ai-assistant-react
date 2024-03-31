@@ -258,7 +258,11 @@ export default TodoApp;
 
 ## Customization
 
-### Change Button Colors
+## Customizing AI Responses
+
+For custom AI responses, go to the [Admin Panel](https://admin.sista.ai/applications) and adjust the LLM settings. It's as simple as entering a prompt.
+
+### Customizing Button Colors
 
 You can modify the colors of the `VuicButton` at different states:
 
@@ -272,6 +276,10 @@ You can modify the colors of the `VuicButton` at different states:
 
   <VuicButton buttonColors={colors} />
 ```
+
+## Customizing Voice
+
+To customize the voice of the AI assistant, go to the [Admin Panel](https://admin.sista.ai/applications) and select your voice from the application settinga.
 
 ---
 
