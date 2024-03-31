@@ -11,7 +11,7 @@ const config = require('./config');
 // This is the main Processor. The only public inerface.
 class Vuic extends EventEmitter {
 
-    constructor(key, vuicBaseURL = config.vuicBaseURL) {
+    constructor(key, apiUrl = config.apiUrl) {
 
         console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
 
@@ -26,16 +26,16 @@ class Vuic extends EventEmitter {
             throw new Error('Missing API Key for VuicProvider. Get your FREE Key from https://admin.sista.ai/applications');
         }
 
-        this.vuicBaseURL = vuicBaseURL;
-        console.log('--[VUIC]-- Registered VUIC Base URL:', this.vuicBaseURL);
+        this.apiUrl = apiUrl;
+        console.log('--[VUIC]-- Registered VUIC Base URL:', this.apiUrl);
 
         this.key = key;
         console.log('--[VUIC]-- Registered KEY:', this.key);
     }
 
 
-    static init(key, vuicBaseURL) {
-        return new Vuic(key, vuicBaseURL);
+    static init(key, apiUrl) {
+        return new Vuic(key, apiUrl);
     }
 
     /**
@@ -82,7 +82,7 @@ class Vuic extends EventEmitter {
         );
 
         try {
-            const response = await fetch(`${this.vuicBaseURL}/processor/run`, {
+            const response = await fetch(`${this.apiUrl}/processor/run`, {
                 method: 'POST',
                 headers: {
                     'x-api-key': this.key,

@@ -1,5 +1,5 @@
 // src/core/config.js
 
 module.exports = {
-    vuicBaseURL: 'https://api.sista.ai'
+    apiUrl: 'https://api.sista.ai'
 };
