@@ -173,6 +173,9 @@ Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` h
 
 
 
+To customize the AI assistant's voice or feed information about your product, visit the [Admin Panel](https://admin.sista.ai/applications).
+
+
 ## Full Example: (Todo App)
 
 For a voice-interactive todo app to `add` or `remove` tasks, the setup is:
