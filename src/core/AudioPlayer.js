@@ -18,7 +18,20 @@ class AudioPlayer {
         } catch (error) {
             console.error('Failed to load audio files:', error);
         }
+    }
 
+    playRecordingTone(audioObj, volume = 0.20) {
+
+        console.log('--[VUIC]-- _playSound');
+
+        try {
+            audioObj.volume = volume;
+            audioObj.play();
+        } catch (error) {
+            console.error('Failed to play sound:', error);
+        }
+
+        return audioObj;
     }
 
     playAiReply = (audioFileUrl) => {
@@ -38,6 +51,11 @@ class AudioPlayer {
             return;
         }
 
+        this._handleAudioEvents(audio);
+    };
+
+
+    _handleAudioEvents = (audio) => {
         // Emit AUDIO_START state when the audio starts
         audio.onplay = () => {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_SPEAKING_START);
@@ -47,31 +65,15 @@ class AudioPlayer {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
         };
         // Handle errors when loading the audio file
-        audio.onerror = function () {
+        audio.onerror = () => {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('An error occurred while trying to load the audio file:', audioFileUrl);
+            console.error('An error occurred while trying to load the audio file:', audio.src);
         };
-
         // Handle errors when trying to play the audio
-        audio.play().catch(function (error) {
+        audio.play().catch((error) => {
             console.error('An error occurred while trying to play the audio:', error);
         });
-    };
-
-
-    playRecordingTone(audioObj, volume = 0.20) {
-        console.log('--[VUIC]-- _playSound');
-
-        try {
-            audioObj.volume = volume;
-            audioObj.play();
-        } catch (error) {
-            console.error('Failed to play sound:', error);
-        }
-
-        return audioObj;
     }
-
 
 }
 
