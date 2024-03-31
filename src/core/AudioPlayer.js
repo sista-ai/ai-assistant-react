@@ -8,20 +8,38 @@ const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.co
 class AudioPlayer {
 
     constructor() {
-
         this.eventEmitter = new EventEmitter();
+        this.audioContext = null; // Add an audio context property
 
         try {
             // Preload the start and end sounds
             this.startSound = new Audio(startProcessingAudioFileUrl);
             this.endSound = new Audio(endProcessingAudioFileUrl);
+            this.setupAudioContext(); // Setup audio context on initialization
         } catch (error) {
             console.error('Failed to load audio files:', error);
         }
     }
 
+    setupAudioContext() {
+        // Use AudioContext to manage playback
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (window.AudioContext) {
+            this.audioContext = new AudioContext();
+            // Unlock the audio context on the first user interaction
+            document.documentElement.addEventListener('click', () => {
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+            }, { once: true });
+        }
+    }
+
     playRecordingTone(audioObj, volume = 0.20) {
         console.log('--[VUIC]-- playRecordingTone');
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume(); // Ensure the audio context is resumed
+        }
 
         try {
             audioObj.volume = volume;
@@ -36,7 +54,7 @@ class AudioPlayer {
     playAiReply = (audioFileUrl) => {
         console.log('--[VUIC]-- playAiReply');
         // Check if the browser supports the Audio API
-        if (!window.Audio) {
+        if (!window.Audio || !this.audioContext) {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('This browser does not support the Audio API');
             return;
@@ -44,38 +62,34 @@ class AudioPlayer {
 
         let audio;
         try {
-            audio = this.playRecordingTone(new Audio(audioFileUrl), 1.0);
+            // Instead of creating a new Audio, connect to the existing AudioContext
+            const source = this.audioContext.createBufferSource();
+            fetch(audioFileUrl)
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer))
+                .then(audioBuffer => {
+                    source.buffer = audioBuffer;
+                    source.connect(this.audioContext.destination);
+                    source.start(0);
+                    this._handleAudioEvents(source); // Adjusted to handle events on source
+                });
         } catch (error) {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('Failed to load and play audio file:', error);
             return;
         }
-
-        this._handleAudioEvents(audio);
     };
 
-
     _handleAudioEvents = (audio) => {
-        // Emit AUDIO_START state when the audio starts
-        audio.onplay = () => {
-            this.eventEmitter.emitStateChange(EventEmitter.STATE_SPEAKING_START);
-        };
-        // Emit AUDIO_END state when the audio ends
+        // Adjust event handling for AudioBufferSourceNode
         audio.onended = () => {
             this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
         };
-        // Handle errors when loading the audio file
-        audio.onerror = () => {
-            this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('An error occurred while trying to load the audio file:', audio.src);
-        };
-        // Handle errors when trying to play the audio
-        audio.play().catch((error) => {
-            console.error('An error occurred while trying to play the audio:', error);
-        });
+
+        // Note: For AudioBufferSourceNode, 'onplay' and 'onerror' events are not directly available like they are for the HTMLAudioElement.
+        // You may need to adjust your event handling logic here based on your application's needs.
     }
 
 }
 
 export default AudioPlayer;
-
