@@ -8,11 +8,12 @@ class AudioPlayer {
         this.volume = 1.0; // Default volume
     }
 
-    playRecordingTone(audioObj) {
-        console.log('--[VUIC]-- playRecordingTone');
-        this.volume = 0.25; // Set volume to 25%
-        this._resumeAudioContextIfSuspended();
-        this._playAudioObject(audioObj);
+    playStartTone() {
+        this._playRecordingTone(this.startSound);
+    }
+
+    playEndTone() {
+        this._playRecordingTone(this.endSound);
     }
 
     playAiReply = (audioFileUrl, callback) => {
@@ -21,37 +22,13 @@ class AudioPlayer {
         this._checkAudioSupportAndPlayReply(audioFileUrl, callback);
     };
 
-
-    _setupAudioContext() {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (window.AudioContext) {
-            this.audioContext = new AudioContext();
-            this._unlockAudioContextOnFirstInteraction();
-        }
+    _playRecordingTone(audioObj) {
+        console.log('--[VUIC]-- playRecordingTone');
+        this.volume = 0.25; // Set volume to 25%
+        this._resumeAudioContextIfSuspended();
+        this._playAudioObject(audioObj);
     }
 
-    _unlockAudioContextOnFirstInteraction() {
-        document.documentElement.addEventListener('click', () => {
-            if (this.audioContext.state === 'suspended') {
-                this.audioContext.resume();
-            }
-        }, { once: true });
-    }
-
-    _loadSounds() {
-        try {
-            this.startSound = new Audio(config.startSoundFileUrl);
-            this.endSound = new Audio(config.endSoundFileUrl);
-        } catch (error) {
-            console.error('Failed to load audio files:', error);
-        }
-    }
-
-    _resumeAudioContextIfSuspended() {
-        if (this.audioContext && this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
-        }
-    }
 
     _playAudio = (audioBuffer, callback) => {
         const source = this.audioContext.createBufferSource();
@@ -79,6 +56,43 @@ class AudioPlayer {
         }
     }
 
+    _setupAudioContext() {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (window.AudioContext) {
+            this.audioContext = new AudioContext();
+            this._unlockAudioContextOnFirstInteraction();
+        }
+    }
+
+    _unlockAudioContextOnFirstInteraction() {
+        document.documentElement.addEventListener('click', () => {
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+        }, { once: true });
+    }
+
+    _loadSounds() {
+        try {
+            this.startSound = new Audio(config.startSoundFileUrl);
+            this.endSound = new Audio(config.endSoundFileUrl);
+        } catch (error) {
+            console.error('Failed to load audio files:', error);
+        }
+    }
+
+    _fetchAudio = (audioFileUrl) => {
+        return fetch(audioFileUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer));
+    };
+
+    _resumeAudioContextIfSuspended() {
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+    }
+
     _checkAudioSupportAndPlayReply(audioFileUrl, callback) {
         if (!window.Audio || !this.audioContext) {
             console.error('This browser does not support the Audio API');
@@ -86,7 +100,7 @@ class AudioPlayer {
             return;
         }
 
-        this._loadAudio(audioFileUrl)
+        this._fetchAudio(audioFileUrl)
             .then(audioBuffer => {
                 this._playAudio(audioBuffer, callback);
             })
@@ -95,14 +109,6 @@ class AudioPlayer {
                 if (callback) callback(error);
             });
     }
-
-
-    _loadAudio = (audioFileUrl) => {
-        return fetch(audioFileUrl)
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer));
-    };
-
 
 }
 

@@ -57,7 +57,7 @@ class MainProcessor extends EventEmitter {
 
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
-        this.audioPlayer.playRecordingTone(this.audioPlayer.startSound);
+        this.audioPlayer.playStartTone();
 
         try {
             const userAudioCommand = await this.audioRecorder.startRecording();
@@ -140,6 +140,7 @@ class MainProcessor extends EventEmitter {
     _handleExecutableFunctionsResponse = (message) => {
         this.functionExecutor.executeFunctions(message);
         this.emitStateChange(EventEmitter.STATE_IDLE);
+        this.audioPlayer.playEndTone();
     };
 
     _handleTextResponse = (content) => {
