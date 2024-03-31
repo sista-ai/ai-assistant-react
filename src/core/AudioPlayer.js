@@ -1,10 +1,8 @@
 // src/core/AudioPlayer.js
 import config from './config';
-import EventEmitter from './EventEmitter';
 
 class AudioPlayer {
     constructor() {
-        this.eventEmitter = new EventEmitter();
         this._setupAudioContext();
         this._loadSounds();
     }
@@ -17,7 +15,6 @@ class AudioPlayer {
 
     playAiReply = (audioFileUrl) => {
         console.log('--[VUIC]-- playAiReply');
-        this.eventEmitter.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this._checkAudioSupportAndPlayReply(audioFileUrl);
     };
 
@@ -63,7 +60,6 @@ class AudioPlayer {
 
     _checkAudioSupportAndPlayReply(audioFileUrl) {
         if (!window.Audio || !this.audioContext) {
-            this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
             console.error('This browser does not support the Audio API');
             return;
         }
@@ -71,7 +67,6 @@ class AudioPlayer {
         this._loadAudio(audioFileUrl)
             .then(this._playAudio)
             .catch(error => {
-                this.eventEmitter.emitStateChange(EventEmitter.STATE_IDLE);
                 console.error('Failed to load and play audio file:', error);
             });
     }

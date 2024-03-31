@@ -135,6 +135,7 @@ class Vuic extends EventEmitter {
     };
 
     _handleAudioResponse = (audioFile) => {
+        this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReply(audioFile);
     };
 
