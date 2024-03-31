@@ -1,4 +1,4 @@
-// VoiceCommandsProcessor.js
+// src/core/FunctionExecutor.js
 
 export default class FunctionExecutor {
     constructor() {

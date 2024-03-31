@@ -1,4 +1,5 @@
 // src/core/EventEmitter.js
+
 class EventEmitter {
     constructor() {
         this.events = {};

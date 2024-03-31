@@ -1,4 +1,4 @@
-// src/core/AudioManager.js
+// src/core/AudioPlayer.js
 
 import EventEmitter from './EventEmitter';
 
