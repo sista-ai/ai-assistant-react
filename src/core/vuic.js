@@ -127,7 +127,6 @@ class Vuic extends EventEmitter {
             this._handleAudioResponse(response.audioFile);
         } else if (message.content !== null) {
             this._handleTextResponse(message.content);
-            this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
 
@@ -141,6 +140,7 @@ class Vuic extends EventEmitter {
 
     _handleExecutableFunctionsResponse = (message) => {
         this.functionExecutor.executeFunctions(message);
+        this.emitStateChange(EventEmitter.STATE_IDLE);
     };
 
     _handleTextResponse = (content) => {
