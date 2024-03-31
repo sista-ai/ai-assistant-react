@@ -118,25 +118,27 @@ class Vuic extends EventEmitter {
             return;
         }
 
-        // Handle audio response if it exists
-        if (response.audioFile) {
-            this._handleAudioResponse(response.audioFile);
-        }
-
         // Handle executable functions if they exist
         if (message.tool_calls) {
             this._handleExecutableFunctionsResponse(message);
         }
 
-        // If no audio or executable functions, handle text response
-        if (message.content !== null) {
+        // Handle audio response if it exists, otherwise handle text response
+        if (response.audioFile) {
+            this._handleAudioResponse(response.audioFile);
+        } else if (message.content !== null) {
             this._handleTextResponse(message.content);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
 
     _handleAudioResponse = (audioFile) => {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
-        this.audioPlayer.playAiReply(audioFile);
+        this.audioPlayer.playAiReply(audioFile, () => {
+            console.log('--[VUIC]-- Audio reply has finished playing.');
+            // When the audio reply has finished playing, set the state back to idle
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+        });
     };
 
     _handleExecutableFunctionsResponse = (message) => {

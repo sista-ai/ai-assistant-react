@@ -13,9 +13,9 @@ class AudioPlayer {
         this._playAudioObject(audioObj, volume);
     }
 
-    playAiReply = (audioFileUrl) => {
+    playAiReply = (audioFileUrl, callback) => {
         console.log('--[VUIC]-- playAiReply');
-        this._checkAudioSupportAndPlayReply(audioFileUrl);
+        this._checkAudioSupportAndPlayReply(audioFileUrl, callback);
     };
 
     _setupAudioContext() {
@@ -58,18 +58,23 @@ class AudioPlayer {
         }
     }
 
-    _checkAudioSupportAndPlayReply(audioFileUrl) {
+    _checkAudioSupportAndPlayReply(audioFileUrl, callback) {
         if (!window.Audio || !this.audioContext) {
             console.error('This browser does not support the Audio API');
+            if (callback) callback(new Error('Audio API not supported'));
             return;
         }
-
+    
         this._loadAudio(audioFileUrl)
-            .then(this._playAudio)
+            .then(audioBuffer => {
+                this._playAudio(audioBuffer, callback);
+            })
             .catch(error => {
                 console.error('Failed to load and play audio file:', error);
+                if (callback) callback(error);
             });
     }
+    
 
     _loadAudio = (audioFileUrl) => {
         return fetch(audioFileUrl)
@@ -77,10 +82,13 @@ class AudioPlayer {
             .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer));
     };
 
-    _playAudio = (audioBuffer) => {
+    _playAudio = (audioBuffer, callback) => {
         const source = this.audioContext.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(this.audioContext.destination);
+        source.onended = () => {
+            if (callback) callback();
+        };
         source.start(0);
     };
 }
