@@ -14,7 +14,14 @@ Just inject `<VuicButton />` and define an array of simple `function signatures`
 
 ## Demo
 
-Experience the power in action. Check out the [Demo](https://vuic.sista.ai).
+Visit our [Demo](https://vuic.sista.ai). 
+
+Click the button at the bottom right corner and talk. 
+
+*Try commands like "turn on the light" or "scroll down".*
+
+[![Sista Logo](./assets/sista-demo-one.png)](https://sista.ai)
+
 
 ## Supported Projects
 
