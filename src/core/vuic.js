@@ -94,7 +94,6 @@ class Vuic extends EventEmitter {
 
             this._handleApiResponse(data);
 
-            this.emitStateChange(EventEmitter.STATE_IDLE);
         } catch (error) {
             console.error('API Error:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
