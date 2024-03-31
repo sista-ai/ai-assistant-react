@@ -126,21 +126,23 @@ const sayHello = (name) => {
 const voiceControlledFunctions = [
   {
     function: {
-      handler: sayHello, // Function to be called
-      description: "Greets the user with their name.", // Function description
+      handler: sayHello, // pass your function
+      description: "Greets the user with their name.", // add function description
+      
+      // In case your function accepts paraemters:
       parameters: {
-        type: "object", // Parameters type
+        type: "object",
         properties: {
           name: { 
-            type: "string", // 'name' property type
-            description: "User's name." // 'name' property description
+            type: "string", // set parameter type
+            description: "User's name." // add parameter description
           },
         },
-        required: ["name"], // Required properties
+        required: ["name"], // list required parameter
       },
     },
   },
-  // Include additional functions here
+  // include additional functions here
 ];
 ```
 
