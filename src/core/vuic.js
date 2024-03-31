@@ -116,46 +116,56 @@ class Vuic extends EventEmitter { // TODO: do not extend
     };
 
 
+
+
+
+
+
+
     _handleApiResponse = (response) => {
         console.log('--[VUIC]-- _handleApiResponse:', response);
-
-        if (!response && response.executableFunctions) {
+    
+        // Check if the response is valid
+        if (!response || !response.executableFunctions) {
             console.error('Invalid response format:', response);
             return;
         }
-
+    
         const { message } = response.executableFunctions;
-
+    
+        // Check if the message exists
         if (!message) {
             console.error('Response does not contain a message:', response);
             return;
         }
-
-        this._handleAudioResponse(response);
-        this._handleExecutableFunctionsResponse(message);
-    };
-
-
-    _handleAudioResponse = (response) => {
+    
+        // Handle audio response if it exists
         if (response.audioFile) {
-            this.audioManager.playAiReply(response.audioFile);
-        } else {
-            // Play the end sound, only when no audio will be returned and just actions to be executed 
-            this.audioManager.playRecordingTone(this.audioManager.endSound);
+            this._handleAudioResponse(response.audioFile);
         }
-    };
-
-    _handleExecutableFunctionsResponse = (message) => {
+    
+        // Handle executable functions if they exist
         if (message.tool_calls) {
-            this.functionExecutor.executeFunctions(message);
-        } else if (message.content !== null) {
-            console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', message.content);
-        } else {
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            console.error('Response does not match expected formats:', response);
+            this._handleExecutableFunctionsResponse(message);
+        }
+    
+        // If no audio or executable functions, handle text response
+        if (message.content !== null) {
+            this._handleTextResponse(message.content);
         }
     };
-
+    
+    _handleAudioResponse = (audioFile) => {
+        this.audioManager.playAiReply(audioFile);
+    };
+    
+    _handleExecutableFunctionsResponse = (message) => {
+        this.functionExecutor.executeFunctions(message);
+    };
+    
+    _handleTextResponse = (content) => {
+        console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
+    };
 
 
 
