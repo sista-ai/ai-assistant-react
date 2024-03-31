@@ -97,10 +97,9 @@ function MyComponent() {
 
 ### 3. Register Voice Controlled Functions
 
-To voice-control your app, just specify the callable functions in a simple config object.
+To voice-enable your UI, list your callable functions as follows:
 
 ```js
-// Regular function
 const sayHelloWorld = () => {
   console.log("Hello, World!");
 };
@@ -113,14 +112,13 @@ const voiceControlledFunctions = [
       description: "Greets the user with 'Hello, World!'.", // add function description
     },
   },
-  // ... include additional functions here
+  // ... register additional functions here
 ];
 ```
 
 For functions that require parameters:
 
 ```js
-// Regular function
 const sayHello = (name) => {
   console.log(`Hello ${name}!`);
 };
@@ -147,7 +145,7 @@ const voiceControlledFunctions = [
 ];
 ```
 
-Register the functions with `vuic.registerFunctions(voiceControlledFunctions);` inside a `useEffect` hook.
+Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` hook.
 
 ```js
   const vuic = useVuic();
