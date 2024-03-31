@@ -4,14 +4,15 @@ Unleash the power of AI in your React App with `@sista/vuic-react` 🚀
 
 This tiny, powerful, AI-driven library enables you to voice-control your React apps 🎤🔊 in **less than 10 minutes**!
 
+Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI assistant.
 
-
-Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI.
 
 
 ![Sista Logo](./assets/sista-logo.png)
 
 Sista AI: Your AI Integration Platform. 🤖
+
+
 
 ## Supported Projects
 
@@ -29,6 +30,8 @@ This package can be integrated into a wide range of React-based projects, includ
 - Storybook
 - RedwoodJS
 - Blitz.js
+
+
 
 ## Installation
 
@@ -48,6 +51,8 @@ yarn add @sista/vuic-react
 ```bash
 pnpm add @sista/vuic-react
 ```
+
+
 
 ## Setup
 
@@ -71,7 +76,7 @@ ReactDOM.render(
 
 Get your free `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
 
----
+
 
 ### 2. Import Button
 
@@ -92,9 +97,13 @@ function MyComponent() {
 }
 ```
 
+
+
 > 🎉 Congrats! Press the button, start talking, and enjoy!
 
 ---
+
+
 
 ### 3. Register Voice Controlled Functions
 
@@ -116,6 +125,8 @@ const voiceControlledFunctions = [
   // ... register additional functions here
 ];
 ```
+
+
 
 For functions that require parameters:
 
@@ -146,6 +157,8 @@ const voiceControlledFunctions = [
 ];
 ```
 
+
+
 Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` hook.
 
 ```js
@@ -158,6 +171,7 @@ Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` h
 ```
 
 > Just like that, your app is voice-interactive. Magic! :sparkles:
+
 
 
 ## Full Example: (Todo App)
@@ -237,6 +251,8 @@ export default TodoApp;
 
 ---
 
+
+
 ## Customization
 
 ### Change Button Colors
@@ -256,6 +272,8 @@ You can modify the colors of the `VuicButton` for different states:
 
 ---
 
+
+
 ## Contributing
 
 We welcome contributions!
@@ -267,6 +285,8 @@ Sista Voice UI Controller is licensed under [CC BY-NC-ND 3.0](./LICENSE).
 ## Support
 
 For issues, raise on Github or contact [support@sista.ai](mailto:support@sista.ai).
+
+
 
 <a href="https://vuic.sista.ai">
   <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
