@@ -127,7 +127,6 @@ const voiceControlledFunctions = [
   {
     function: {
       handler: sayHello, // Function to be called
-      name: "sayHello", // Function name
       description: "Greets the user with their name.", // Function description
       parameters: {
         type: "object", // Parameters type
@@ -187,7 +186,6 @@ function TodoApp() {
       {
         function: {
           handler: addTask,
-          name: 'addTask',
           description: 'Adds a new task.',
           parameters: {
             type: 'object',
@@ -201,7 +199,6 @@ function TodoApp() {
       {
         function: {
           handler: removeTask,
-          name: 'removeTask',
           description: 'Removes an existing task.',
           parameters: {
             type: 'object',
