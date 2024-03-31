@@ -1,14 +1,17 @@
-# Sista: Voice UI Controller
+# Sista AI: Voice UI Controller
 
-🔊 Unleash the power of voice 🎤 in your React apps with `@sista/vuic-react` 🚀
+Unleash the power of AI in your React App with `@sista/vuic-react` 🚀
 
-This tiny, AI-powered library lets you build voice-enabled apps without any code changes!!
+This tiny, powerful, AI-driven library enables you to voice-control your React apps 🎤🔊 in **less than 10 minutes**!
 
- All you need is 1 `config` file, informing our powerful AI model what `functions` it can call. 
 
-Dive into this mini guide and discover how to integrate voice functionality seamlessly into your React projects in **less than 10 min**!
+
+Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI.
+
 
 ![Sista Logo](./assets/sista-logo.png)
+
+Sista AI: Your AI Integration Platform. 🤖
 
 ## Supported Projects
 
@@ -29,8 +32,7 @@ This package can be integrated into a wide range of React-based projects, includ
 
 ## Installation
 
-To use [@sista/vutic-reac](https://www.npmjs.com/package/@sista/vuic-react), install it in your React App.
-
+To use [@sista/vuic-react](https://www.npmjs.com/package/@sista/vuic-react), install it in your React App.
 
 ##### Using npm:
 ```bash
@@ -83,9 +85,8 @@ import { VuicButton } from "@sista/vuic-react";
 function MyComponent() {
   return (
     <div>
-      {/* ... */}
+      // ...
       <VuicButton />  // << Add the magic button anywhere
-      {/* ... */}
     </div>
   );
 }
@@ -123,13 +124,13 @@ const sayHello = (name) => {
   console.log(`Hello ${name}!`);
 };
 
-// Define the functions to be voice-controller
+// Define the functions to be voice-controlled
 const voiceControlledFunctions = [
   {
     function: {
       handler: sayHello,
       description: "Greets the user with their name.",
-      // In case your function accepts paraemters:
+      // In case your function accepts parameters:
       parameters: {
         type: "object",
         properties: {
@@ -253,18 +254,19 @@ You can modify the colors of the `VuicButton` for different states:
   <VuicButton buttonColors={colors} />
 ```
 
+---
 
 ## Contributing
 
-We welcome contributions to Sista Voice UI Controller! Please see our [contributing guide](LINK_TO_CONTRIBUTING_GUIDE).
+We welcome contributions!
 
 ## License
 
-Sista Voice UI Controller is [MIT licensed](./LICENSE).
+Sista Voice UI Controller is licensed under [CC BY-NC-ND 3.0](./LICENSE).
 
 ## Support
 
-If you're having a problem with this package, please raise an issue on Github or contact us at [support@sista.ai](mailto:support@sista.ai).
+For issues, raise on Github or contact [support@sista.ai](mailto:support@sista.ai).
 
 <a href="https://vuic.sista.ai">
   <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
