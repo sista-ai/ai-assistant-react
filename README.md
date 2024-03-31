@@ -2,7 +2,7 @@
 
 Unleash the power of AI in your React App with `@sista/vuic-react` 🚀
 
-This tiny, powerful, AI-driven library enables you to voice-control your React apps 🎤🔊 in **less than 10 minutes**!
+This tiny, powerful, AI-driven library enables you to make your React App voice-interactive 🎤🔊 in **less than 10 minutes**!
 
 Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI assistant.
 
@@ -10,13 +10,13 @@ Just inject `<VuicButton />` and define an array of simple `function signatures`
 
 ![Sista Logo](./assets/sista-logo.png)
 
-Sista AI: Your AI Integration Platform. 🤖
+> Sista AI: 🤖 Your AI Integration Platform. ❤️
 
 
 
 ## Supported Projects
 
-This package can be integrated into a wide range of React-based projects, including:
+This package integrates with many React projects.
 
 - Create React App
 - React Native
@@ -47,10 +47,10 @@ npm install @sista/vuic-react
 yarn add @sista/vuic-react
 ```
 
-##### Using pnpm:
+<!-- ##### Using pnpm:
 ```bash
 pnpm add @sista/vuic-react
-```
+``` -->
 
 
 
@@ -74,13 +74,13 @@ ReactDOM.render(
 );
 ```
 
-Get your free `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
+Get your **free** `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
 
 
 
 ### 2. Import Button
 
-Import `VuicButton` and add it wherever you want in your component.
+Import `VuicButton` and add it wherever you want.
 
 ```js
 // ...
@@ -104,10 +104,9 @@ function MyComponent() {
 ---
 
 
+### 3. Register Voice-Interactive Functions
 
-### 3. Register Voice Controlled Functions
-
-To voice-enable your UI, list your callable functions as follows:
+To make your UI voice-interactive, simply register an array of function signatures to the AI model.
 
 ```js
 const sayHelloWorld = () => {
@@ -118,7 +117,7 @@ const sayHelloWorld = () => {
 const voiceControlledFunctions = [
   {
     function: {
-      handler: sayHelloWorld, // pass your function
+      handler: sayHelloWorld, // pass a refference to your function
       description: "Greets the user with 'Hello, World!'.", // add function description
     },
   },
@@ -176,7 +175,7 @@ Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` h
 
 ## Full Example: (Todo App)
 
-For a todo app with voice commands to add or remove tasks, the setup is:
+For a voice-interactive todo app to `add` or `remove` tasks, the setup is:
 
 ```js
 import React, { useEffect } from 'react';
