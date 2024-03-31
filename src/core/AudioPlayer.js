@@ -1,9 +1,6 @@
 // src/core/AudioPlayer.js
-
+import config from './config';
 import EventEmitter from './EventEmitter';
-
-const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
-const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
 class AudioPlayer {
 
@@ -13,8 +10,8 @@ class AudioPlayer {
 
         try {
             // Preload the start and end sounds
-            this.startSound = new Audio(startProcessingAudioFileUrl);
-            this.endSound = new Audio(endProcessingAudioFileUrl);
+            this.startSound = new Audio(config.startSoundFileUrl);
+            this.endSound = new Audio(config.endSoundFileUrl);
             this.setupAudioContext(); // Setup audio context on initialization
         } catch (error) {
             console.error('Failed to load audio files:', error);
