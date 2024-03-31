@@ -5,7 +5,7 @@ import pkg from '../../package.json';
 import Recorder from 'recorder-js';
 import AudioPlayer from './AudioPlayer';
 import AudioRecorder from './AudioRecorder';
-import VoiceCommandProcessor from './VoiceCommandProcessor';
+import FunctionExecutor from './FunctionExecutor';
 
 const config = require('./config');
 
@@ -20,7 +20,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
 
         this.audioManager = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
-        this.voiceCommandProcessor = new VoiceCommandProcessor();
+        this.functionExecutor = new FunctionExecutor();
 
         if (!key) {
             console.error('Missing API Key for VuicProvider.');
@@ -86,7 +86,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
     // proxy: to register voice functions 
     registerFunctions(voiceFunctions) {
         console.log('sdsdsds');
-        this.voiceCommandProcessor.registerFunctions(voiceFunctions);
+        this.functionExecutor.registerFunctions(voiceFunctions);
     }
 
     // TODO this should go in voice command processor
@@ -97,7 +97,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
         formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
-            JSON.stringify(this.voiceCommandProcessor.functionSignatures),
+            JSON.stringify(this.functionExecutor.functionSignatures),
         );
 
         // TODO: this should remain on this class but as its own method for making the API calls. should be named something like _makeAPIRequest
@@ -143,7 +143,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
         }
 
         if (message.tool_calls) {
-            this.voiceCommandProcessor._executeFunctions(message);
+            this.functionExecutor._executeFunctions(message);
         } else if (message.content !== null) {
             console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', message.content);
         } else {

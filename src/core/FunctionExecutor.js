@@ -1,7 +1,7 @@
 // VoiceCommandsProcessor.js
 
 // todo this class should be renamed to FunctionExecutor
-export default class VoiceCommandsProcessor {
+export default class FunctionExecutor {
     constructor() {
         this.functionSignatures = [];
         this.functionHandlers = new Map();
