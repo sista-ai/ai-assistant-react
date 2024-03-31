@@ -226,7 +226,7 @@ function TodoApp() {
   return (
     <div>
       {/* Other UI Components */}
-      <VuicButton />  // Add the magic button anywhere
+      <VuicButton />
     </div>
   );
 }
