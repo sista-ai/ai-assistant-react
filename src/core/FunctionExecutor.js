@@ -9,8 +9,13 @@ export default class FunctionExecutor {
     registerFunctions(voiceFunctions) {
         console.log('--[VUIC]-- registerFunctions');
 
+        // 1) extract the name and handler to build functionHandlers
+        // 2) removing the handler from functionSignatures
+        // 3) adding the type as 'function' to functionSignatures
+        // 4) adding the function name to functionSignatures from the handler
         voiceFunctions.forEach(({ function: func }) => {
-            const { name, handler, ...rest } = func;
+            const { handler, ...rest } = func;
+            const name = handler.name;
             this.functionHandlers.set(Symbol(name), handler);
             this.functionSignatures.push({
                 type: "function",
