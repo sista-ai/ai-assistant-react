@@ -17,7 +17,7 @@ class Vuic extends EventEmitter {
 
         super();
 
-        this.audioManager = new AudioPlayer();
+        this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
 
@@ -58,7 +58,7 @@ class Vuic extends EventEmitter {
 
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
-        this.audioManager.playRecordingTone(this.audioManager.startSound);
+        this.audioPlayer.playRecordingTone(this.audioPlayer.startSound);
 
         try {
             const userAudioCommand = await this.audioRecorder.startRecording();
@@ -135,7 +135,7 @@ class Vuic extends EventEmitter {
     };
 
     _handleAudioResponse = (audioFile) => {
-        this.audioManager.playAiReply(audioFile);
+        this.audioPlayer.playAiReply(audioFile);
     };
 
     _handleExecutableFunctionsResponse = (message) => {
