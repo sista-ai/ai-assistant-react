@@ -29,16 +29,21 @@ This package can be integrated into a wide range of React-based projects, includ
 
 ## Installation
 
-To use [@sista/vutic-reac](https://www.npmjs.com/package/@sista/vuic-react), install it via `npm` or `yarn` or `pnpm` in your React App.
+To use [@sista/vutic-reac](https://www.npmjs.com/package/@sista/vuic-react), install it in your React App.
 
+
+##### Using npm:
 ```bash
-# install with npm
 npm install @sista/vuic-react
+```
 
-# Or with yarn
+##### Using yarn:
+```bash
 yarn add @sista/vuic-react
+```
 
-# Or with pnpm
+##### Using pnpm:
+```bash
 pnpm add @sista/vuic-react
 ```
 
@@ -62,9 +67,7 @@ b. Wrap your main component:
 
 c. Add your API KEY
 
-Replace `"YOUR_API_KEY"` with your actual API key. 
-
-Obtain your FREE API key from the [Admin Panel](https://admin.sista.ai/applications). _(or visit admin.sista.ai)_
+Get your free `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
 
 
 Example:
@@ -113,7 +116,7 @@ function MyComponent() {
 
 To voice-control your app, just specify the callable functions in a simple config object.
 
-That's all it takes for users to start interacting with your app via voice commands. It works like magic :sparkles:
+> Just like that, your app is voice-interactive. Magic! :sparkles:
 
 
 ```js
@@ -128,7 +131,6 @@ const voiceControlledFunctions = [
     function: {
       handler: sayHello, // pass your function
       description: "Greets the user with their name.", // add function description
-      
       // In case your function accepts paraemters:
       parameters: {
         type: "object",
@@ -138,18 +140,15 @@ const voiceControlledFunctions = [
             description: "User's name." // add parameter description
           },
         },
-        required: ["name"], // list required parameter
+        required: ["name"], // list required parameters
       },
     },
   },
-  // include additional functions here
+  // ... include additional functions here
 ];
 ```
 
-The `voiceControlledFunctions` array contains objects, each representing a function that can be activated by a voice command.
-
-
-To register these functions, use the `vuic.registerFunctions(voiceControlledFunctions);` inside a `useEffect` hook to ensure it's done once the component is loaded.
+Register the functions with `vuic.registerFunctions(voiceControlledFunctions);` inside a `useEffect` hook.
 
 ```js
   const vuic = useVuic();
@@ -160,9 +159,9 @@ To register these functions, use the `vuic.registerFunctions(voiceControlledFunc
   }, [vuic]);
 ```
 
-#### Full Example: Todo App
+## Full Example: (Todo App)
 
-Consider a todo app where users can add or remove tasks using voice commands. The setup would look like this:
+For a todo app with voice commands to add or remove tasks, the setup is:
 
 ```js
 import React, { useEffect } from 'react';
@@ -192,7 +191,10 @@ function TodoApp() {
           parameters: {
             type: 'object',
             properties: {
-              task: { type: 'string', description: 'Description of the task.' },
+              task: { 
+                type: 'string', 
+                description: 'Description of the task.' 
+              },
             },
             required: ['task'],
           },
@@ -205,7 +207,10 @@ function TodoApp() {
           parameters: {
             type: 'object',
             properties: {
-              task: { type: 'string', description: 'Description of the task.' },
+              task: { 
+                type: 'string', 
+                description: 'Description of the task.' 
+              },
             },
             required: ['task'],
           },
