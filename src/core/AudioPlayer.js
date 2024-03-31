@@ -5,8 +5,7 @@ import EventEmitter from './EventEmitter';
 const startProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/start.mp3';
 const endProcessingAudioFileUrl = 'https://vuic-assets.s3.us-west-1.amazonaws.com/sdk-assets/audio/end.mp3';
 
-// Rename to ,,, 
-class AudioManager {
+class AudioPlayer {
 
     constructor() {
 
@@ -79,5 +78,5 @@ class AudioManager {
 
 }
 
-export default AudioManager;
+export default AudioPlayer;
 

@@ -3,7 +3,7 @@
 import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
 import Recorder from 'recorder-js';
-import AudioManager from './AudioManager';
+import AudioPlayer from './AudioPlayer';
 import AudioRecorder from './AudioRecorder';
 import VoiceCommandProcessor from './VoiceCommandProcessor';
 
@@ -18,7 +18,7 @@ class Vuic extends EventEmitter { // TODO: do not extend
 
         super();
 
-        this.audioManager = new AudioManager();
+        this.audioManager = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.voiceCommandProcessor = new VoiceCommandProcessor();
 
