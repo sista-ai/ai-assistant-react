@@ -36,68 +36,66 @@ class Vuic extends EventEmitter { // TODO: do not extend
 
 
     // The first step in the voice interaction process is to start recording the user's voice
-startProcessing = async () => {
-    console.log('--[VUIC]-- startProcessing');
+    startProcessing = async () => {
+        console.log('--[VUIC]-- startProcessing');
 
-    this.audioManager.playRecordingTone(this.audioManager.startSound);
-    this.emitStateChange(EventEmitter.STATE_LISTENING_START);
+        this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
-    // TODO: this audio related stuff should be in the AudioRecorder
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        console.error('getUserMedia is not supported by this browser.');
-        this.emitStateChange(EventEmitter.STATE_IDLE);
-        return;
-    }
+        this.audioManager.playRecordingTone(this.audioManager.startSound);
 
-    try {
-        const audioBlob = await this._recordAudio();
+        try {
+            const userAudioCommand = await this._recordAudio();
+
+            await this._makeAPIRequest(userAudioCommand);
+        } catch (err) {
+            console.error('Error accessing the microphone:', err);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+        }
+    };
+
+    _recordAudio = async () => {
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error('getUserMedia is not supported by this browser.');
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+            return;
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const recorder = new Recorder(audioContext);
+        recorder.init(stream);
+
+        await recorder.start();
+
+        // Consider making the recording duration configurable or adaptive
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                recorder.stop()
+                    .then(({ blob, buffer }) => {
+                        stream.getTracks().forEach(track => track.stop());
+                        resolve(blob);
+                    });
+            }, 3500); // Stop recording after 3.5 seconds
+        });
+    };
+
+
+
+
+
+
+    _makeAPIRequest = async (audioBlob) => {
+        console.log('--[VUIC]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
-        // Process the audio blob here
-        this._processVoiceCommand(audioBlob);
-    } catch (err) {
-        console.error('Error accessing the microphone:', err);
-        this.emitStateChange(EventEmitter.STATE_IDLE);
-    }
-};
+        const formData = new FormData();
+        formData.append('audio', audioBlob);
+        formData.append(
+            'functionsSignatures',
+            JSON.stringify(this.functionExecutor.functionSignatures),
+        );
 
-_recordAudio = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const recorder = new Recorder(audioContext);
-    recorder.init(stream);
-
-    await recorder.start();
-
-    // Consider making the recording duration configurable or adaptive
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            recorder.stop()
-                .then(({ blob, buffer }) => {
-                    stream.getTracks().forEach(track => track.stop());
-                    resolve(blob);
-                });
-        }, 3500); // Stop recording after 3.5 seconds
-    });
-};
-
-_processVoiceCommand = async (audioBlob) => {
-    console.log('--[VUIC]-- _processVoiceCommand');
-
-    const formData = new FormData();
-    formData.append('audio', audioBlob);
-    formData.append(
-        'functionsSignatures',
-        JSON.stringify(this.functionExecutor.functionSignatures),
-    );
-
-    await this._makeAPIRequest(formData);
-};
-
-
-
-
-    _makeAPIRequest = async (formData) => {
         try {
             const response = await fetch(`${this.vuicBaseURL}/processor/run`, {
                 method: 'POST',
