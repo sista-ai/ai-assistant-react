@@ -48,7 +48,7 @@ const bounce = keyframes`
 //   mobileFontSize: '30px',
 //   mobileBottom: '25px',
 //   mobileRight: '25px',
-// }}
+// }} 
 
 const Button = styled.button`
     width: 75px;

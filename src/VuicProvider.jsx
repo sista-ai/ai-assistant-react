@@ -1,13 +1,13 @@
 // src/VuicProvider.jsx
 import React, { useState, useEffect } from 'react';
-import Vuic from './core/vuic';
+import MainProcessor from './core/MainProcessor';
 import VuicContext from './VuicContext';
 
 export const VuicProvider = ({ children, apiKey, apiUrl }) => {
   const [vuiSdk, setVuiSdk] = useState(null);
 
   useEffect(() => {
-    const sdkInstance = Vuic.init(apiKey, apiUrl);
+    const sdkInstance = MainProcessor.init(apiKey, apiUrl);
     // Ensure sdkInstance has 'on' and 'off' methods from EventEmitter
     if (sdkInstance && typeof sdkInstance.on === 'function' && typeof sdkInstance.off === 'function') {
       setVuiSdk(sdkInstance);

@@ -5,18 +5,22 @@ class AudioPlayer {
     constructor() {
         this._setupAudioContext();
         this._loadSounds();
+        this.volume = 1.0; // Default volume
     }
 
-    playRecordingTone(audioObj, volume = 0.20) {
+    playRecordingTone(audioObj) {
         console.log('--[VUIC]-- playRecordingTone');
+        this.volume = 0.25; // Set volume to 25%
         this._resumeAudioContextIfSuspended();
-        this._playAudioObject(audioObj, volume);
+        this._playAudioObject(audioObj);
     }
 
     playAiReply = (audioFileUrl, callback) => {
         console.log('--[VUIC]-- playAiReply');
+        this.volume = 1.0; // Set volume to 100%
         this._checkAudioSupportAndPlayReply(audioFileUrl, callback);
     };
+
 
     _setupAudioContext() {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -49,9 +53,26 @@ class AudioPlayer {
         }
     }
 
-    _playAudioObject(audioObj, volume) {
+    _playAudio = (audioBuffer, callback) => {
+        const source = this.audioContext.createBufferSource();
+        const gainNode = this.audioContext.createGain();
+    
+        source.buffer = audioBuffer;
+        source.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+    
+        gainNode.gain.value = this.volume;
+    
+        source.onended = () => {
+            if (callback) callback();
+        };
+    
+        source.start(0);
+    };
+
+    _playAudioObject(audioObj) {
         try {
-            audioObj.volume = volume;
+            audioObj.volume = this.volume;
             audioObj.play();
         } catch (error) {
             console.error('Failed to play sound:', error);
@@ -64,7 +85,7 @@ class AudioPlayer {
             if (callback) callback(new Error('Audio API not supported'));
             return;
         }
-    
+
         this._loadAudio(audioFileUrl)
             .then(audioBuffer => {
                 this._playAudio(audioBuffer, callback);
@@ -74,7 +95,7 @@ class AudioPlayer {
                 if (callback) callback(error);
             });
     }
-    
+
 
     _loadAudio = (audioFileUrl) => {
         return fetch(audioFileUrl)
@@ -82,15 +103,7 @@ class AudioPlayer {
             .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer));
     };
 
-    _playAudio = (audioBuffer, callback) => {
-        const source = this.audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(this.audioContext.destination);
-        source.onended = () => {
-            if (callback) callback();
-        };
-        source.start(0);
-    };
+
 }
 
 export default AudioPlayer;

@@ -1,7 +1,7 @@
 // src/core/vuic.js
 
-import EventEmitter from './EventEmitter';
 import pkg from '../../package.json';
+import EventEmitter from './EventEmitter';
 import AudioPlayer from './AudioPlayer';
 import AudioRecorder from './AudioRecorder';
 import FunctionExecutor from './FunctionExecutor';
@@ -9,7 +9,7 @@ import FunctionExecutor from './FunctionExecutor';
 const config = require('./config');
 
 // This is the main Processor. The only public inerface.
-class Vuic extends EventEmitter {
+class MainProcessor extends EventEmitter {
 
     constructor(key, apiUrl = config.apiUrl) {
 
@@ -33,9 +33,8 @@ class Vuic extends EventEmitter {
         console.log('--[VUIC]-- Registered KEY:', this.key);
     }
 
-
     static init(key, apiUrl) {
-        return new Vuic(key, apiUrl);
+        return new MainProcessor(key, apiUrl);
     }
 
     /**
@@ -149,4 +148,4 @@ class Vuic extends EventEmitter {
 
 }
 
-export default Vuic;
+export default MainProcessor;
