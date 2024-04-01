@@ -1,10 +1,10 @@
 # Sista AI: Voice UI Assistant
 
-Unleash the power of AI in your React App with `@sista/vuic-react` 🚀
+Unleash the power of AI with `@sista/vuic-react` 🚀
 
-This powerful library allows you turn your App into AI powered App **in less than 10 minutes**!
+Turn your app into an AI-powered masterpiece **in less than 10 minutes**!
 
-__Just inject `<VuicButton />` and define an array of simple `function signatures` to guide the AI assistant.__
+__Just inject `<VuicButton />` and define some `function signatures` to guide the AI assistant.__
 
 
 
