@@ -16,7 +16,7 @@ Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10
 
 Visit our [Demo](https://vuic.sista.ai). Click the button at the bottom right corner and talk. *Try commands like "turn on the light" or "scroll down".*
 
-[![Sista Logo](./assets/sista-demo-one.png)](vuic.https://sista.ai)
+[![Sista Logo](./assets/sista-demo-one.png)](https://vuic.sista.ai)
 
 
 ## Supported Projects
