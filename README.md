@@ -300,7 +300,7 @@ To personalize the AI assistant's voice, visit the [Admin Panel](https://admin.s
 
 
 <a href="https://vuic.sista.ai">
-  <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
+  <img src="./assets/sista-vuic-icon.png" alt="Sista Logo" width="100"/>
 </a>
 
 
