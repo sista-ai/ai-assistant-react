@@ -1,8 +1,17 @@
-# Sista AI: Voice UI Assistant
-
-Unleash the power of AI with `@sista/vuic-react` 🚀
+# Sista AI: Voice UI Controller
 
 Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10 minutes**!
+
+
+
+**What You Get:**
+
+- UI Controller (Performs any action)
+- Voice UI (Speaks any language)
+- AI Assistant (Answers any question)
+- Admin Panel (Customizes any detail)
+
+
 
 *Just inject `<VuicButton />` and define some `function signatures` to guide the AI assistant.*
 
