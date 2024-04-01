@@ -1,4 +1,4 @@
-# Voice UI Assistant (Sista AI)
+# Voice UI Assistant
 
 Turn your App into an AI-powered, Voice-controlled interface **in less than 10 minutes**!
 
