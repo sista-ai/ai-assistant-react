@@ -19,16 +19,6 @@ __No Code Changes & No Intent Definitions Required!__ *Just inject a button `<Vu
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
-- Voice UI Controller
-- Natural Language Understanding Engine
-- Text-to-Executable Translator
-- Audio-to-Text / Text-to-Audio Conversion
-- Intent Recognition and Handling
-- Contextual Response Generator
-- Custom Prompt Configuration
-- Analytics and Logging
-- Privacy and Security
-
 
 
 ## Demo
@@ -317,6 +307,18 @@ To personalize the AI assistant's voice, go to the [Admin Panel](https://admin.s
 <a href="https://vuic.sista.ai">
   <img src="./assets/sista-vuic-icon.png" alt="Sista Logo" width="100"/>
 </a>
+
+Unlock the Future with our advacned **Voice UI Assistant**: Embrace top-tier components:
+- Voice UI Controller
+- Natural Language Understanding Engine
+- Text-to-Executable Translator
+- Audio-to-Text / Text-to-Audio Conversion
+- Intent Recognition and Handling
+- Contextual Response Generator
+- Custom Prompt Configuration
+- Analytics and Logging
+- Privacy and Security
+
 
 
 
