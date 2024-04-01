@@ -2,9 +2,9 @@
 
 Unleash the power of AI with `@sista/vuic-react` 🚀
 
-Turn your app into an AI-powered masterpiece **in less than 10 minutes**!
+Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10 minutes**!
 
-__Just inject `<VuicButton />` and define some `function signatures` to guide the AI assistant.__
+*Just inject `<VuicButton />` and define some `function signatures` to guide the AI assistant.*
 
 
 
@@ -14,11 +14,7 @@ __Just inject `<VuicButton />` and define some `function signatures` to guide th
 
 ## Demo
 
-Visit our [Demo](https://vuic.sista.ai). 
-
-Click the button at the bottom right corner and talk. 
-
-*Try commands like "turn on the light" or "scroll down".*
+Visit our [Demo](https://vuic.sista.ai). Click the button at the bottom right corner and talk. *Try commands like "turn on the light" or "scroll down".*
 
 [![Sista Logo](./assets/sista-demo-one.png)](https://sista.ai)
 
