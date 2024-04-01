@@ -8,7 +8,7 @@ Just inject `<VuicButton />` and define an array of simple `function signatures`
 
 
 
-[![Sista Logo](./assets/sista-logo.png)](https://sista.ai)
+[![Sista Logo](./assets/sista-vuic-logo.png)](https://sista.ai)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
