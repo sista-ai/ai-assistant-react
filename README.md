@@ -2,17 +2,14 @@
 
 Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10 minutes**!
 
-__No Code Changes & No Intent Definitions Required!__ 
-
-*Just inject a button `<VuicButton />`.*
+__No Code Changes & No Intent Definitions Required!__ *Just inject a button `<VuicButton />`.*
 
 
 **Features at a Glance:**
-- UI Controller (Performs any action)
-- Voice UI (Speaks any language)
-- AI Assistant (Answers any question)
-- Admin Panel (Customizes any detail)
-
+- **UI Controller:** Performs any action
+- **Voice UI:** Speaks any language
+- **AI Assistant:** Answers any question
+- **Admin Panel:** Customizes any detail
 
 
 
@@ -22,17 +19,15 @@ __No Code Changes & No Intent Definitions Required!__
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
-Power up your App with our **Voice UI Assistant**, featuring cutting-edge components:
 - Voice UI Controller
-- NLU Engine
-- Text-to-Executable Functions Generator
+- Natural Language Understanding Engine
+- Text-to-Executable Translator
 - Audio-to-Text / Text-to-Audio Conversion
 - Intent Recognition and Handling
 - Contextual Response Generator
 - Custom Prompt Configuration
 - Analytics and Logging
-
-
+- Privacy and Security
 
 
 
