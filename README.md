@@ -6,6 +6,10 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<VuicButt
 
 
 
+[![Sista Logo](./assets/sista-vuic-logo.png)](https://vuic.sista.ai)
+
+> Sista AI: 🤖 Your AI Integration Platform. ❤️
+
 **Features at a Glance:**
 - **UI Controller:** Performs any action
 - **Voice UI:** Speaks any language
@@ -14,19 +18,11 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<VuicButt
 
 
 
-[![Sista Logo](./assets/sista-vuic-logo.png)](https://vuic.sista.ai)
-
-
-
-> Sista AI: 🤖 Your AI Integration Platform. ❤️
-
-
-
 ## Demo
 
 #### Try it now!
 
-Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... __Test commands like "turn the light on"!__
+Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... Say "turn the light on"!__
 
 
 
