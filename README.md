@@ -8,7 +8,7 @@ Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10
 
 
 
-[![Sista Logo](./assets/sista-vuic-logo.png)](https://sista.ai)
+[![Sista Logo](./assets/sista-vuic-logo.png)](https://vuic.sista.ai)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
@@ -16,7 +16,7 @@ Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10
 
 Visit our [Demo](https://vuic.sista.ai). Click the button at the bottom right corner and talk. *Try commands like "turn on the light" or "scroll down".*
 
-[![Sista Logo](./assets/sista-demo-one.png)](https://sista.ai)
+[![Sista Logo](./assets/sista-demo-one.png)](vuic.https://sista.ai)
 
 
 ## Supported Projects
@@ -285,7 +285,7 @@ You can modify the colors of the `VuicButton` at different states:
 
 For custom AI responses, go to the [Admin Panel](https://admin.sista.ai/applications) and adjust the **LLM settings**. It's as simple as entering a prompt.
 
-[![Sista Logo](./assets/sista-admin-dark.png)](https://sista.ai)
+[![Sista Logo](./assets/sista-admin-dark.png)](https://vuic.sista.ai)
 
 ### Customizing Voice
 
