@@ -1,11 +1,13 @@
-# Sista AI: Voice UI Controller
+# Voice UI Assistant (Sista AI)
 
 Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10 minutes**!
 
+__No Code Changes & No Intent Definitions Required!__ 
+
+*Just inject a button `<VuicButton />`.*
 
 
-**What You Get:**
-
+**Features at a Glance:**
 - UI Controller (Performs any action)
 - Voice UI (Speaks any language)
 - AI Assistant (Answers any question)
@@ -13,19 +15,32 @@ Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10
 
 
 
-__No Code Changes Required!!__ *Just inject `<VuicButton />` and define some `function signatures`.*
-
-
 
 [![Sista Logo](./assets/sista-vuic-logo.png)](https://vuic.sista.ai)
 
+
+
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
+
+Power up your App with our **Voice UI Assistant**, featuring cutting-edge components:
+- Voice UI Controller
+- NLU Engine
+- Text-to-Executable Functions Generator
+- Audio-to-Text / Text-to-Audio Conversion
+- Intent Recognition and Handling
+- Contextual Response Generator
+- Custom Prompt Configuration
+- Analytics and Logging
+
+
+
+
 
 ## Demo
 
 Visit our [Demo](https://vuic.sista.ai). Click the button at the bottom right corner and talk. *Try commands like "turn on the light" or "scroll down".*
 
-[![Sista Logo](./assets/sista-demo-one.png)](https://vuic.sista.ai)
+[![Sista Logo](./assets/sista-vuic-demo-one.png)](https://vuic.sista.ai)
 
 
 ## Supported Projects
