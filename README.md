@@ -24,7 +24,12 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<VuicButt
 
 ## Demo
 
-Visit our [Demo](https://vuic.sista.ai). Click the button at the bottom right corner and talk. *Try commands like "turn on the light" or "scroll down".*
+#### Try it now!
+
+Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... __Test commands like "turn the light on"!__
+
+
+
 
 [![Sista Logo](./assets/sista-vuic-demo-one.png)](https://vuic.sista.ai)
 
