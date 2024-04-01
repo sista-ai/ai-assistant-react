@@ -13,7 +13,7 @@ Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10
 
 
 
-*Just inject `<VuicButton />` and define some `function signatures` to guide the AI assistant.*
+*No Code Changes Required!! Just inject `<VuicButton />` and define some `function signatures`.*
 
 
 
