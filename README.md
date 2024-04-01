@@ -1,8 +1,9 @@
 # Voice UI Assistant (Sista AI)
 
-Turn your App into an AI-powered, Voice-controlled masterpiece **in less than 10 minutes**!
+Turn your App into an AI-powered, Voice-controlled interface **in less than 10 minutes**!
 
-__No Code Changes & No Intent Definitions Required!__ *Just inject a button `<VuicButton />`.*
+__No Code Changes or Intent Definitions!__ *Just add our magic button `<VuicButton />`.*
+
 
 
 **Features at a Glance:**
