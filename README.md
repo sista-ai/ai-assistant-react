@@ -285,11 +285,11 @@ You can modify the colors of the `VuicButton` at different states:
 
 For custom AI responses, go to the [Admin Panel](https://admin.sista.ai/applications) and adjust the **LLM settings**. It's as simple as entering a prompt.
 
-[![Sista Logo](./assets/sista-admin-panel-app.png)](https://sista.ai)
+[![Sista Logo](./assets/sista-admin-dark.png)](https://sista.ai)
 
 ### Customizing Voice
 
-To personalize the AI assistant's voice, visit the [Admin Panel](https://admin.sista.ai/applications) and choose your preferred voice in the **application settings**.
+To personalize the AI assistant's voice, go to the [Admin Panel](https://admin.sista.ai/applications) and choose your preferred voice in the **application settings**.
 
 ---
 
