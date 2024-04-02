@@ -1,5 +1,5 @@
 // src/core/EventEmitter.js
-
+import Logger from './Logger';
 class EventEmitter {
     constructor() {
         this.events = {};
@@ -23,7 +23,7 @@ class EventEmitter {
     }
 
     emitStateChange(eventName, ...args) {
-        console.log('--[VUIC]-- emitStateChange: ', eventName, ...args);
+        Logger.log('--[VUIC]-- emitStateChange: ', eventName, ...args);
         this.emit('stateChange', eventName, ...args);
     }
 

@@ -1,5 +1,5 @@
 // src/core/AudioRecorder.js
-
+import Logger from './Logger';
 import Recorder from 'recorder-js';
 
 class AudioRecorder {
@@ -7,7 +7,7 @@ class AudioRecorder {
     startRecording = async () => {
 
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            console.error('getUserMedia is not supported by this browser.');
+            Logger.error('getUserMedia is not supported by this browser.');
             return;
         }
 

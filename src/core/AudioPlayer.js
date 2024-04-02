@@ -1,5 +1,6 @@
 // src/core/AudioPlayer.js
 import config from './config';
+import Logger from './Logger';
 
 class AudioPlayer {
     constructor() {
@@ -17,13 +18,13 @@ class AudioPlayer {
     }
 
     playAiReply = (audioFileUrl, callback) => {
-        console.log('--[VUIC]-- playAiReply');
+        Logger.log('--[VUIC]-- playAiReply');
         this.volume = 1.0; // Set volume to 100%
         this._checkAudioSupportAndPlayReply(audioFileUrl, callback);
     };
 
     _playRecordingTone(audioObj) {
-        console.log('--[VUIC]-- playRecordingTone');
+        Logger.log('--[VUIC]-- playRecordingTone');
         this.volume = 0.25; // Set volume to 25%
         this._resumeAudioContextIfSuspended();
         this._playAudioObject(audioObj);
@@ -52,7 +53,7 @@ class AudioPlayer {
             audioObj.volume = this.volume;
             audioObj.play();
         } catch (error) {
-            console.error('Failed to play sound:', error);
+            Logger.error('Failed to play sound:', error);
         }
     }
 
@@ -77,7 +78,7 @@ class AudioPlayer {
             this.startSound = new Audio(config.startSoundFileUrl);
             this.endSound = new Audio(config.endSoundFileUrl);
         } catch (error) {
-            console.error('Failed to load audio files:', error);
+            Logger.error('Failed to load audio files:', error);
         }
     }
 
@@ -95,7 +96,7 @@ class AudioPlayer {
 
     _checkAudioSupportAndPlayReply(audioFileUrl, callback) {
         if (!window.Audio || !this.audioContext) {
-            console.error('This browser does not support the Audio API');
+            Logger.error('This browser does not support the Audio API');
             if (callback) callback(new Error('Audio API not supported'));
             return;
         }
@@ -105,7 +106,7 @@ class AudioPlayer {
                 this._playAudio(audioBuffer, callback);
             })
             .catch(error => {
-                console.error('Failed to load and play audio file:', error);
+                Logger.error('Failed to load and play audio file:', error);
                 if (callback) callback(error);
             });
     }

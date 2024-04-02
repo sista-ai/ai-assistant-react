@@ -5,36 +5,38 @@ import EventEmitter from './EventEmitter';
 import AudioPlayer from './AudioPlayer';
 import AudioRecorder from './AudioRecorder';
 import FunctionExecutor from './FunctionExecutor';
+import Logger from './Logger';
 
 const config = require('./config');
 
 // This is the main Processor. The only public inerface.
 class MainProcessor extends EventEmitter {
 
-    constructor(key, apiUrl = config.apiUrl) {
-
-        console.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
+    constructor(key, apiUrl = config.apiUrl, debug = false) {
 
         super();
+
+        Logger.setDebug(debug);
+        Logger.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
 
         if (!key) {
-            console.error('Missing API Key for VuicProvider.');
+            Logger.error('Missing API Key for VuicProvider.');
             throw new Error('Missing API Key for VuicProvider. Get your FREE Key from https://admin.sista.ai/applications');
         }
 
         this.apiUrl = apiUrl;
-        console.log('--[VUIC]-- Registered VUIC Base URL:', this.apiUrl);
+        Logger.log('--[VUIC]-- Registered VUIC Base URL:', this.apiUrl);
 
         this.key = key;
-        console.log('--[VUIC]-- Registered KEY:', this.key);
+        Logger.log('--[VUIC]-- Registered KEY:', this.key);
     }
 
-    static init(key, apiUrl) {
-        return new MainProcessor(key, apiUrl);
+    static init(key, apiUrl, debug = false) {
+        return new MainProcessor(key, apiUrl, debug);
     }
 
     /**
@@ -53,7 +55,7 @@ class MainProcessor extends EventEmitter {
      * @throws Will throw an error if there's an issue accessing the microphone.
      */
     startProcessing = async () => {
-        console.log('--[VUIC]-- startProcessing');
+        Logger.log('--[VUIC]-- startProcessing');
 
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
@@ -64,13 +66,13 @@ class MainProcessor extends EventEmitter {
 
             await this._makeAPIRequest(userAudioCommand);
         } catch (err) {
-            console.error('Error accessing the microphone:', err);
+            Logger.error('Error accessing the microphone:', err);
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
 
     _makeAPIRequest = async (audioBlob) => {
-        console.log('--[VUIC]-- _makeAPIRequest');
+        Logger.log('--[VUIC]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
         const formData = new FormData();
@@ -94,17 +96,17 @@ class MainProcessor extends EventEmitter {
             this._handleApiResponse(data);
 
         } catch (error) {
-            console.error('VUIC: API Call - Error:', error);
+            Logger.error('VUIC: API Call - Error:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
 
     _handleApiResponse = (response) => {
-        console.log('--[VUIC]-- _handleApiResponse:', response);
+        Logger.log('--[VUIC]-- _handleApiResponse:', response);
 
         // Check if the response is valid
         if (!response || !response.executableFunctions) {
-            console.error('Invalid response format:', response);
+            Logger.error('Invalid response format:', response);
             return;
         }
 
@@ -112,7 +114,7 @@ class MainProcessor extends EventEmitter {
 
         // Check if the message exists
         if (!message) {
-            console.error('Response does not contain a message:', response);
+            Logger.error('Response does not contain a message:', response);
             return;
         }
 
@@ -132,7 +134,7 @@ class MainProcessor extends EventEmitter {
     _handleAudioResponse = (audioFile) => {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReply(audioFile, () => {
-            console.log('--[VUIC]-- Audio reply has finished playing.');
+            Logger.log('--[VUIC]-- Audio reply has finished playing.');
             this.emitStateChange(EventEmitter.STATE_IDLE);
         });
     };
@@ -144,7 +146,7 @@ class MainProcessor extends EventEmitter {
     };
 
     _handleTextResponse = (content) => {
-        console.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
+        Logger.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
     };
 
 }

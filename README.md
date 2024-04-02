@@ -20,7 +20,7 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<VuicButt
 
 ## Demo
 
-#### Try it now!
+### Try it now!
 
 Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... Say "turn the light on"!__
 

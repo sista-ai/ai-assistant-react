@@ -1,4 +1,5 @@
 // src/core/FunctionExecutor.js
+import Logger from './Logger';
 
 export default class FunctionExecutor {
     constructor() {
@@ -7,7 +8,7 @@ export default class FunctionExecutor {
     }
 
     registerFunctions(voiceFunctions) {
-        console.log('--[VUIC]-- registerFunctions');
+        Logger.log('--[VUIC]-- registerFunctions');
 
         // 1) extract the name and handler to build functionHandlers
         // 2) removing the handler from functionSignatures
@@ -23,12 +24,12 @@ export default class FunctionExecutor {
             });
         });
 
-        console.log('--[VUIC]-- Function References:', this.functionHandlers);
-        console.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
+        Logger.log('--[VUIC]-- Function References:', this.functionHandlers);
+        Logger.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
     }
 
     executeFunctions = (message) => {
-        console.log('--[VUIC]-- executeFunctions');
+        Logger.log('--[VUIC]-- executeFunctions');
 
         console.dir(this.functionHandlers, { depth: null });
 
@@ -41,14 +42,14 @@ export default class FunctionExecutor {
         }
 
         if (!message || !message.tool_calls) {
-            console.error('E1: Invalid API response:', message);
+            Logger.error('E1: Invalid API response:', message);
             return;
         }
 
 
         message.tool_calls.forEach((toolCall) => {
             if (!toolCall.function || !toolCall.function.name) {
-                console.error('E2: Invalid API response:', toolCall);
+                Logger.error('E2: Invalid API response:', toolCall);
                 return;
             }
 
@@ -64,7 +65,7 @@ export default class FunctionExecutor {
             }
 
             if (!functionToCall) {
-                console.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
+                Logger.error(`Function '${functionName}' not found. Ensure you've registered the function in 'registerFunctions'. See docs https://docs.sista.ai`);
                 return;
             }
 
@@ -72,16 +73,16 @@ export default class FunctionExecutor {
             try {
                 functionArgs = JSON.parse(toolCall.function.arguments);
             } catch (error) {
-                console.error('E3: Invalid API response:', error);
+                Logger.error('E3: Invalid API response:', error);
                 return;
             }
 
             const functionArgsArray = Object.values(functionArgs);
             try {
-                console.log(`--[VUIC]-- Calling function ${functionName} with arguments:`, functionArgsArray);
+                Logger.log(`--[VUIC]-- Calling function ${functionName} with arguments:`, functionArgsArray);
                 functionToCall(...functionArgsArray);
             } catch (error) {
-                console.error(`Error calling function ${functionName}:`, error);
+                Logger.error(`Error calling function ${functionName}:`, error);
             }
         });
 
