@@ -274,6 +274,26 @@ export default TodoApp;
 ---
 
 
+## Configuration
+
+`VuicProvider` accepts few props:
+
+- `apiKey` (required): Your API key.
+- `debug` (optional): Enables debug mode if set to `true`.
+
+Example:
+
+```jsx
+<VuicProvider
+  apiKey="your-api-key" // (required): Your API key.
+  debug={true} // (optional): Enables debug mode.
+
+  // apiUrl="your-api-url" // (optional): You don't need, unless you have your own AI backend.
+>
+  // ...
+</VuicProvider>
+```
+
 
 ## Customization
 
