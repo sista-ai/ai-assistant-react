@@ -280,10 +280,10 @@ export default TodoApp;
 
 ```jsx
 <VuicProvider
-  apiKey="your-api-key"   // (required): Your API key.
+  apiKey="api-key"   // (required): Your API key.
   debug={true}   // (optional): Enables debug mode.
 
-  // apiUrl="your-api-url"   // apiUrl="your-api-url" // (optional): You can provide this if you have your own AI backend or for testing purposes.
+  // apiUrl="api-url" // (optional): Only provide this if you have your own AI backend or for testing purposes.
 >
   // ...
 </VuicProvider>
