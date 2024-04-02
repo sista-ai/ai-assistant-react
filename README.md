@@ -312,7 +312,7 @@ You can modify the colors of the `VuicButton` at different states:
 Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data`.
 
 
-### Customizing Voice
+### Change Assistant Voice
 
 Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
 
