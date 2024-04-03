@@ -9,33 +9,33 @@ import Logger from './Logger';
 
 const config = require('./config');
 
-// This is the main Processor. The only public inerface.
-class MainProcessor extends EventEmitter {
+class AiAssistantEngine extends EventEmitter {
 
     constructor(key, apiUrl = config.apiUrl, debug = false) {
 
         super();
 
         Logger.setDebug(debug);
-        Logger.log(`--[SISTA]-- Initializing VUIC Version: ${pkg.version} + LOCAL`);
+        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${pkg.version}`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
 
         if (!key) {
-            throw new Error('Missing API Key for VuicProvider. Get your FREE Key from https://admin.sista.ai/applications');
+            throw new Error('Missing API Key for AiAssistantProvider. Get your FREE Key from https://admin.sista.ai/applications');
         }
 
-        this.apiUrl = apiUrl;
-        Logger.log('--[SISTA]-- Registered VUIC Base URL:', this.apiUrl);
-
         this.key = key;
-        Logger.log('--[SISTA]-- Registered KEY:', '...' + this.key.slice(-8));
+        Logger.log('--[SISTA]-- Using Acesss Key:', '...' + this.key.slice(-8));
+
+        this.apiUrl = apiUrl;
+        Logger.log('--[SISTA]-- Using Base URL:', this.apiUrl);
+
     }
 
     static init(key, apiUrl, debug = false) {
-        return new MainProcessor(key, apiUrl, debug);
+        return new AiAssistantEngine(key, apiUrl, debug);
     }
 
     /**
@@ -158,4 +158,4 @@ class MainProcessor extends EventEmitter {
 
 }
 
-export default MainProcessor;
+export default AiAssistantEngine;
