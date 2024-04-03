@@ -1,32 +1,55 @@
 {
-	"name": "@sista/vuic-react",
-	"version": "1.0.0",
-	"description": "A Voice UI Controller SDK to easily integrate voice commands into any applications.",
-	"main": "vuic.js",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/sista-ai/vuic-react-sdk.git"
-	},
-	"keywords": [
-		"sista",
-		"voice",
-		"ui",
-		"controller",
-		"react",
-		"sdk"
-	],
-	"author": "Sista AI <support@sista.ai>",
-	"license": "AGPL-3.0",
-	"bugs": {
-		"url": "https://github.com/sista-ai/vuic-react-sdk/issues"
-	},
-	"homepage": "https://github.com/sista-ai/vuic-react-sdk#readme",
-	"peerDependencies": {
-		"react": "^16.8.0",
-		"react-dom": "^16.8.0"
-	},
-	"devDependencies": {
-		"react": "^16.8.0",
-		"react-dom": "^16.8.0"
-	}
+    "name": "@sista/ai-assistant-react",
+    "version": "2.0.2",
+    "description": "An SDK for integrating AI-powered voice and text assistants into any React-based app, simplifying user engagement with conversational interfaces.",
+    "main": "dist/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sista-ai/ai-assistant-react.git"
+    },
+    "scripts": {
+        "build": "babel src --out-dir dist --extensions \".js,.jsx\" --copy-files",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "nodemon --exec yarn run build --watch src --ext js,jsx",
+        "prepublishOnly": "npm run build",
+        "publish:public": "npm publish --access public",
+        "version:major": "npm version major",
+        "version:minor": "npm version minor",
+        "version:patch": "npm version patch"
+    },
+    "keywords": [
+        "sista",
+        "voice",
+        "UI",
+        "controller",
+        "assistant",
+        "react",
+        "sdk",
+        "AI"
+    ],
+    "author": "Sista AI <support@sista.ai>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sista-ai/ai-assistant-react/issues"
+    },
+    "homepage": "https://github.com/sista-ai/ai-assistant-react#readme",
+    "peerDependencies": {
+        "react": ">=16.11.0",
+        "react-dom": ">=16.11.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.23.9",
+        "@babel/core": "^7.24.0",
+        "@babel/preset-env": "^7.24.0",
+        "@babel/preset-react": "^7.23.3",
+        "nodemon": "^3.1.0"
+    },
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "react-icons": "^5.0.1",
+        "recorder-js": "^1.0.7",
+        "styled-components": "^6.1.8"
+    }
 }
