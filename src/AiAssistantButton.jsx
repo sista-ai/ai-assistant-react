@@ -1,4 +1,4 @@
-// src/VuicButton.jsx
+// src/AiAssistantButton.jsx
 import React, { useState, useEffect } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
 import { FaMicrophone } from 'react-icons/fa';
@@ -100,7 +100,7 @@ const Button = styled.button`
     }
 `;
 
-const VuicButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
+const AiAssistantButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
     const vuic = useAiAssistant();
     const [recordingState, setRecordingState] = useState('STATE_IDLE');
     const [isButtonDisabled, setButtonDisabled] = useState(false);
@@ -155,4 +155,4 @@ const VuicButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
     );
 };
 
-export { VuicButton };
+export { AiAssistantButton };
