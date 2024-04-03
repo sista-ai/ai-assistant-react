@@ -8,7 +8,7 @@ export default class FunctionExecutor {
     }
 
     registerFunctions(voiceFunctions) {
-        Logger.log('--[VUIC]-- registerFunctions');
+        Logger.log('--[SISTA]-- registerFunctions');
 
         // 1) extract the name and handler to build functionHandlers
         // 2) removing the handler from functionSignatures
@@ -24,12 +24,12 @@ export default class FunctionExecutor {
             });
         });
 
-        Logger.log('--[VUIC]-- Function References:', this.functionHandlers);
-        Logger.log('--[VUIC]-- Function Signatures:', this.functionSignatures);
+        Logger.log('--[SISTA]-- Function References:', this.functionHandlers);
+        Logger.log('--[SISTA]-- Function Signatures:', this.functionSignatures);
     }
 
     executeFunctions = (message) => {
-        Logger.log('--[VUIC]-- executeFunctions');
+        Logger.log('--[SISTA]-- executeFunctions');
 
         console.dir(this.functionHandlers, { depth: null });
 
@@ -79,7 +79,7 @@ export default class FunctionExecutor {
 
             const functionArgsArray = Object.values(functionArgs);
             try {
-                Logger.log(`--[VUIC]-- Calling function ${functionName} with arguments:`, functionArgsArray);
+                Logger.log(`--[SISTA]-- Calling function ${functionName} with arguments:`, functionArgsArray);
                 functionToCall(...functionArgsArray);
             } catch (error) {
                 Logger.error(`Error calling function ${functionName}:`, error);

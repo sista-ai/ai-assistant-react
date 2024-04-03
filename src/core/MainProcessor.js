@@ -1,4 +1,4 @@
-// src/core/vuic.js
+// src/core/MainProcessor.js
 
 import pkg from '../../package.json';
 import EventEmitter from './EventEmitter';
@@ -17,7 +17,7 @@ class MainProcessor extends EventEmitter {
         super();
 
         Logger.setDebug(debug);
-        Logger.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + LOCAL`);
+        Logger.log(`--[SISTA]-- Initializing VUIC Version: ${pkg.version} + LOCAL`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
@@ -28,10 +28,10 @@ class MainProcessor extends EventEmitter {
         }
 
         this.apiUrl = apiUrl;
-        Logger.log('--[VUIC]-- Registered VUIC Base URL:', this.apiUrl);
+        Logger.log('--[SISTA]-- Registered VUIC Base URL:', this.apiUrl);
 
         this.key = key;
-        Logger.log('--[VUIC]-- Registered KEY:', this.key);
+        Logger.log('--[SISTA]-- Registered KEY:', '...' + this.key.slice(-8));
     }
 
     static init(key, apiUrl, debug = false) {
@@ -54,12 +54,12 @@ class MainProcessor extends EventEmitter {
      * @throws Will throw an error if there's an issue accessing the microphone.
      */
     startProcessing = async () => {
-        Logger.log('--[VUIC]-- startProcessing');
-    
+        Logger.log('--[SISTA]-- startProcessing');
+
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
-    
+
         this.audioPlayer.playStartTone();
-    
+
         let userAudioCommand;
 
         try {
@@ -69,7 +69,7 @@ class MainProcessor extends EventEmitter {
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
-    
+
         try {
             await this._makeAPIRequest(userAudioCommand);
         } catch (err) {
@@ -79,7 +79,7 @@ class MainProcessor extends EventEmitter {
     };
 
     _makeAPIRequest = async (audioBlob) => {
-        Logger.log('--[VUIC]-- _makeAPIRequest');
+        Logger.log('--[SISTA]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
         const formData = new FormData();
@@ -109,7 +109,7 @@ class MainProcessor extends EventEmitter {
     };
 
     _handleApiResponse = (response) => {
-        Logger.log('--[VUIC]-- _handleApiResponse:', response);
+        Logger.log('--[SISTA]-- _handleApiResponse:', response);
 
         // Check if the response is valid
         if (!response || !response.executableFunctions) {
@@ -141,7 +141,7 @@ class MainProcessor extends EventEmitter {
     _handleAudioResponse = (audioFile) => {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReply(audioFile, () => {
-            Logger.log('--[VUIC]-- Audio reply has finished playing.');
+            Logger.log('--[SISTA]-- Audio reply has finished playing.');
             this.emitStateChange(EventEmitter.STATE_IDLE);
         });
     };
@@ -153,7 +153,7 @@ class MainProcessor extends EventEmitter {
     };
 
     _handleTextResponse = (content) => {
-        Logger.log('--[VUIC]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
+        Logger.log('--[SISTA]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
     };
 
 }

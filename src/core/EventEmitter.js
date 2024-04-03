@@ -23,7 +23,7 @@ class EventEmitter {
     }
 
     emitStateChange(eventName, ...args) {
-        Logger.log('--[VUIC]-- emitStateChange: ', eventName, ...args);
+        Logger.log('--[SISTA]-- emitStateChange: ', eventName, ...args);
         this.emit('stateChange', eventName, ...args);
     }
 

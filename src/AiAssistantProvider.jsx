@@ -1,4 +1,5 @@
 // src/AiAssistantProvider.jsx
+
 import React, { useState, useEffect } from 'react';
 import MainProcessor from './core/MainProcessor';
 import AiAssistantContext from './AiAssistantContext';

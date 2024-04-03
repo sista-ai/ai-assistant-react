@@ -18,13 +18,13 @@ class AudioPlayer {
     }
 
     playAiReply = (audioFileUrl, callback) => {
-        Logger.log('--[VUIC]-- playAiReply');
+        Logger.log('--[SISTA]-- playAiReply');
         this.volume = 1.0; // Set volume to 100%
         this._checkAudioSupportAndPlayReply(audioFileUrl, callback);
     };
 
     _playRecordingTone(audioObj) {
-        Logger.log('--[VUIC]-- playRecordingTone');
+        Logger.log('--[SISTA]-- playRecordingTone');
         this.volume = 0.25; // Set volume to 25%
         this._resumeAudioContextIfSuspended();
         this._playAudioObject(audioObj);
@@ -34,17 +34,17 @@ class AudioPlayer {
     _playAudio = (audioBuffer, callback) => {
         const source = this.audioContext.createBufferSource();
         const gainNode = this.audioContext.createGain();
-    
+
         source.buffer = audioBuffer;
         source.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
-    
+
         gainNode.gain.value = this.volume;
-    
+
         source.onended = () => {
             if (callback) callback();
         };
-    
+
         source.start(0);
     };
 

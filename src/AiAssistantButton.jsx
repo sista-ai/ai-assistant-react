@@ -1,4 +1,5 @@
 // src/AiAssistantButton.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
 import { FaMicrophone } from 'react-icons/fa';
