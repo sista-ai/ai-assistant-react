@@ -2,7 +2,7 @@
 
 Turn your App into an AI-powered, Voice-controlled interface **in less than 10 minutes**!
 
-__No Code Changes or Intent Definitions!__ *Just add our magic button `<VuicButton />`.*
+__No Code Changes or Intent Definitions!__ *Just add our magic button `<AiAssistantButton />`.*
 
 
 
@@ -96,18 +96,18 @@ Get your **free** `API key` from the [Admin Panel](https://admin.sista.ai/applic
 
 ### 2. Import Button
 
-Import `VuicButton` and add it wherever you want.
+Import `AiAssistantButton` and add it wherever you want.
 
 ```js
 // ...
-import { VuicButton } from "@sista/vuic-react";
+import { AiAssistantButton } from "@sista/vuic-react";
 
 // ...
 function MyComponent() {
   return (
     <div>
       // ...
-      <VuicButton />  // << Add the magic button anywhere
+      <AiAssistantButton />  // << Add the magic button anywhere
     </div>
   );
 }
@@ -174,15 +174,15 @@ const interactiveFunctions = [
 
 
 
-Register the functions with `vuic.registerFunctions(..);` inside a `useEffect` hook.
+Register the functions with `aiAssistant.registerFunctions(..);` inside a `useEffect` hook.
 
 ```js
-  const vuic = useVuic();
+  const aiAssistant = useAiAssistant();
   useEffect(() => {
-    if (vuic) {
-      vuic.registerFunctions(interactiveFunctions);
+    if (aiAssistant) {
+      aiAssistant.registerFunctions(interactiveFunctions);
     }
-  }, [vuic]);
+  }, [aiAssistant]);
 ```
 
 > Just like that, your app is voice-interactive. Magic! :sparkles:
@@ -198,7 +198,7 @@ For a voice-interactive todo app to `add` or `remove` tasks, the setup is:
 
 ```js
 import React, { useEffect } from 'react';
-import { useVuic, VuicButton } from '@sista/vuic-react';
+import { useAiAssistant, AiAssistantButton } from '@sista/vuic-react';
 
 function TodoApp() {
 
@@ -212,8 +212,8 @@ function TodoApp() {
 
   // ...
 
-  // Initialize the vuic instance
-  const vuic = useVuic();
+  // Initialize the aiAssistant instance
+  const aiAssistant = useAiAssistant();
 
   useEffect(() => {
     // Define the voice-controlled functions
@@ -253,17 +253,17 @@ function TodoApp() {
     ];
 
     // Register the AI controlled functions
-    if (vuic) {
-      vuic.registerFunctions(interactiveFunctions);
+    if (aiAssistant) {
+      aiAssistant.registerFunctions(interactiveFunctions);
     }
-  }, [vuic]);
+  }, [aiAssistant]);
 
   // ...
 
   return (
     <div>
       // ...
-      <VuicButton />
+      <AiAssistantButton />
     </div>
   );
 }
@@ -294,7 +294,7 @@ export default TodoApp;
 
 ### Change Button Color
 
-You can modify the colors of the `VuicButton` at different states:
+You can modify the colors of the `AiAssistantButton` at different states:
 
 ```js
     const colors = {
@@ -304,7 +304,7 @@ You can modify the colors of the `VuicButton` at different states:
         STATE_SPEAKING_START: '#4af67f', // Green
     };
 
-  <VuicButton buttonColors={colors} />
+  <AiAssistantButton buttonColors={colors} />
 ```
 
 ### Modify AI Responses
