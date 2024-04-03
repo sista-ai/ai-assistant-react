@@ -1,7 +1,7 @@
-// src/VuicProvider.jsx
+// src/AiAssistantProvider.jsx
 import React, { useState, useEffect } from 'react';
 import MainProcessor from './core/MainProcessor';
-import VuicContext from './VuicContext';
+import AiAssistantContext from './AiAssistantContext';
 
 export const AiAssistantProvider = ({ children, apiKey, apiUrl, debug }) => {
   const [vuiSdk, setVuiSdk] = useState(null);
@@ -17,8 +17,8 @@ export const AiAssistantProvider = ({ children, apiKey, apiUrl, debug }) => {
   }, [apiKey, apiUrl, debug]);
 
   return (
-    <VuicContext.Provider value={vuiSdk}>
+    <AiAssistantContext.Provider value={vuiSdk}>
       {children}
-    </VuicContext.Provider>
+    </AiAssistantContext.Provider>
   );
 };

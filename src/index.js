@@ -1,4 +1,4 @@
 // src/index.js
-export { useVuic } from './VuicContext';
+export { useAiAssistant } from './AiAssistantContext';
 export { VuicButton } from './VuicButton';
 export { AiAssistantProvider } from './AiAssistantProvider';
