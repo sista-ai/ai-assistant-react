@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import MainProcessor from './core/MainProcessor';
 import VuicContext from './VuicContext';
 
-export const VuicProvider = ({ children, apiKey, apiUrl, debug }) => {
+export const AiAssistantProvider = ({ children, apiKey, apiUrl, debug }) => {
   const [vuiSdk, setVuiSdk] = useState(null);
 
   useEffect(() => {

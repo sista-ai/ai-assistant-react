@@ -74,17 +74,17 @@ pnpm add @sista/vuic-react
 
 ### 1. Import Provider
 
-Import `VuicProvider` and wrap your App at the root level.
+Import `AiAssistantProvider` and wrap your App at the root level.
 
 ```jsx
 // ...
-import { VuicProvider } from "@sista/vuic-react";
+import { AiAssistantProvider } from "@sista/vuic-react";
 
 ReactDOM.render(
   <React.StrictMode>
-    <VuicProvider apiKey="YOUR_API_KEY"> // << Wrap your app with this provider
+    <AiAssistantProvider apiKey="YOUR_API_KEY"> // << Wrap your app with this provider
       <App />
-    </VuicProvider>
+    </AiAssistantProvider>
   </React.StrictMode>,
   // ...
 );
@@ -276,16 +276,16 @@ export default TodoApp;
 
 ## Configuration
 
-`VuicProvider` accepts few props:
+`AiAssistantProvider` accepts few props:
 
 ```jsx
-<VuicProvider
+<AiAssistantProvider
   apiKey="api-key"   // (required): Your API key.
   debug={true}       // (optional): Enables debug mode.
   apiUrl="api-url"   // (optional): For custom backend or testing purposes.
 >
   // ...
-</VuicProvider>
+</AiAssistantProvider>
 ```
 
 ---
