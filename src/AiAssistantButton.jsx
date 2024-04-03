@@ -16,7 +16,7 @@ const pulse = keyframes`
 `;
 
 const PulseAnimation = css`
-  animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 `;
 const spin = keyframes`
   0% {
@@ -48,7 +48,7 @@ const bounce = keyframes`
 //   mobileFontSize: '30px',
 //   mobileBottom: '25px',
 //   mobileRight: '25px',
-// }} 
+// }}
 
 const Button = styled.button`
     width: 75px;
@@ -60,14 +60,13 @@ const Button = styled.button`
     right: 75px;
 
     @media (max-width: 768px) {
+        width: 65px;
+        height: 65px;
 
-      width: 65px;
-      height: 65px;
+        font-size: 30px;
 
-      font-size: 30px;
-
-      bottom: 25px;
-      right: 25px;
+        bottom: 25px;
+        right: 25px;
     }
 
     color: #ffffff;
@@ -100,8 +99,12 @@ const Button = styled.button`
     }
 `;
 
-const AiAssistantButton = ({ buttonText = 'Record', buttonColors = {}, ...props }) => {
-    const vuic = useAiAssistant();
+const AiAssistantButton = ({
+    buttonText = 'Record',
+    buttonColors = {},
+    ...props
+}) => {
+    const aiAssistant = useAiAssistant();
     const [recordingState, setRecordingState] = useState('STATE_IDLE');
     const [isButtonDisabled, setButtonDisabled] = useState(false);
 
@@ -117,24 +120,24 @@ const AiAssistantButton = ({ buttonText = 'Record', buttonColors = {}, ...props 
     const colors = { ...defaultButtonColors, ...buttonColors };
 
     const handleButtonClick = () => {
-        if (vuic) {
-            vuic.startProcessing();
+        if (aiAssistant) {
+            aiAssistant.startProcessing();
         }
     };
     useEffect(() => {
-        if (vuic) {
+        if (aiAssistant) {
             const handleStateChange = (newState) => {
                 setRecordingState(newState);
                 setButtonDisabled(newState !== 'STATE_IDLE');
             };
 
-            vuic.on('stateChange', handleStateChange);
+            aiAssistant.on('stateChange', handleStateChange);
 
             return () => {
-                vuic.off('stateChange', handleStateChange);
+                aiAssistant.off('stateChange', handleStateChange);
             };
         }
-    }, [vuic]);
+    }, [aiAssistant]);
 
     return (
         <Button
