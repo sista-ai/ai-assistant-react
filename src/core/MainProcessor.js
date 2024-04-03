@@ -17,14 +17,13 @@ class MainProcessor extends EventEmitter {
         super();
 
         Logger.setDebug(debug);
-        Logger.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version}`);
+        Logger.log(`--[VUIC]-- Initializing VUIC Version: ${pkg.version} + LOCAL`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
 
         if (!key) {
-            Logger.error('Missing API Key for VuicProvider.');
             throw new Error('Missing API Key for VuicProvider. Get your FREE Key from https://admin.sista.ai/applications');
         }
 
@@ -56,17 +55,25 @@ class MainProcessor extends EventEmitter {
      */
     startProcessing = async () => {
         Logger.log('--[VUIC]-- startProcessing');
-
+    
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
-
+    
         this.audioPlayer.playStartTone();
+    
+        let userAudioCommand;
 
         try {
-            const userAudioCommand = await this.audioRecorder.startRecording();
-
-            await this._makeAPIRequest(userAudioCommand);
+            userAudioCommand = await this.audioRecorder.startRecording();
         } catch (err) {
             Logger.error('Error accessing the microphone:', err);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+            return;
+        }
+    
+        try {
+            await this._makeAPIRequest(userAudioCommand);
+        } catch (err) {
+            Logger.error('Error making API request:', err);
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
@@ -96,7 +103,7 @@ class MainProcessor extends EventEmitter {
             this._handleApiResponse(data);
 
         } catch (error) {
-            Logger.error('VUIC: API Call - Error:', error);
+            Logger.error('Error Calling Sista API:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };

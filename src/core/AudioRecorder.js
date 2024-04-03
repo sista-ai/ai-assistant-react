@@ -1,17 +1,27 @@
-// src/core/AudioRecorder.js
 import Logger from './Logger';
-import Recorder from 'recorder-js';
-
 class AudioRecorder {
 
     startRecording = async () => {
 
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            Logger.error('getUserMedia is not supported by this browser.');
+            Logger.error('Microphone access is required for recording. Please update your browser or enable microphone access.');
             return;
         }
 
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        let stream;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (error) {
+            const errorMessages = {
+                'NotAllowedError': 'Microphone access was denied. Please allow access to your microphone to start recording.',
+                'NotFoundError': 'No microphone was found. Please connect a microphone to start recording.',
+                'default': 'An unexpected error occurred: ' + error.message
+            };
+
+            const message = errorMessages[error.name] || errorMessages['default'];
+            throw new Error(message);
+        }
+
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const recorder = new Recorder(audioContext);
         recorder.init(stream);
@@ -32,4 +42,3 @@ class AudioRecorder {
 }
 
 export default AudioRecorder;
-
