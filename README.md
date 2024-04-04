@@ -1,4 +1,4 @@
-# Smart AI Assistant (For ReactJS)
+# Smart AI Assistant (React JS)
 
 Turn your React App into an AI-powered, Voice-controlled interface **in less than 10 minutes**!
 
@@ -23,7 +23,7 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<AiAssist
 
 ### Try it now!
 
-Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... Say "turn the light on"!__
+Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... _Say "turn the light on"!_
 
 
 
@@ -35,18 +35,16 @@ Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... S
 
 This package integrates with many React projects.
 
-- Create React App
-- React Native
-- Next.js
-- Gatsby
+- NextJS
 - Electron
+- Gatsby
 - Meteor
+- React Native
+- Remix
+- RedwoodJS
 - Parcel
 - Expo
-- Remix
-- Storybook
-- RedwoodJS
-- Blitz.js
+- BlitzJS
 
 
 
@@ -283,7 +281,7 @@ export default TodoApp;
 <AiAssistantProvider
   apiKey="api-key"   // (required): Your API key.
   debug={true}       // (optional): Enables debug mode.
-  apiUrl="api-url"   // (optional): For custom backend or testing purposes.
+  apiUrl="api-url"   // (optional): For testing purposes.
 >
   // ...
 </AiAssistantProvider>
@@ -339,6 +337,15 @@ Unlock the Future with our advacned **Voice UI Assistant**: Embrace top-tier com
 - Analytics and Logging
 - Privacy and Security
 
+## Diverse SDKs
+
+Install across all platforms for a unified experience.
+
+| | | | | | |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| [<img src="./assets/sdks/VUE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/ANGULAR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/EMBER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/SVELTE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/NEXT.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/GATSBY.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |
+| [<img src="./assets/sdks/REMIX.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/DART.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/JS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/IOS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/ANDROID.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/IONIC.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |
+| [<img src="./assets/sdks/CORDOVA.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/REACT-NATIVE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/FLUTTER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/MAUI.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/XAMARIN.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)           |          [<img src="./assets/sdks/CAPACITOR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |
 
 
 
