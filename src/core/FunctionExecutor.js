@@ -41,19 +41,19 @@ export default class FunctionExecutor {
             throw new Error('functionHandlers is empty. Please register your voice activated functions. See docs https://docs.sista.ai');
         }
 
-        if (!message || !message.tool_calls) {
+        if (!message || !message.functions) {
             Logger.error('E1: Invalid API response:', message);
             return;
         }
 
 
-        message.tool_calls.forEach((toolCall) => {
-            if (!toolCall.function || !toolCall.function.name) {
-                Logger.error('E2: Invalid API response:', toolCall);
+        message.functions.forEach((func) => {
+            if (!func.function || !func.function.name) {
+                Logger.error('E2: Invalid API response:', func);
                 return;
             }
 
-            const functionName = toolCall.function.name;
+            const functionName = func.function.name;
             let functionToCall;
 
             // Iterate over Map to find the function by its name
@@ -71,7 +71,7 @@ export default class FunctionExecutor {
 
             let functionArgs = {};
             try {
-                functionArgs = JSON.parse(toolCall.function.arguments);
+                functionArgs = JSON.parse(func.function.arguments);
             } catch (error) {
                 Logger.error('E3: Invalid API response:', error);
                 return;

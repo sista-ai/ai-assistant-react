@@ -1,19 +1,20 @@
-# Voice UI Assistant
+# Smart AI Assistant (For ReactJS)
 
-Turn your App into an AI-powered, Voice-controlled interface **in less than 10 minutes**!
+Turn your React App into an AI-powered, Voice-controlled interface **in less than 10 minutes**!
 
 __No Code Changes or Intent Definitions!__ *Just add our magic button `<AiAssistantButton />`.*
 
 
 
-[![Sista Logo](./assets/sista-vuic-logo.png)](https://vuic.sista.ai)
+[![Sista Logo](./assets/sista-logo.png)](https://vuic.sista.ai)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
 **Features at a Glance:**
+
+- **AI Assistant:** Answers any question
 - **UI Controller:** Performs any action
 - **Voice UI:** Speaks any language
-- **AI Assistant:** Answers any question
 - **Admin Panel:** Customizes any detail
 
 
@@ -27,7 +28,7 @@ Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... S
 
 
 
-[![Sista Logo](./assets/sista-vuic-demo-one.png)](https://vuic.sista.ai)
+[![Sista Logo](./assets/sista-demo-one.png)](https://vuic.sista.ai)
 
 
 ## Supported Projects
@@ -324,7 +325,7 @@ Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applica
 
 
 <a href="https://vuic.sista.ai">
-  <img src="./assets/sista-vuic-icon.png" alt="Sista Logo" width="100"/>
+  <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
 </a>
 
 Unlock the Future with our advacned **Voice UI Assistant**: Embrace top-tier components:

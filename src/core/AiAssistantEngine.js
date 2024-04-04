@@ -117,7 +117,7 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
-        const { message } = response.executableFunctions;
+        const message = response.executableFunctions;
 
         // Check if the message exists
         if (!message) {
@@ -126,7 +126,7 @@ class AiAssistantEngine extends EventEmitter {
         }
 
         // Handle executable functions if they exist
-        if (message.tool_calls) {
+        if (message.functions) {
             this._handleExecutableFunctionsResponse(message);
         }
 
