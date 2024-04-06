@@ -8,9 +8,9 @@
         "url": "git+https://github.com/sista-ai/ai-assistant-react.git"
     },
     "scripts": {
+        "watch": "nodemon --exec yarn run build --watch src --ext js,jsx",
         "build": "babel src --out-dir dist --extensions \".js,.jsx\" --copy-files",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "watch": "nodemon --exec yarn run build --watch src --ext js,jsx",
         "prepublishOnly": "npm run build",
         "publish:public": "npm publish --access public",
         "version:major": "npm version major",

@@ -6,32 +6,29 @@ class AudioPlayer {
     constructor() {
         this._setupAudioContext();
         this._loadSounds();
-        this.volume = 1.0; // Default volume
-    }
-
-    playStartTone() {
-        this._playRecordingTone(this.startSound);
-    }
-
-    playEndTone() {
-        this._playRecordingTone(this.endSound);
     }
 
     playAiReply = (audioFileUrl, callback) => {
         Logger.log('--[SISTA]-- playAiReply');
-        this.volume = 1.0; // Set volume to 100%
-        this._checkAudioSupportAndPlayReply(audioFileUrl, callback);
+        this._fetchAudio(audioFileUrl)
+            .then(audioBuffer => {
+                this._playAudioBuffer(audioBuffer, callback, 1.0);
+            });
     };
 
-    _playRecordingTone(audioObj) {
-        Logger.log('--[SISTA]-- playRecordingTone');
-        this.volume = 0.25; // Set volume to 25%
-        this._resumeAudioContextIfSuspended();
-        this._playAudioObject(audioObj);
+    playStartTone() {
+        this._playAudioElement(this.startSound, 0.25);
     }
 
+    playEndTone() {
+        this._playAudioElement(this.endSound, 0.25);
+    }
 
-    _playAudio = (audioBuffer, callback) => {
+    _playAudioBuffer = (audioBuffer, callback, volume) => {
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+
         const source = this.audioContext.createBufferSource();
         const gainNode = this.audioContext.createGain();
 
@@ -39,7 +36,7 @@ class AudioPlayer {
         source.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
 
-        gainNode.gain.value = this.volume;
+        gainNode.gain.value = volume;
 
         source.onended = () => {
             if (callback) callback();
@@ -48,10 +45,10 @@ class AudioPlayer {
         source.start(0);
     };
 
-    _playAudioObject(audioObj) {
+    _playAudioElement(audioElement, volume) {
         try {
-            audioObj.volume = this.volume;
-            audioObj.play();
+            audioElement.volume = volume;
+            audioElement.play();
         } catch (error) {
             Logger.error('Failed to play sound:', error);
         }
@@ -61,16 +58,12 @@ class AudioPlayer {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         if (window.AudioContext) {
             this.audioContext = new AudioContext();
-            this._unlockAudioContextOnFirstInteraction();
+            document.documentElement.addEventListener('click', () => {
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+            }, { once: true });
         }
-    }
-
-    _unlockAudioContextOnFirstInteraction() {
-        document.documentElement.addEventListener('click', () => {
-            if (this.audioContext.state === 'suspended') {
-                this.audioContext.resume();
-            }
-        }, { once: true });
     }
 
     _loadSounds() {
@@ -84,33 +77,14 @@ class AudioPlayer {
 
     _fetchAudio = (audioFileUrl) => {
         return fetch(audioFileUrl)
-            .then(response => response.arrayBuffer())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load audio file');
+                }
+                return response.arrayBuffer();
+            })
             .then(arrayBuffer => this.audioContext.decodeAudioData(arrayBuffer));
     };
-
-    _resumeAudioContextIfSuspended() {
-        if (this.audioContext && this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
-        }
-    }
-
-    _checkAudioSupportAndPlayReply(audioFileUrl, callback) {
-        if (!window.Audio || !this.audioContext) {
-            Logger.error('This browser does not support the Audio API');
-            if (callback) callback(new Error('Audio API not supported'));
-            return;
-        }
-
-        this._fetchAudio(audioFileUrl)
-            .then(audioBuffer => {
-                this._playAudio(audioBuffer, callback);
-            })
-            .catch(error => {
-                Logger.error('Failed to load and play audio file:', error);
-                if (callback) callback(error);
-            });
-    }
-
 }
 
 export default AudioPlayer;
