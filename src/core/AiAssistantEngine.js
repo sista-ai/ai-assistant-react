@@ -16,7 +16,7 @@ class AiAssistantEngine extends EventEmitter {
         super();
 
         Logger.setDebug(debug);
-        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${pkg.version}`);
+        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${pkg.version} + LOCAL 4`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
