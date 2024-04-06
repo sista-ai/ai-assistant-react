@@ -16,7 +16,8 @@ class AiAssistantEngine extends EventEmitter {
         super();
 
         Logger.setDebug(debug);
-        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${pkg.version} + LOCAL 4`);
+        this.sdkVersion = pkg.version;
+        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion} + LOCAL 4`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
@@ -83,8 +84,9 @@ class AiAssistantEngine extends EventEmitter {
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
         const formData = new FormData();
-        formData.append('audio', audioBlob);
+        formData.append('sdkVersion', this.sdkVersion);
         formData.append('endUser', JSON.stringify(this._getEndUserDetails()));
+        formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
             JSON.stringify(this.functionExecutor.functionSignatures),
