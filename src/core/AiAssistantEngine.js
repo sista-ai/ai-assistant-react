@@ -84,6 +84,7 @@ class AiAssistantEngine extends EventEmitter {
 
         const formData = new FormData();
         formData.append('audio', audioBlob);
+        formData.append('endUser', JSON.stringify(this._getEndUserDetails()));
         formData.append(
             'functionsSignatures',
             JSON.stringify(this.functionExecutor.functionSignatures),
@@ -107,6 +108,20 @@ class AiAssistantEngine extends EventEmitter {
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
+
+    _getEndUserDetails() {
+        let endUserId = localStorage.getItem('endUserId');
+        if (!endUserId) {
+            endUserId = Math.random().toString(36).substring(2);
+            localStorage.setItem('endUserId', endUserId);
+        }
+
+        return {
+            endUserAgent: navigator.userAgent,
+            generatedEndUserId: endUserId,
+            providedEndUserId: ''
+        };
+    }
 
     _handleApiResponse = (response) => {
         Logger.log('--[SISTA]-- _handleApiResponse:', response);
