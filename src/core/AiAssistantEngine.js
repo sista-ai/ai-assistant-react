@@ -17,7 +17,7 @@ class AiAssistantEngine extends EventEmitter {
 
         Logger.setDebug(debug);
         this.sdkVersion = pkg.version;
-        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion} + LOCAL 4`);
+        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`);
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
@@ -142,16 +142,18 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
-        // Handle executable functions if they exist
-        if (message.functions) {
-            this._handleExecutableFunctionsResponse(message);
-        }
-
-        // Handle audio response if it exists, otherwise handle text response
+        // Play audio response if it exists, otherwise handle the rest
         if (response.audioFile) {
             this._handleAudioResponse(response.audioFile);
-        } else if (message.content !== null) {
-            this._handleTextResponse(message.content);
+        } else {
+            // Handle executable functions if they exist
+            if (message.functions) {
+                this._handleExecutableFunctionsResponse(message);
+            }
+
+            if (message.content !== null) {
+                this._handleTextResponse(message.content);
+            }
         }
     };
 
