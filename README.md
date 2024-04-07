@@ -6,7 +6,7 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<AiAssist
 
 
 
-[![Sista Logo](./assets/sista-logo.png)](https://vuic.sista.ai)
+[![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
@@ -23,12 +23,12 @@ __No Code Changes or Intent Definitions!__ *Just add our magic button `<AiAssist
 
 ### Try it now!
 
-Visit our [Demo](https://vuic.sista.ai) click the button, and start talking... _Say "turn the light on"!_
+Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Say "turn the light on"!_
 
 
 
 
-[![Sista Logo](./assets/sista-demo-one.png)](https://vuic.sista.ai)
+[![Sista Logo](./assets/sista-demo-one.png)](https://smart.sista.ai)
 
 
 ## Supported Projects
@@ -280,6 +280,7 @@ export default TodoApp;
 ```jsx
 <AiAssistantProvider
   apiKey="api-key"   // (required): Your API key.
+  userId="user-id"   // (optional): The end user ID (for analytics).
   debug={true}       // (optional): Enables debug mode.
   apiUrl="api-url"   // (optional): For testing purposes.
 >
@@ -316,13 +317,13 @@ Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/app
 Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
 
 
-[![Sista Logo](./assets/sista-admin-dark.png)](https://vuic.sista.ai)
+[![Sista Logo](./assets/sista-admin-dark.png)](https://smart.sista.ai)
 
 ---
 
 
 
-<a href="https://vuic.sista.ai">
+<a href="https://smart.sista.ai">
   <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
 </a>
 
