@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 import AiAssistantEngine from './core/AiAssistantEngine';
 import AiAssistantContext from './AiAssistantContext';
 
-export const AiAssistantProvider = ({ children, apiKey, apiUrl, debug }) => {
+export const AiAssistantProvider = ({ children, apiKey, apiUrl, userId, debug }) => {
     const [aiAssistant, setAiAssistant] = useState(null);
 
     useEffect(() => {
-        const sdkInstance = AiAssistantEngine.init(apiKey, apiUrl, debug);
+        const sdkInstance = AiAssistantEngine.init(apiKey, apiUrl, userId, debug);
         setAiAssistant(sdkInstance);
-    }, [apiKey, apiUrl, debug]);
+    }, [apiKey, apiUrl, userId, debug]);
 
     return (
         <AiAssistantContext.Provider value={aiAssistant}>

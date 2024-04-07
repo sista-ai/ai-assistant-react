@@ -11,7 +11,7 @@ const config = require('./config');
 
 class AiAssistantEngine extends EventEmitter {
 
-    constructor(key, apiUrl = config.apiUrl, debug = false) {
+    constructor(key, apiUrl = config.apiUrl, userId = null, debug = false) {
 
         super();
 
@@ -33,10 +33,11 @@ class AiAssistantEngine extends EventEmitter {
         this.apiUrl = apiUrl;
         Logger.log('--[SISTA]-- Using Base URL:', this.apiUrl);
 
+        this.userId = userId;
     }
 
-    static init(key, apiUrl, debug = false) {
-        return new AiAssistantEngine(key, apiUrl, debug);
+    static init(key, apiUrl, userId, debug = false) {
+        return new AiAssistantEngine(key, apiUrl, userId, debug);
     }
 
     /**
@@ -121,7 +122,7 @@ class AiAssistantEngine extends EventEmitter {
         return {
             endUserAgent: navigator.userAgent,
             generatedEndUserId: endUserId,
-            providedEndUserId: ''
+            providedEndUserId: this.userId,
         };
     }
 
