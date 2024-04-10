@@ -136,9 +136,17 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
+        // Check if the response is a 401 Unauthorized
+        if (response && response.statusCode === 401) {
+            Logger.error('API Error:', response.message);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+            return;
+        }
+
         // Check if the response is valid
         if (!response || !response.executableFunctions) {
             Logger.error('Invalid response format:', response);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
@@ -147,6 +155,7 @@ class AiAssistantEngine extends EventEmitter {
         // Check if the message exists
         if (!message) {
             Logger.error('Response does not contain a message:', response);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
