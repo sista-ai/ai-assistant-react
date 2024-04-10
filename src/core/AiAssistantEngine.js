@@ -129,6 +129,13 @@ class AiAssistantEngine extends EventEmitter {
     _handleApiResponse = (response) => {
         Logger.log('--[SISTA]-- _handleApiResponse:', response);
 
+        // Check if the response contains a warning message (in case of low balance, etc.)
+        if (response && response.warningMessage) {
+            Logger.error('API Warning:', response.warningMessage);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+            return;
+        }
+
         // Check if the response is valid
         if (!response || !response.executableFunctions) {
             Logger.error('Invalid response format:', response);
@@ -151,7 +158,7 @@ class AiAssistantEngine extends EventEmitter {
             if (message.functions) {
                 this._handleExecutableFunctionsResponse(message);
             }
-
+            // Handle text response if it exists (for example, to display on the screen)
             if (message.content !== null) {
                 this._handleTextResponse(message.content);
             }
@@ -173,7 +180,7 @@ class AiAssistantEngine extends EventEmitter {
     };
 
     _handleTextResponse = (content) => {
-        Logger.log('--[SISTA]-- AI Response As Text: In Case You Wanna Display This Somewhere:', content);
+        Logger.log('--[SISTA]-- AI Response As Text:', content);
     };
 
 }
