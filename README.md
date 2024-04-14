@@ -23,7 +23,7 @@ __No Code Changes! No Intent Definitions!__ *Just add our magic button `<AiAssis
 
 ### Try it now!
 
-Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Say "turn the light on"!_
+Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Say "Turn on the light"!_
 
 
 
