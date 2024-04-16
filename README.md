@@ -292,20 +292,75 @@ export default TodoApp;
 
 ## Customization
 
-### Change Button Color
+### Button Color
 
-You can modify the colors of the `AiAssistantButton` at different states:
+Modify the colors of the `AiAssistantButton` at different states:
 
 ```js
-    const colors = {
-        STATE_IDLE: '#4a6cf6', // Default
-        STATE_LISTENING_START: '#F64A7B', // Red
-        STATE_THINKING_START: '#4ac2f6', // Blue
-        STATE_SPEAKING_START: '#4af67f', // Green
-    };
+const colors = {
+    STATE_IDLE: '#4a6cf6', // Default
+    STATE_LISTENING_START: '#F64A7B', // Red
+    STATE_THINKING_START: '#4ac2f6', // Blue
+    STATE_SPEAKING_START: '#4af67f', // Green
+};
 
-  <AiAssistantButton buttonColors={colors} />
+<AiAssistantButton buttonColors={colors} />
 ```
+
+### Button Style & Position
+
+Pass a `style` object to adjust dimensions, position, and appearance:
+
+```js
+  const customStyle = {
+    width: "100px",               // Button width
+    height: "100px",              // Button height
+    fontSize: "50px",             // Font size of the icon/text inside the button
+    borderRadius: "20%",          // Border radius to control the curvature of the button corners
+    position: "relative",         // Positioning of the button, 'absolute' or 'relative' to its normal position
+    bottom: "50px",               // Distance from the bottom of its container (use with 'position: absolute')
+    right: "50px",                // Distance from the right of its container (use with 'position: absolute')
+    zIndex: 999,                  // Z-index for layering controls
+    border: "none",               // Border properties
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)", // Box shadow properties
+    transition: "background-color 0.3s ease-in-out", // Transition effect for hover or click events
+    display: "flex",              // CSS display property
+    justifyContent: "center",     // Aligns children (e.g., icon) horizontally
+    alignItems: "center",         // Aligns children (e.g., icon) vertically
+    color: "#FFF",                // Color of the text/icon inside the button
+  };
+
+<AiAssistantButton style={customStyle} />
+```
+
+### Button Advanced Styling
+
+Apply CSS classes for complex styling:
+
+```js
+.my-custom-button {
+    padding: 10px 20px;
+    transition: all 0.5s ease;
+
+    /* Hover effect */
+    &:hover {
+        background-color: #365f8c;
+        transform: scale(1.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        width: 100%;
+        font-size: 14px;
+    }
+}
+
+<AiAssistantButton className="my-custom-button" />
+```
+
+Use the `style` prop for inline adjustments or `className` for stylesheet-based customizations.
+
+
 
 ### Modify AI Responses
 
