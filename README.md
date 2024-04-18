@@ -311,8 +311,6 @@ const colors = {
 
 Pass a `style` object to adjust dimensions, position, and appearance:
 
-Example: To override default positioning, set `position: 'relative'` and `bottom/right: 'auto'`. This allows custom placement within your container.
-
 ```js
 const customStyle = {
   // Positioning and layout properties
@@ -345,6 +343,8 @@ const customStyle = {
 
 <AiAssistantButton style={customStyle} />
 ```
+
+For example: To override default positioning, set `position: 'relative'` and `bottom/right: 'auto'`. This allows custom placement within your container.
 
 ### Button Advanced Styling
 
