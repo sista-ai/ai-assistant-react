@@ -26,86 +26,100 @@ const keyframes = `
 `;
 
 const AiAssistantButton = ({
-  buttonText = 'Record',
-  buttonColors = {},
-  style = {}, // Users can now pass custom styles including position properties
-  ...props
+    buttonText = 'Record',
+    buttonColors = {},
+    style = {},
+    ...props
 }) => {
-  const aiAssistant = useAiAssistant();
-  const [recordingState, setRecordingState] = useState('STATE_IDLE');
-  const [isButtonDisabled, setButtonDisabled] = useState(false);
+    const aiAssistant = useAiAssistant();
+    const [recordingState, setRecordingState] = useState('STATE_IDLE');
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
+    const [hover, setHover] = useState(false);
 
-  useEffect(() => {
-    injectStyles(keyframes);
-  }, []);
+    useEffect(() => {
+        injectStyles(keyframes);
+    }, []);
 
-  // Default buttonColors object
-  const defaultButtonColors = {
-    STATE_IDLE: '#4a6cf6',
-    STATE_LISTENING_START: '#F64A7B',
-    STATE_THINKING_START: '#015589',
-    STATE_SPEAKING_START: '#019a9a',
-  };
+    // Default buttonColors object
+    const defaultButtonColors = {
+        STATE_IDLE: '#4a6cf6',
+        STATE_LISTENING_START: '#F64A7B',
+        STATE_THINKING_START: '#015589',
+        STATE_SPEAKING_START: '#019a9a',
+    };
 
-  const colors = { ...defaultButtonColors, ...buttonColors };
+    const colors = { ...defaultButtonColors, ...buttonColors };
 
-  const handleButtonClick = () => {
-    if (aiAssistant) {
-      aiAssistant.startProcessing();
-    }
-  };
+    const handleButtonClick = () => {
+        if (aiAssistant) {
+            aiAssistant.startProcessing();
+        }
+    };
 
-  useEffect(() => {
-    if (aiAssistant) {
-      const handleStateChange = (newState) => {
-        setRecordingState(newState);
-        setButtonDisabled(newState !== 'STATE_IDLE');
-      };
+    useEffect(() => {
+        if (aiAssistant) {
+            const handleStateChange = (newState) => {
+                setRecordingState(newState);
+                setButtonDisabled(newState !== 'STATE_IDLE');
+            };
 
-      aiAssistant.on('stateChange', handleStateChange);
+            aiAssistant.on('stateChange', handleStateChange);
 
-      return () => {
-        aiAssistant.off('stateChange', handleStateChange);
-      };
-    }
-  }, [aiAssistant]);
+            return () => {
+                aiAssistant.off('stateChange', handleStateChange);
+            };
+        }
+    }, [aiAssistant]);
 
-  const baseStyle = {
-    width: '75px',
-    height: '75px',
-    fontSize: '35px',
-    color: '#ffffff',
-    borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    border: 'none',
-    boxShadow: '0px 0px 15px rgba(0, 0, 0, 0.7)',
-    transition: 'background-color 0.3s ease-in-out',
-    backgroundColor: colors[recordingState],
-    animation: recordingState === 'STATE_LISTENING_START' ? 'spin 2s infinite' :
-               recordingState === 'STATE_THINKING_START' ? 'bounce 2s infinite' :
-               recordingState === 'STATE_SPEAKING_START' ? 'pulse 1.5s infinite' : 'none',
-    ...style,  // Custom styles override default styles
-    position: style.position || 'fixed', // Use 'fixed' as default if not overridden
-    bottom: style.bottom || '75px',
-    right: style.right || '75px',
-    zIndex: style.zIndex || 9999
-  };
+    const baseStyle = {
+        width: '75px',
+        height: '75px',
+        fontSize: '35px',
+        color: '#ffffff',
+        borderRadius: '50%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        border: 'none',
+        boxShadow: hover
+            ? '0px 0px 20px rgba(255, 255, 255, 0.8)'
+            : '0px 0px 15px rgba(0, 0, 0, 0.7)',
+        transition:
+            'background-color 0.3s ease-in-out, boxShadow 0.3s ease-in-out',
+        backgroundColor: colors[recordingState],
+        animation:
+            recordingState === 'STATE_LISTENING_START'
+                ? 'spin 2s infinite'
+                : recordingState === 'STATE_THINKING_START'
+                ? 'bounce 2s infinite'
+                : recordingState === 'STATE_SPEAKING_START'
+                ? 'pulse 1.5s infinite'
+                : 'none',
+        ...style,
+        position: style.position || 'fixed',
+        bottom: style.bottom || '75px',
+        right: style.right || '75px',
+        zIndex: style.zIndex || 9999,
+    };
 
-
-  return (
-    <button
-      onClick={handleButtonClick}
-      disabled={isButtonDisabled}
-      style={baseStyle}
-      {...props}
-    >
-      {recordingState === 'STATE_THINKING_START' ? <FaSatelliteDish /> :
-       recordingState === 'STATE_SPEAKING_START' ? <FaVolumeUp /> :
-       <FaMicrophone />}
-    </button>
-  );
+    return (
+        <button
+            onClick={handleButtonClick}
+            disabled={isButtonDisabled}
+            style={baseStyle}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            {...props}
+        >
+            {recordingState === 'STATE_THINKING_START' ? (
+                <FaSatelliteDish />
+            ) : recordingState === 'STATE_SPEAKING_START' ? (
+                <FaVolumeUp />
+            ) : (
+                <FaMicrophone />
+            )}
+        </button>
+    );
 };
 
 export { AiAssistantButton };

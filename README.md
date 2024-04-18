@@ -311,24 +311,37 @@ const colors = {
 
 Pass a `style` object to adjust dimensions, position, and appearance:
 
+Example: To override default positioning, set `position: 'relative'` and `bottom/right: 'auto'`. This allows custom placement within your container.
+
 ```js
-  const customStyle = {
-    width: "100px",               // Button width
-    height: "100px",              // Button height
-    fontSize: "50px",             // Font size of the icon/text inside the button
-    borderRadius: "20%",          // Border radius to control the curvature of the button corners
-    position: "relative",         // Positioning of the button, 'absolute' or 'relative' to its normal position
-    bottom: "50px",               // Distance from the bottom of its container (use with 'position: absolute')
-    right: "50px",                // Distance from the right of its container (use with 'position: absolute')
-    zIndex: 999,                  // Z-index for layering controls
-    border: "none",               // Border properties
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)", // Box shadow properties
-    transition: "background-color 0.3s ease-in-out", // Transition effect for hover or click events
-    display: "flex",              // CSS display property
-    justifyContent: "center",     // Aligns children (e.g., icon) horizontally
-    alignItems: "center",         // Aligns children (e.g., icon) vertically
-    color: "#FFF",                // Color of the text/icon inside the button
-  };
+const customStyle = {
+  // Positioning and layout properties
+  position: "relative",         // Positioning of the button, 'absolute' or 'relative' to its normal position
+  bottom: "auto",               // Distance from the bottom of its container (use with 'position: absolute')
+  right: "auto",                // Distance from the right of its container (use with 'position: absolute')
+  zIndex: 999,                  // Z-index for layering controls
+
+  // Dimension properties
+  width: "100px",               // Button width
+  height: "100px",              // Button height
+
+  // Font and color properties
+  fontSize: "50px",             // Font size of the icon/text inside the button
+  color: "#FFF",                // Color of the text/icon inside the button
+
+  // Border properties
+  border: "none",               // Border properties
+  borderRadius: "20%",          // Border radius to control the curvature of the button corners
+
+  // Box model properties
+  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",     // Box shadow properties
+  transition: "background-color 0.3s ease-in-out", // Transition effect for hover or click events
+
+  // Flexbox properties
+  display: "flex",              // CSS display property
+  justifyContent: "center",     // Aligns children (e.g., icon) horizontally
+  alignItems: "center",         // Aligns children (e.g., icon) vertically
+};
 
 <AiAssistantButton style={customStyle} />
 ```
