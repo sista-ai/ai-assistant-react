@@ -15,6 +15,7 @@ __No Code Changes! No Intent Definitions!__ *Just add our magic button `<AiAssis
 - **AI Assistant:** Answers any question
 - **UI Controller:** Performs any action
 - **Voice UI:** Speaks any language
+- **Auto Scraper:** Scrape any page
 - **Admin Panel:** Customizes any detail
 
 
@@ -398,9 +399,10 @@ Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applica
 Unlock the Future with our advacned **Voice AI Assistant**: Embrace top-tier components:
 - Conversational AI Agents
 - Interactive Voice UI
+- Automatic page content scraping
 - Intelligent AI interface
 - Natural Language Understanding Engine
-- Text-to-Executable Translator
+- Text-to-Executable Translator (frontend & backend)
 - Audio-to-Text / Text-to-Audio Conversion
 - Intent Recognition and Handling
 - Contextual Response Generator

@@ -24,7 +24,8 @@ class AiAssistantEngine extends EventEmitter {
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
         this.scraper = new Scraper();
-        this.scraper.getText();
+        
+        this.pageContent = this.scraper.getText();
 
         if (!key) {
             throw new Error('Missing API Key for AiAssistantProvider. Get your FREE Key from https://admin.sista.ai/applications');
@@ -90,6 +91,7 @@ class AiAssistantEngine extends EventEmitter {
         const formData = new FormData();
         formData.append('sdkVersion', this.sdkVersion);
         formData.append('endUser', JSON.stringify(this._getEndUserDetails()));
+        formData.append('pageContent', JSON.stringify(this.pageContent));
         formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
