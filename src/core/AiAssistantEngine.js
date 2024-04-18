@@ -6,6 +6,7 @@ import AudioPlayer from './AudioPlayer';
 import AudioRecorder from './AudioRecorder';
 import FunctionExecutor from './FunctionExecutor';
 import Logger from './Logger';
+import Scraper from './Scraper';
 
 const config = require('./config');
 
@@ -22,6 +23,8 @@ class AiAssistantEngine extends EventEmitter {
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
+        this.scraper = new Scraper();
+        this.scraper.getText();
 
         if (!key) {
             throw new Error('Missing API Key for AiAssistantProvider. Get your FREE Key from https://admin.sista.ai/applications');
