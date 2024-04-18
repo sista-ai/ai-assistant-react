@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
 import { FaMicrophone, FaVolumeUp } from 'react-icons/fa';
-import { LuBrainCircuit } from 'react-icons/lu';
+import { GiBrainFreeze } from "react-icons/gi";
+
 
 const injectStyles = () => {
     const style = document.createElement('style');
@@ -100,11 +101,13 @@ const AiAssistantButton = ({
             className="ai-assistant-button"
             onClick={handleButtonClick}
             disabled={isButtonDisabled}
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
             style={{
                 backgroundColor: colors[recordingState],
                 boxShadow: hover
-                    ? '0px 0px 10px rgba(255, 255, 255, 0.4)'
-                    : '0px 0px 15px rgba(0, 0, 0, 0.7)',
+                    ? '0px 0px 10px #4a6cf6'
+                    : '0px 0px 15px rgba(0, 0, 0, 0.9)',
                 animation:
                     recordingState === 'STATE_LISTENING_START'
                         ? 'spin 2s infinite'
@@ -118,7 +121,7 @@ const AiAssistantButton = ({
             {...props}
         >
             {recordingState === 'STATE_THINKING_START' ? (
-                <LuBrainCircuit />
+                <GiBrainFreeze />
             ) : recordingState === 'STATE_SPEAKING_START' ? (
                 <FaVolumeUp />
             ) : (
