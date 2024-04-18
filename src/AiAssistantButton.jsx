@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
-import { FaMicrophone, FaVolumeUp, FaSatelliteDish } from 'react-icons/fa';
+import { FaMicrophone, FaVolumeUp } from 'react-icons/fa';
+import { LuBrainCircuit } from 'react-icons/lu';
 
 const injectStyles = (keyframes) => {
     const style = document.createElement('style');
@@ -82,7 +83,7 @@ const AiAssistantButton = ({
         alignItems: 'center',
         border: 'none',
         boxShadow: hover
-            ? '0px 0px 20px rgba(255, 255, 255, 0.8)'
+            ? '0px 0px 10px rgba(255, 255, 255, 0.4)'
             : '0px 0px 15px rgba(0, 0, 0, 0.7)',
         transition:
             'background-color 0.3s ease-in-out, boxShadow 0.3s ease-in-out',
@@ -112,7 +113,7 @@ const AiAssistantButton = ({
             {...props}
         >
             {recordingState === 'STATE_THINKING_START' ? (
-                <FaSatelliteDish />
+                <LuBrainCircuit />
             ) : recordingState === 'STATE_SPEAKING_START' ? (
                 <FaVolumeUp />
             ) : (
