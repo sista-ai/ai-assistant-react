@@ -11,37 +11,45 @@ import Scraper from './Scraper';
 const config = require('./config');
 
 class AiAssistantEngine extends EventEmitter {
-
-    constructor(key, apiUrl = config.apiUrl, userId = null, debug = false) {
-
+    constructor(
+        apiKey,
+        apiUrl = config.apiUrl,
+        userId = null,
+        scrapeContent = true,
+        debugMode = false,
+    ) {
         super();
 
-        Logger.setDebug(debug);
+        Logger.setDebugMode(debugMode);
         this.sdkVersion = pkg.version;
-        Logger.log(`--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`);
+        Logger.log(
+            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`,
+        );
+        this.scrapeContent = scrapeContent;
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
         this.scraper = new Scraper();
-        
-        this.pageContent = this.scraper.getText();
 
-        if (!key) {
-            throw new Error('Missing API Key for AiAssistantProvider. Get your FREE Key from https://admin.sista.ai/applications');
+        this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
+
+        if (!apiKey) {
+            throw new Error(
+                'Missing API Key for AiAssistantProvider. Get your FREE Key from https://admin.sista.ai/applications',
+            );
         }
 
-        this.key = key;
-        Logger.log('--[SISTA]-- Using Acesss Key:', '...' + this.key.slice(-8));
+        this.apiKey = apiKey;
+        Logger.log(
+            '--[SISTA]-- Using Acesss Key:',
+            '...' + this.apiKey.slice(-8),
+        );
 
         this.apiUrl = apiUrl;
         Logger.log('--[SISTA]-- Using Base URL:', this.apiUrl);
 
         this.userId = userId;
-    }
-
-    static init(key, apiUrl, userId, debug = false) {
-        return new AiAssistantEngine(key, apiUrl, userId, debug);
     }
 
     /**
@@ -91,18 +99,20 @@ class AiAssistantEngine extends EventEmitter {
         const formData = new FormData();
         formData.append('sdkVersion', this.sdkVersion);
         formData.append('endUser', JSON.stringify(this._getEndUserDetails()));
-        formData.append('pageContent', JSON.stringify(this.pageContent));
         formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
             JSON.stringify(this.functionExecutor.functionSignatures),
         );
+        if (this.scrapeContent) {
+            formData.append('pageContent', JSON.stringify(this.pageContent));
+        }
 
         try {
             const response = await fetch(`${this.apiUrl}/processor/run`, {
                 method: 'POST',
                 headers: {
-                    'x-api-key': this.key,
+                    'x-api-key': this.apiKey,
                 },
                 body: formData,
             });
@@ -110,7 +120,6 @@ class AiAssistantEngine extends EventEmitter {
             const data = await response.json();
 
             this._handleApiResponse(data);
-
         } catch (error) {
             Logger.error('Error Calling Sista API:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
@@ -196,7 +205,6 @@ class AiAssistantEngine extends EventEmitter {
     _handleTextResponse = (content) => {
         Logger.log('--[SISTA]-- AI Response As Text:', content);
     };
-
 }
 
 export default AiAssistantEngine;

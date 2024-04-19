@@ -250,19 +250,18 @@ export default TodoApp;
 
 ## Configuration
 
-`AiAssistantProvider` accepts few props:
+`AiAssistantProvider` accepts the following props:
 
 ```jsx
 <AiAssistantProvider
-    apiKey="api-key" // (required): Your API key.
-    userId="user-id" // (optional): The end user ID (for analytics).
-    debug={true} // (optional): Enables debug mode.
-    apiUrl="api-url" // (optional): For testing purposes.
+  apiKey="api-key"           // (required): Your API key.
+  userId="user-id"           // (optional): Your end user ID (for analytics tracking).
+  scrapeContent={true}       // (optional): Automatic page content scraping (Enabled by default).
+  debug={false}              // (optional): Debug mode. (Disabled by default)
+  apiUrl="api-url"           // (optional): For testing purposes.
 >
-    // ...
+  // ...
 </AiAssistantProvider>
-```
-
 ---
 
 ## Customization
@@ -350,7 +349,10 @@ Use the `style` prop for inline adjustments or `className` for stylesheet-based 
 
 ### Modify AI Responses
 
-Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data`.
+Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data` in the AI Instruction.
+
+By default, `AiAssistantProvider` supplies the AI model with the current page's content. To disable, set `scrapeContent` to false. Scraped content supplements any prompts from the admin panel.
+
 
 ### Change Assistant Voice
 

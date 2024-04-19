@@ -10,7 +10,7 @@ class Logger {
         return Logger.instance;
     }
 
-    setDebug(debug) {
+    setDebugMode(debug) {
         this.debug = debug;
     }
 
