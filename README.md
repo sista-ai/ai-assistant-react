@@ -90,12 +90,12 @@ import { AiAssistantButton } from "@sista/ai-assistant-react";
 
 // ...
 function MyComponent() {
-  return (
-    <div>
-      // ...
-      <AiAssistantButton />  // << Add the magic button anywhere
-    </div>
-  );
+    return (
+        <div>
+            // ...
+            <AiAssistantButton />  // << Add the magic button anywhere
+        </div>
+    );
 }
 ```
 
@@ -252,13 +252,13 @@ export default TodoApp;
 
 `AiAssistantProvider` accepts the following props:
 
-```jsx
+````jsx
 <AiAssistantProvider
-  apiKey="api-key"           // (required): Your API key.
-  userId="user-id"           // (optional): Your end user ID (for analytics tracking).
-  scrapeContent={true}       // (optional): Automatic page content scraping (Enabled by default).
-  debug={false}              // (optional): Debug mode. (Disabled by default)
-  apiUrl="api-url"           // (optional): For testing purposes.
+    apiKey="api-key"           // (required): Your API key.
+    userId="user-id"           // (optional): Your end user ID (for analytics tracking).
+    scrapeContent={true}       // (optional): Automatic page content scraping (Enabled by default).
+    debug={false}              // (optional): Debug mode. (Disabled by default)
+    apiUrl="api-url"           // (optional): For testing purposes.
 >
   // ...
 </AiAssistantProvider>
@@ -279,7 +279,7 @@ const customStateColors = {
 };
 
 <AiAssistantButton stateColors={customStateColors} />;
-```
+````
 
 ### Button Style & Position
 
@@ -349,10 +349,9 @@ Use the `style` prop for inline adjustments or `className` for stylesheet-based 
 
 ### Modify AI Responses
 
-Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data` in the AI Instruction.
+Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data` as AI Instructions.
 
-By default, `AiAssistantProvider` supplies the AI model with the current page's content. To disable, set `scrapeContent` to false. Scraped content supplements any prompts from the admin panel.
-
+By default, `AiAssistantProvider` supplies the AI model with the current page's content. To disable, set `scrapeContent` to false. Scraped content supplements your custom prompts added from the admin panel.
 
 ### Change Assistant Voice
 
