@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
 import { FaMicrophone, FaVolumeUp } from 'react-icons/fa';
-import { GiBrainFreeze } from "react-icons/gi";
-
+import { GiBrainFreeze } from 'react-icons/gi';
 
 const injectStyles = () => {
     const style = document.createElement('style');
@@ -52,8 +51,7 @@ const injectStyles = () => {
 };
 
 const AiAssistantButton = ({
-    buttonText = 'Record',
-    buttonColors = {},
+    stateColors = {},
     style = {},
     ...props
 }) => {
@@ -66,14 +64,14 @@ const AiAssistantButton = ({
         injectStyles();
     }, []);
 
-    const defaultButtonColors = {
+    const defaultStateColors = {
         STATE_IDLE: '#4a6cf6',
         STATE_LISTENING_START: '#F64A7B',
         STATE_THINKING_START: '#015589',
         STATE_SPEAKING_START: '#019a9a',
     };
 
-    const colors = { ...defaultButtonColors, ...buttonColors };
+    const colors = { ...defaultStateColors, ...stateColors };
 
     const handleButtonClick = () => {
         if (aiAssistant) {

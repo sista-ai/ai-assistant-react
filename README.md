@@ -2,9 +2,7 @@
 
 Turn your App smart with a conversational AI assistant and interactive voice UI **in less than 10 minutes**!
 
-__No Code Changes! No Intent Definitions!__ *Just add our magic button `<AiAssistantButton />`.*
-
-
+**No Code Changes! No Intent Definitions!** _Just add our magic button `<AiAssistantButton />`._
 
 [![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai)
 
@@ -12,13 +10,11 @@ __No Code Changes! No Intent Definitions!__ *Just add our magic button `<AiAssis
 
 **Features at a Glance:**
 
-- **AI Assistant:** Answers any question
-- **UI Controller:** Performs any action
-- **Voice UI:** Speaks any language
-- **Auto Scraper:** Scrape any page
-- **Admin Panel:** Customizes any detail
-
-
+-   **AI Assistant:** Answers any question
+-   **UI Controller:** Performs any action
+-   **Voice UI:** Speaks any language
+-   **Auto Scraper:** Scrape any page
+-   **Admin Panel:** Customizes any detail
 
 ## Demo
 
@@ -26,39 +22,35 @@ __No Code Changes! No Intent Definitions!__ *Just add our magic button `<AiAssis
 
 Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Say "Turn on the light"!_
 
-
-
-
 [![Sista Logo](./assets/sista-demo-one.png)](https://smart.sista.ai)
-
 
 ## Supported Projects
 
 This package integrates with many React projects.
 
-- NextJS
-- Electron
-- Gatsby
-- Meteor
-- React Native
-- Remix
-- RedwoodJS
-- Parcel
-- Expo
-- BlitzJS
-
-
+-   NextJS
+-   Electron
+-   Gatsby
+-   Meteor
+-   React Native
+-   Remix
+-   RedwoodJS
+-   Parcel
+-   Expo
+-   BlitzJS
 
 ## Installation
 
 To use [@sista/ai-assistant-react](https://www.npmjs.com/package/@sista/ai-assistant-react), install it in your React App.
 
 ##### Using npm:
+
 ```bash
 npm install @sista/ai-assistant-react
 ```
 
 ##### Using yarn:
+
 ```bash
 yarn add @sista/ai-assistant-react
 ```
@@ -67,8 +59,6 @@ yarn add @sista/ai-assistant-react
 ```bash
 pnpm add @sista/ai-assistant-react
 ``` -->
-
-
 
 ## Setup
 
@@ -81,18 +71,14 @@ Import `AiAssistantProvider` and wrap your App at the root level.
 import { AiAssistantProvider } from "@sista/ai-assistant-react";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AiAssistantProvider apiKey="YOUR_API_KEY"> // << Wrap your app with this provider
+    <AiAssistantProvider apiKey="YOUR_API_KEY">   // << Wrap your app with this provider
       <App />
     </AiAssistantProvider>
-  </React.StrictMode>,
   // ...
 );
 ```
 
 Get your **free** `API key` from the [Admin Panel](https://admin.sista.ai/applications) and replace `"YOUR_API_KEY"`.
-
-
 
 ### 2. Import Button
 
@@ -113,12 +99,9 @@ function MyComponent() {
 }
 ```
 
-
-
 > 🎉 Congrats! Press the button, start talking, and enjoy!
 
 ---
-
 
 ### 3. Register Voice-Interactive Functions
 
@@ -126,71 +109,64 @@ To make your UI voice-interactive, simply register an `array` of `function signa
 
 ```js
 const sayHelloWorld = () => {
-  console.log("Hello, World!");
+    console.log('Hello, World!');
 };
 
 // Define the functions to be voice-controlled
 const interactiveFunctions = [
-  {
-    function: {
-      handler: sayHelloWorld, // pass a refference to your function
-      description: "Greets the user with Hello World :)", // add function description
+    {
+        function: {
+            handler: sayHelloWorld, // (required) pass a refference to your function
+            description: 'Greets the user with Hello World :)', // (required) its important to include clear description (our smart AI automatically handles different variations.)
+        },
     },
-  },
-  // ... register additional functions here
+    // ... register additional functions here
 ];
 ```
-
-
 
 For functions that accepts parameters:
 
 ```js
 const sayHello = (name) => {
-  console.log(`Hello ${name}!`);
+    console.log(`Hello ${name}!`);
 };
 
 // Define the functions to be voice-controlled
 const interactiveFunctions = [
-  {
-    function: {
-      handler: sayHello,
-      description: "Greets the user with their name.",
-      // In case your function accepts parameters:
-      parameters: {
-        type: "object",
-        properties: {
-          name: { 
-            type: "string", // set parameter type
-            description: "User's name." // add parameter description
-          },
+    {
+        function: {
+            handler: sayHello,
+            description: 'Greets the user with their name.',
+            // In case your function accepts parameters:
+            parameters: {
+                type: 'object',
+                properties: {
+                    name: {
+                        type: 'string', // set parameter type
+                        description: "User's name.", // add parameter description
+                    },
+                },
+                required: ['name'], // list required parameters
+            },
         },
-        required: ["name"], // list required parameters
-      },
     },
-  },
 ];
 ```
-
-
 
 Register the functions with `aiAssistant.registerFunctions(..);` inside a `useEffect` hook.
 
 ```js
-  const aiAssistant = useAiAssistant();
-  useEffect(() => {
+const aiAssistant = useAiAssistant();
+useEffect(() => {
     if (aiAssistant) {
-      aiAssistant.registerFunctions(interactiveFunctions);
+        aiAssistant.registerFunctions(interactiveFunctions);
     }
-  }, [aiAssistant]);
+}, [aiAssistant]);
 ```
 
 > Just like that, your app is voice-interactive. Magic! :sparkles:
 
-
-
 To customize the AI assistant's voice or feed information about your product, visit the [Admin Panel](https://admin.sista.ai/applications).
-
 
 ## Full Example: (Todo App)
 
@@ -201,71 +177,70 @@ import React, { useEffect } from 'react';
 import { useAiAssistant, AiAssistantButton } from '@sista/ai-assistant-react';
 
 function TodoApp() {
+    const addTask = (task) => {
+        console.log(`Task added: ${task}`);
+    };
 
-  const addTask = (task) => {
-    console.log(`Task added: ${task}`);
-  };
+    const removeTask = (task) => {
+        console.log(`Task removed: ${task}`);
+    };
 
-  const removeTask = (task) => {
-    console.log(`Task removed: ${task}`);
-  };
+    // ...
 
-  // ...
+    // Initialize the aiAssistant instance
+    const aiAssistant = useAiAssistant();
 
-  // Initialize the aiAssistant instance
-  const aiAssistant = useAiAssistant();
-
-  useEffect(() => {
-    // Define the voice-controlled functions
-    const interactiveFunctions = [
-      {
-        function: {
-          handler: addTask,
-          description: 'Adds a new task.',
-          parameters: {
-            type: 'object',
-            properties: {
-              task: { 
-                type: 'string', 
-                description: 'Description of the task.' 
-              },
+    useEffect(() => {
+        // Define the voice-controlled functions
+        const interactiveFunctions = [
+            {
+                function: {
+                    handler: addTask,
+                    description: 'Adds a new task.',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            task: {
+                                type: 'string',
+                                description: 'Description of the task.',
+                            },
+                        },
+                        required: ['task'],
+                    },
+                },
             },
-            required: ['task'],
-          },
-        },
-      },
-      {
-        function: {
-          handler: removeTask,
-          description: 'Removes an existing task.',
-          parameters: {
-            type: 'object',
-            properties: {
-              task: { 
-                type: 'string', 
-                description: 'Description of the task.' 
-              },
+            {
+                function: {
+                    handler: removeTask,
+                    description: 'Removes an existing task.',
+                    parameters: {
+                        type: 'object',
+                        properties: {
+                            task: {
+                                type: 'string',
+                                description: 'Description of the task.',
+                            },
+                        },
+                        required: ['task'],
+                    },
+                },
             },
-            required: ['task'],
-          },
-        },
-      },
-    ];
+        ];
 
-    // Register the AI controlled functions
-    if (aiAssistant) {
-      aiAssistant.registerFunctions(interactiveFunctions);
-    }
-  }, [aiAssistant]);
+        // Register the AI controlled functions
+        if (aiAssistant) {
+            aiAssistant.registerFunctions(interactiveFunctions);
+        }
+    }, [aiAssistant]);
 
-  // ...
+    // ...
 
-  return (
-    <div>
-      // ...
-      <AiAssistantButton />
-    </div>
-  );
+    return (
+        <div>
+            // ...
+            <AiAssistantButton />
+        </div>
+    );
 }
 
 export default TodoApp;
@@ -273,19 +248,18 @@ export default TodoApp;
 
 ---
 
-
 ## Configuration
 
 `AiAssistantProvider` accepts few props:
 
 ```jsx
 <AiAssistantProvider
-  apiKey="api-key"   // (required): Your API key.
-  userId="user-id"   // (optional): The end user ID (for analytics).
-  debug={true}       // (optional): Enables debug mode.
-  apiUrl="api-url"   // (optional): For testing purposes.
+    apiKey="api-key" // (required): Your API key.
+    userId="user-id" // (optional): The end user ID (for analytics).
+    debug={true} // (optional): Enables debug mode.
+    apiUrl="api-url" // (optional): For testing purposes.
 >
-  // ...
+    // ...
 </AiAssistantProvider>
 ```
 
@@ -298,14 +272,14 @@ export default TodoApp;
 Modify the colors of the `AiAssistantButton` at different states:
 
 ```js
-const colors = {
-    STATE_IDLE: '#4a6cf6', // Default
-    STATE_LISTENING_START: '#F64A7B', // Red
-    STATE_THINKING_START: '#4ac2f6', // Blue
-    STATE_SPEAKING_START: '#4af67f', // Green
+const customStateColors = {
+    STATE_IDLE: '#4a6cf6', // Bright Blue
+    STATE_LISTENING_START: '#F64A7B', // Bright Pink
+    STATE_THINKING_START: '#4ac2f6', // Sky Blue
+    STATE_SPEAKING_START: '#4af67f', // Light Green
 };
 
-<AiAssistantButton buttonColors={colors} />
+<AiAssistantButton stateColors={customStateColors} />;
 ```
 
 ### Button Style & Position
@@ -314,35 +288,35 @@ Pass a `style` object to adjust dimensions, position, and appearance:
 
 ```js
 const customStyle = {
-  // Positioning and layout properties
-  position: "relative",         // Positioning of the button, 'absolute' or 'relative' to its normal position
-  bottom: "auto",               // Distance from the bottom of its container (use with 'position: absolute')
-  right: "auto",                // Distance from the right of its container (use with 'position: absolute')
-  zIndex: 999,                  // Z-index for layering controls
+    // Positioning and layout properties
+    position: 'relative', // Positioning of the button, 'absolute' or 'relative' to its normal position
+    bottom: 'auto', // Distance from the bottom of its container (use with 'position: absolute')
+    right: 'auto', // Distance from the right of its container (use with 'position: absolute')
+    zIndex: 999, // Z-index for layering controls
 
-  // Dimension properties
-  width: "100px",               // Button width
-  height: "100px",              // Button height
+    // Dimension properties
+    width: '100px', // Button width
+    height: '100px', // Button height
 
-  // Font and color properties
-  fontSize: "50px",             // Font size of the icon/text inside the button
-  color: "#FFF",                // Color of the text/icon inside the button
+    // Font and color properties
+    fontSize: '50px', // Font size of the icon/text inside the button
+    color: '#FFF', // Color of the text/icon inside the button
 
-  // Border properties
-  border: "none",               // Border properties
-  borderRadius: "20%",          // Border radius to control the curvature of the button corners
+    // Border properties
+    border: 'none', // Border properties
+    borderRadius: '20%', // Border radius to control the curvature of the button corners
 
-  // Box model properties
-  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)",     // Box shadow properties
-  transition: "background-color 0.3s ease-in-out", // Transition effect for hover or click events
+    // Box model properties
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.5)', // Box shadow properties
+    transition: 'background-color 0.3s ease-in-out', // Transition effect for hover or click events
 
-  // Flexbox properties
-  display: "flex",              // CSS display property
-  justifyContent: "center",     // Aligns children (e.g., icon) horizontally
-  alignItems: "center",         // Aligns children (e.g., icon) vertically
+    // Flexbox properties
+    display: 'flex', // CSS display property
+    justifyContent: 'center', // Aligns children (e.g., icon) horizontally
+    alignItems: 'center', // Aligns children (e.g., icon) vertically
 };
 
-<AiAssistantButton style={customStyle} />
+<AiAssistantButton style={customStyle} />;
 ```
 
 For example: To override default positioning, set `position: 'relative'` and `bottom/right: 'auto'`. This allows custom placement within your container.
@@ -374,53 +348,46 @@ Apply CSS classes for complex styling:
 
 Use the `style` prop for inline adjustments or `className` for stylesheet-based customizations.
 
-
-
 ### Modify AI Responses
 
 Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data`.
-
 
 ### Change Assistant Voice
 
 Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
 
-
 [![Sista Logo](./assets/sista-admin-dark.png)](https://smart.sista.ai)
 
 ---
-
-
 
 <a href="https://smart.sista.ai">
   <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
 </a>
 
 Unlock the Future with our advacned **Voice AI Assistant**: Embrace top-tier components:
-- Conversational AI Agents
-- Interactive Voice UI
-- Automatic page content scraping
-- Intelligent AI interface
-- Natural Language Understanding Engine
-- Text-to-Executable Translator (frontend & backend)
-- Audio-to-Text / Text-to-Audio Conversion
-- Intent Recognition and Handling
-- Contextual Response Generator
-- Custom Prompt Configuration
-- Analytics and Logging
-- Privacy and Security
+
+-   Conversational AI Agents
+-   Interactive Voice UI
+-   Automatic page content scraping
+-   Intelligent AI interface
+-   Natural Language Understanding Engine
+-   Text-to-Executable Translator (frontend & backend)
+-   Audio-to-Text / Text-to-Audio Conversion
+-   Intent Recognition and Handling
+-   Contextual Response Generator
+-   Custom Prompt Configuration
+-   Analytics and Logging
+-   Privacy and Security
 
 ## Diverse SDKs
 
 Install across all platforms for a unified experience.
 
-| | | | | | |
-|:---:|:---:|:---:|:---:|:---:|:---:|
-| [<img src="./assets/sdks/VUE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/ANGULAR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/EMBER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/SVELTE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/NEXT.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/GATSBY.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |
-| [<img src="./assets/sdks/REMIX.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/DART.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/JS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/IOS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/ANDROID.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/IONIC.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |
-| [<img src="./assets/sdks/CORDOVA.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/REACT-NATIVE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/FLUTTER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/MAUI.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |          [<img src="./assets/sdks/XAMARIN.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)           |          [<img src="./assets/sdks/CAPACITOR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)          |
-
-
+|                                                                                                      |                                                                                                           |                                                                                                      |                                                                                                     |                                                                                                      |                                                                                                        |
+| :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
+|   [<img src="./assets/sdks/VUE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |   [<img src="./assets/sdks/ANGULAR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)    |  [<img src="./assets/sdks/EMBER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  | [<img src="./assets/sdks/SVELTE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |  [<img src="./assets/sdks/NEXT.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |  [<img src="./assets/sdks/GATSBY.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |
+|  [<img src="./assets/sdks/REMIX.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  |     [<img src="./assets/sdks/DART.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)     |   [<img src="./assets/sdks/JS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)    |  [<img src="./assets/sdks/IOS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   | [<img src="./assets/sdks/ANDROID.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |   [<img src="./assets/sdks/IONIC.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |
+| [<img src="./assets/sdks/CORDOVA.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/REACT-NATIVE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/FLUTTER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |  [<img src="./assets/sdks/MAUI.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  | [<img src="./assets/sdks/XAMARIN.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/CAPACITOR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |
 
 ## Contributing
 
