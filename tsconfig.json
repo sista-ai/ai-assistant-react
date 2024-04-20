@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "target": "ES2020", // Modern ECMAScript features for better browser compatibility.
+        "module": "ESNext", // Use the latest module system.
+        "lib": ["dom", "dom.iterable", "esnext"], // Updated libraries to support modern web APIs along with ECMAScript features.
+        "allowJs": true, // Allow JavaScript files to be compiled.
+        "skipLibCheck": true, // Skip type checking of all declaration files (*.d.ts).
+        "esModuleInterop": true, // Enables ES6-style module import interoperability.
+        "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export.
+        "strict": true, // Enable all strict type-checking options.
+        "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file.
+        "moduleResolution": "node", // Use Node.js style module resolution.
+        "resolveJsonModule": true, // Include modules imported with '.json' extensions.
+        "isolatedModules": true, // Ensure each file can be safely transpiled without relying on other imports.
+        "noEmit": false, // Enable the generation of '.js' files from TypeScript.
+        "jsx": "react-jsx", // Support for the new JSX transform in React 17+.
+        "baseUrl": ".", // Base directory to resolve non-relative module names.
+        "outDir": "dist", // Redirect output structure to the directory.
+        "declaration": true, // Generate corresponding '.d.ts' files.
+        "paths": {
+            "*": ["src/*", "node_modules/*"] // Support for resolving modules located in these paths.
+        },
+        "downlevelIteration": true // Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'.
+    },
+    "include": [
+        "src/**/*" // All files under 'src' are included in compilation.
+    ],
+    "exclude": [
+        "node_modules", // Exclude this folder from the compilation.
+        "**/*.spec.ts" // Exclude test files.
+    ]
+}

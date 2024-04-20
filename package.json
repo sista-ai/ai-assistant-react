@@ -2,14 +2,14 @@
     "name": "@sista/ai-assistant-react",
     "version": "2.1.2",
     "description": "An SDK for integrating AI-powered voice (or text) assistants into any React App, increasing user engagement with AI conversational interfaces.",
-    "main": "dist/index.js",
+    "main": "dist/src/index.js",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/sista-ai/ai-assistant-react.git"
     },
     "scripts": {
-        "watch": "nodemon --exec yarn run build --watch src --ext js,jsx",
-        "build": "babel src --out-dir dist --extensions \".js,.jsx\" --copy-files",
+        "watch": "nodemon --exec yarn run build --watch src --ext ts,tsx",
+        "build": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1",
         "prepublishOnly": "npm run build",
         "publish:public": "npm publish --access public",
@@ -38,18 +38,19 @@
         "react-dom": ">=16.11.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.23.9",
-        "@babel/core": "^7.24.0",
-        "@babel/preset-env": "^7.24.0",
-        "@babel/preset-react": "^7.23.3",
-        "nodemon": "^3.1.0"
+        "@types/howler": "^2.2.11",
+        "@types/react": "^18.2.79",
+        "@types/react-dom": "^17.0.0",
+        "@types/recorder-js": "^1.0.4",
+        "nodemon": "^3.1.0",
+        "typescript": "^5.4.5"
     },
     "files": [
         "dist"
     ],
     "dependencies": {
-        "react-icons": "^5.0.1",
         "howler": "^2.2.4",
+        "react-icons": "^5.0.1",
         "recorder-js": "^1.0.7"
     }
 }

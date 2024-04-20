@@ -1,5 +1,3 @@
-// src/AiAssistantButton.jsx
-
 import React, { useState, useEffect } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
 import { FaMicrophone, FaVolumeUp } from 'react-icons/fa';
@@ -50,28 +48,42 @@ const injectStyles = () => {
     document.head.appendChild(style);
 };
 
-const AiAssistantButton = ({
+type RecordingState =
+    | 'STATE_IDLE'
+    | 'STATE_LISTENING_START'
+    | 'STATE_THINKING_START'
+    | 'STATE_SPEAKING_START';
+
+type StateColors = { [key in RecordingState]: string };
+
+interface AiAssistantButtonProps {
+    stateColors?: StateColors;
+    style?: React.CSSProperties;
+    [key: string]: any;
+}
+
+const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
     stateColors = {},
     style = {},
     ...props
 }) => {
-    const aiAssistant = useAiAssistant();
-    const [recordingState, setRecordingState] = useState('STATE_IDLE');
-    const [isButtonDisabled, setButtonDisabled] = useState(false);
-    const [hover, setHover] = useState(false);
+    const { aiAssistant } = useAiAssistant();
+    const [recordingState, setRecordingState] = useState<RecordingState>('STATE_IDLE');
+    const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
+    const [hover, setHover] = useState<boolean>(false);
 
     useEffect(() => {
         injectStyles();
     }, []);
 
-    const defaultStateColors = {
+    const defaultStateColors: StateColors = {
         STATE_IDLE: '#4a6cf6',
         STATE_LISTENING_START: '#F64A7B',
         STATE_THINKING_START: '#015589',
         STATE_SPEAKING_START: '#019a9a',
     };
 
-    const colors = { ...defaultStateColors, ...stateColors };
+    const colors: StateColors = { ...defaultStateColors, ...stateColors };
 
     const handleButtonClick = () => {
         if (aiAssistant) {
@@ -81,8 +93,8 @@ const AiAssistantButton = ({
 
     useEffect(() => {
         if (aiAssistant) {
-            const handleStateChange = (newState) => {
-                setRecordingState(newState);
+            const handleStateChange = (newState: string) => {
+                setRecordingState(newState as RecordingState);
                 setButtonDisabled(newState !== 'STATE_IDLE');
             };
 

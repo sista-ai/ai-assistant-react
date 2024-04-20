@@ -1,4 +1,4 @@
-// src/core/MainProcessor.js
+// src/core/AiAssistantEngine.ts
 
 import pkg from '../../package.json';
 import EventEmitter from './EventEmitter';
@@ -7,32 +7,43 @@ import AudioRecorder from './AudioRecorder';
 import FunctionExecutor from './FunctionExecutor';
 import Logger from './Logger';
 import Scraper from './Scraper';
+import config from './config';
+import { VoiceFunction } from './commonTypes';
 
-const config = require('./config');
+interface EndUserDetails {
+    endUserAgent: string;
+    generatedEndUserId: string;
+    providedEndUserId: string | null;
+}
+
+interface ApiResponse {
+    warningMessage?: string;
+    statusCode?: number;
+    message?: string;
+    executableFunctions?: any;
+    audioFile?: string;
+}
 
 class AiAssistantEngine extends EventEmitter {
+    private readonly apiKey: string;
+    private readonly apiUrl: string;
+    private readonly userId: string | null;
+    private readonly scrapeContent: boolean;
+    private readonly sdkVersion: string;
+    private readonly audioPlayer: AudioPlayer;
+    private readonly audioRecorder: AudioRecorder;
+    private readonly functionExecutor: FunctionExecutor;
+    private readonly scraper: Scraper;
+    private readonly pageContent: Record<string, string[]> | null;
+
     constructor(
-        apiKey,
-        apiUrl = config.apiUrl,
-        userId = null,
-        scrapeContent = true,
-        debugMode = false,
+        apiKey: string,
+        apiUrl: string = config.apiUrl,
+        userId: string | null = null,
+        scrapeContent: boolean = true,
+        debugMode: boolean = false,
     ) {
         super();
-
-        Logger.setDebugMode(debugMode);
-        this.sdkVersion = pkg.version;
-        Logger.log(
-            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`,
-        );
-        this.scrapeContent = scrapeContent;
-
-        this.audioPlayer = new AudioPlayer();
-        this.audioRecorder = new AudioRecorder();
-        this.functionExecutor = new FunctionExecutor();
-        this.scraper = new Scraper();
-
-        this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
 
         if (!apiKey) {
             throw new Error(
@@ -40,41 +51,40 @@ class AiAssistantEngine extends EventEmitter {
             );
         }
 
+        Logger.setDebugMode(debugMode);
+        this.sdkVersion = pkg.version;
+        Logger.log(
+            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion} + TS 5`,
+        );
+        this.scrapeContent = scrapeContent;
         this.apiKey = apiKey;
         Logger.log(
-            '--[SISTA]-- Using Acesss Key:',
+            '--[SISTA]-- Using Access Key:',
             '...' + this.apiKey.slice(-8),
         );
-
         this.apiUrl = apiUrl;
         Logger.log('--[SISTA]-- Using Base URL:', this.apiUrl);
-
         this.userId = userId;
+
+        this.audioPlayer = new AudioPlayer();
+        this.audioRecorder = new AudioRecorder();
+        this.functionExecutor = new FunctionExecutor();
+        this.scraper = new Scraper();
+        this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
     }
 
-    /**
-     * Registers the given voice activated functions.
-     *
-     * @param {Object[]} voiceFunctions - An array of voice functions to register.
-     */
-    registerFunctions(voiceFunctions) {
+    registerFunctions(voiceFunctions: VoiceFunction[]): void {
         this.functionExecutor.registerFunctions(voiceFunctions);
     }
 
-    /**
-     * Handle the full voice interaction process from start to finish.
-     *
-     * @async
-     * @throws Will throw an error if there's an issue accessing the microphone.
-     */
-    startProcessing = async () => {
+    startProcessing = async (): Promise<void> => {
         Logger.log('--[SISTA]-- startProcessing');
 
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
 
         this.audioPlayer.playStartTone();
 
-        let userAudioCommand;
+        let userAudioCommand: Blob | undefined;
 
         try {
             userAudioCommand = await this.audioRecorder.startRecording();
@@ -84,15 +94,17 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
-        try {
-            await this._makeAPIRequest(userAudioCommand);
-        } catch (err) {
-            Logger.error('Error making API request:', err);
-            this.emitStateChange(EventEmitter.STATE_IDLE);
+        if (userAudioCommand) {
+            try {
+                await this._makeAPIRequest(userAudioCommand);
+            } catch (err) {
+                Logger.error('Error making API request:', err);
+                this.emitStateChange(EventEmitter.STATE_IDLE);
+            }
         }
     };
 
-    _makeAPIRequest = async (audioBlob) => {
+    private _makeAPIRequest = async (audioBlob: Blob): Promise<void> => {
         Logger.log('--[SISTA]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
@@ -117,7 +129,7 @@ class AiAssistantEngine extends EventEmitter {
                 body: formData,
             });
 
-            const data = await response.json();
+            const data: ApiResponse = await response.json();
 
             this._handleApiResponse(data);
         } catch (error) {
@@ -126,7 +138,7 @@ class AiAssistantEngine extends EventEmitter {
         }
     };
 
-    _getEndUserDetails() {
+    private _getEndUserDetails(): EndUserDetails {
         let endUserId = localStorage.getItem('endUserId');
         if (!endUserId) {
             endUserId = Math.random().toString(36).substring(2);
@@ -140,25 +152,22 @@ class AiAssistantEngine extends EventEmitter {
         };
     }
 
-    _handleApiResponse = (response) => {
+    private _handleApiResponse = (response: ApiResponse): void => {
         Logger.log('--[SISTA]-- _handleApiResponse:', response);
 
-        // Check if the response contains a warning message (in case of low balance, etc.)
-        if (response && response.warningMessage) {
+        if (response.warningMessage) {
             Logger.error('API Warning:', response.warningMessage);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
-        // Check if the response is a 401 Unauthorized
-        if (response && response.statusCode === 401) {
+        if (response.statusCode === 401) {
             Logger.error('API Error:', response.message);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
-        // Check if the response is valid
-        if (!response || !response.executableFunctions) {
+        if (!response.executableFunctions) {
             Logger.error('Invalid response format:', response);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
@@ -166,29 +175,25 @@ class AiAssistantEngine extends EventEmitter {
 
         const message = response.executableFunctions;
 
-        // Check if the message exists
         if (!message) {
             Logger.error('Response does not contain a message:', response);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
-        // Play audio response if it exists, otherwise handle the rest
         if (response.audioFile) {
             this._handleAudioResponse(response.audioFile);
         } else {
-            // Handle executable functions if they exist
             if (message.functions) {
                 this._handleExecutableFunctionsResponse(message);
             }
-            // Handle text response if it exists (for example, to display on the screen)
             if (message.content !== null) {
                 this._handleTextResponse(message.content);
             }
         }
     };
 
-    _handleAudioResponse = (audioFile) => {
+    private _handleAudioResponse = (audioFile: string): void => {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReply(audioFile, () => {
             Logger.log('--[SISTA]-- Audio reply has finished playing.');
@@ -196,13 +201,13 @@ class AiAssistantEngine extends EventEmitter {
         });
     };
 
-    _handleExecutableFunctionsResponse = (message) => {
+    private _handleExecutableFunctionsResponse = (message: any): void => {
         this.functionExecutor.executeFunctions(message);
         this.emitStateChange(EventEmitter.STATE_IDLE);
         this.audioPlayer.playEndTone();
     };
 
-    _handleTextResponse = (content) => {
+    private _handleTextResponse = (content: string): void => {
         Logger.log('--[SISTA]-- AI Response As Text:', content);
     };
 }

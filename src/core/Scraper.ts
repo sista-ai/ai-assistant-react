@@ -1,43 +1,40 @@
-// src/core/Scraper.js
+// src/core/Scraper.ts
 import Logger from './Logger';
+
+type GroupedTexts = {
+    buttons: Set<string>;
+    links: Set<string>;
+    paragraphs: Set<string>;
+    headers: Set<string>;
+    others: Set<string>;
+};
+
 class Scraper {
     constructor() {}
 
-    getText = () => {
-        let groupedTexts = {
+    getText = (): Record<string, string[]> => {
+        let groupedTexts: GroupedTexts = {
             buttons: new Set(),
             links: new Set(),
             paragraphs: new Set(),
             headers: new Set(),
-            others: new Set(), // To capture any other text elements
+            others: new Set(),
         };
 
-        const walkDOM = (node) => {
+        const walkDOM = (node: Node | null): void => {
             if (node) {
                 node = node.firstChild;
-                while (node != null) {
+                while (node !== null) {
                     switch (node.nodeType) {
-                        case 3: // Text node
-                            const text = node.nodeValue.trim();
+                        case 3:
+                            const text = node.nodeValue?.trim();
                             if (text) {
-                                // Append text to others if it is not an obvious part of structured data
                                 if (
                                     node.parentNode &&
-                                    [
-                                        'P',
-                                        'H1',
-                                        'H2',
-                                        'H3',
-                                        'H4',
-                                        'H5',
-                                        'H6',
-                                        'BUTTON',
-                                        'A',
-                                    ].includes(node.parentNode.tagName)
+                                    node.parentNode instanceof Element
                                 ) {
                                     // Already handled by parent elements
                                 } else {
-                                    // Ensuring separation by checking sibling nodes
                                     let textWithSpacing = text;
                                     if (
                                         node.previousSibling &&
@@ -55,13 +52,14 @@ class Scraper {
                                 }
                             }
                             break;
-                        case 1: // Element node
+                        case 1:
                             if (
+                                node instanceof Element &&
                                 !['SCRIPT', 'STYLE'].includes(
                                     node.tagName.toUpperCase(),
                                 )
                             ) {
-                                const trimmedText = node.textContent.trim();
+                                const trimmedText = node.textContent?.trim();
                                 if (trimmedText) {
                                     switch (node.tagName.toUpperCase()) {
                                         case 'P':
@@ -76,8 +74,10 @@ class Scraper {
                                             break;
                                         case 'A':
                                             if (
-                                                node.href ||
-                                                node.role === 'button'
+                                                node instanceof
+                                                    HTMLAnchorElement &&
+                                                (node.href ||
+                                                    node.role === 'button')
                                             ) {
                                                 groupedTexts.links.add(
                                                     trimmedText,
@@ -95,11 +95,10 @@ class Scraper {
                                             );
                                             break;
                                         default:
-                                            // Text is handled above in text node case
                                             break;
                                     }
                                 }
-                                walkDOM(node); // Continue walking the DOM
+                                walkDOM(node);
                             }
                             break;
                     }
@@ -107,10 +106,10 @@ class Scraper {
                 }
             }
         };
+
         walkDOM(document.body);
 
-        // Convert sets to arrays and ensure no trailing or leading spaces
-        const result = {};
+        const result: Record<string, string[]> = {};
         for (const [key, value] of Object.entries(groupedTexts)) {
             result[key] = Array.from(value).map((text) => text.trim());
         }

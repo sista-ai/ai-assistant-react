@@ -113,7 +113,7 @@ const sayHelloWorld = () => {
 };
 
 // Define the functions to be voice-controlled
-const interactiveFunctions = [
+const aiFunctions = [
     {
         function: {
             handler: sayHelloWorld, // (required) pass a refference to your function
@@ -132,7 +132,7 @@ const sayHello = (name) => {
 };
 
 // Define the functions to be voice-controlled
-const interactiveFunctions = [
+const aiFunctions = [
     {
         function: {
             handler: sayHello,
@@ -153,15 +153,17 @@ const interactiveFunctions = [
 ];
 ```
 
-Register the functions with `aiAssistant.registerFunctions(..);` inside a `useEffect` hook.
+Register the functions using `registerFunctions([...]);` inside a `useEffect` hook.
 
 ```js
-const aiAssistant = useAiAssistant();
+const { registerFunctions } = useAiAssistant();
+
 useEffect(() => {
-    if (aiAssistant) {
-        aiAssistant.registerFunctions(interactiveFunctions);
+    if (registerFunctions) {
+      registerFunctions(voiceControlledFunctions);
     }
-}, [aiAssistant]);
+    
+}, [registerFunctions]);
 ```
 
 > Just like that, your app is voice-interactive. Magic! :sparkles:
@@ -188,11 +190,11 @@ function TodoApp() {
     // ...
 
     // Initialize the aiAssistant instance
-    const aiAssistant = useAiAssistant();
+    const { registerFunctions } = useAiAssistant();
 
     useEffect(() => {
         // Define the voice-controlled functions
-        const interactiveFunctions = [
+        const aiFunctions = [
             {
                 function: {
                     handler: addTask,
@@ -228,10 +230,10 @@ function TodoApp() {
         ];
 
         // Register the AI controlled functions
-        if (aiAssistant) {
-            aiAssistant.registerFunctions(interactiveFunctions);
+        if (registerFunctions) {
+            registerFunctions(aiFunctions);
         }
-    }, [aiAssistant]);
+    }, [registerFunctions]);
 
     // ...
 
@@ -373,6 +375,7 @@ Unlock the Future with our advacned **Voice AI Assistant**: Embrace top-tier com
 -   Intelligent AI interface
 -   Natural Language Understanding Engine
 -   Text-to-Executable Translator (frontend & backend)
+-   Real-time data fetcher
 -   Audio-to-Text / Text-to-Audio Conversion
 -   Intent Recognition and Handling
 -   Contextual Response Generator

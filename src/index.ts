@@ -1,4 +1,4 @@
-// src/index.js
+// src/index.ts
 
 export { useAiAssistant } from './AiAssistantContext';
 export { AiAssistantButton } from './AiAssistantButton';
