@@ -1,4 +1,5 @@
 // src/core/Scraper.ts
+
 import Logger from './Logger';
 
 type GroupedTexts = {
