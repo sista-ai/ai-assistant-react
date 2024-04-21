@@ -67,19 +67,26 @@ class AudioRecorder {
 
     public async startRecording(): Promise<Blob> {
         const stream = await this.getMediaStream();
-        let options = { mimeType: 'audio/webm;codecs=opus' };
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-            if (MediaRecorder.isTypeSupported('audio/mp4')) {
-                options.mimeType = 'audio/mp4';
-            } else if (
-                MediaRecorder.isTypeSupported('audio/ogg; codecs=opus')
-            ) {
-                options.mimeType = 'audio/ogg; codecs=opus';
-            } else {
-                console.error('No supported audio type found');
-                throw new Error('No supported audio type found');
-            }
+        // Try a wide range of MIME types to maximize browser compatibility
+        const possibleTypes = [
+            'audio/mp4', // Commonly supported in modern browsers
+            'audio/ogg; codecs=opus', // Supported in Firefox and Chrome
+            'audio/webm; codecs=opus', // Supported in Firefox and Chrome
+            'audio/wav', // Universally supported format
+            'audio/mpeg', // Common MP3 format
+        ];
+
+        let options = { mimeType: 'audio/webm; codecs=opus' };
+        let supportedType = possibleTypes.find((type) =>
+            MediaRecorder.isTypeSupported(type),
+        );
+
+        if (!supportedType) {
+            console.error('No supported audio type found');
+            throw new Error('No supported audio type found');
         }
+
+        options.mimeType = supportedType;
 
         this.mediaRecorder = new MediaRecorder(stream, options);
         this.mediaRecorder.ondataavailable = this.handleDataAvailable;
