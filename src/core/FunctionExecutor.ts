@@ -24,18 +24,30 @@ export default class FunctionExecutor {
     registerFunctions(voiceFunctions: VoiceFunction[]): void {
         Logger.log('--[SISTA]-- registerFunctions');
 
+        // 1) extract the name and handler to build functionHandlers
+        // 2) removing the handler from functionSignatures
+        // 3) adding the type as 'function' to functionSignatures
+        // 4) adding the function name to functionSignatures from the handler
         voiceFunctions.forEach(({ function: func }) => {
             const { handler, ...rest } = func;
             const name = handler.name;
             this.functionHandlers.set(name, handler);
-            this.functionSignatures.push({
-                type: 'function',
-                function: { name, ...rest },
-            });
+
+            // Ensure no duplicate function signatures
+            const functionExists = this.functionSignatures.some(
+                (funcSig) => funcSig.function.name === name,
+            );
+
+            if (!functionExists) {
+                this.functionSignatures.push({
+                    type: 'function',
+                    function: { name, ...rest },
+                });
+            }
         });
 
-        Logger.log('--[SISTA]-- Function References:', this.functionHandlers);
-        Logger.log('--[SISTA]-- Function Signatures:', this.functionSignatures);
+        Logger.log('--[SISTA]-- Registered Function References:', this.functionHandlers);
+        Logger.log('--[SISTA]-- Registered Function Signatures:', this.functionSignatures);
     }
 
     executeFunctions(message: AiMessage): void {
