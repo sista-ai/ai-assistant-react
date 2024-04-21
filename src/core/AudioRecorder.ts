@@ -4,9 +4,9 @@ import Logger from './Logger';
 
 class AudioRecorder {
     // Stop recording after x seconds as hard limit
-    private maxRecordingTime = 10000;
+    private maxRecordingTime = 7000;
     // Stop recording after x seconds of silence
-    private silenceThreshold = 1500;
+    private silenceThreshold = 1000;
     private mediaRecorder: MediaRecorder | null = null;
     private stream: MediaStream | null = null;
     private audioChunks: Blob[] = [];
@@ -67,7 +67,21 @@ class AudioRecorder {
 
     public async startRecording(): Promise<Blob> {
         const stream = await this.getMediaStream();
-        this.mediaRecorder = new MediaRecorder(stream);
+        let options = { mimeType: 'audio/webm;codecs=opus' };
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                options.mimeType = 'audio/mp4';
+            } else if (
+                MediaRecorder.isTypeSupported('audio/ogg; codecs=opus')
+            ) {
+                options.mimeType = 'audio/ogg; codecs=opus';
+            } else {
+                console.error('No supported audio type found');
+                throw new Error('No supported audio type found');
+            }
+        }
+
+        this.mediaRecorder = new MediaRecorder(stream, options);
         this.mediaRecorder.ondataavailable = this.handleDataAvailable;
         this.mediaRecorder.onstop = this.handleStop;
         this.mediaRecorder.start();
