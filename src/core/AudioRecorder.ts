@@ -42,15 +42,6 @@ class AudioRecorder {
         }
     }
 
-    private handleStop(): void {
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-        this.audioChunks = [];
-        if (this.resolveRecording) {
-            this.resolveRecording(audioBlob);
-        }
-        this.cleanup();
-    }
-
     private cleanup(): void {
         if (this.stream) {
             this.stream.getTracks().forEach((track) => track.stop());
@@ -65,6 +56,15 @@ class AudioRecorder {
         this.mediaRecorder = null;
     }
 
+    private handleStop(): void {
+        const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+        this.audioChunks = [];
+        if (this.resolveRecording) {
+            this.resolveRecording(audioBlob);
+        }
+        this.cleanup();
+    }
+
     public async startRecording(): Promise<Blob> {
         const stream = await this.getMediaStream();
         // Try a wide range of MIME types to maximize browser compatibility
@@ -76,7 +76,7 @@ class AudioRecorder {
             'audio/mpeg', // Common MP3 format
         ];
 
-        let options = { mimeType: 'audio/webm; codecs=opus' };
+        let options = { mimeType: 'audio/wav' }; // Changed to 'audio/wav'
         let supportedType = possibleTypes.find((type) =>
             MediaRecorder.isTypeSupported(type),
         );
