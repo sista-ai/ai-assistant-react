@@ -5,10 +5,10 @@ import AiAssistantContext, { AiAssistantContextType } from './AiAssistantContext
 interface AiAssistantProviderProps {
     children: ReactNode;
     apiKey: string;
-    apiUrl: string;
+    apiUrl?: string;
     userId?: string;
-    scrapeContent: boolean;
-    debug: boolean;
+    scrapeContent?: boolean;
+    debug?: boolean;
 }
 
 export const AiAssistantProvider: React.FC<AiAssistantProviderProps> = ({
@@ -17,7 +17,7 @@ export const AiAssistantProvider: React.FC<AiAssistantProviderProps> = ({
     apiUrl,
     userId,
     scrapeContent,
-    debug,
+    debug
 }) => {
     const [aiAssistant, setAiAssistant] = useState<AiAssistantEngine | undefined>();
 

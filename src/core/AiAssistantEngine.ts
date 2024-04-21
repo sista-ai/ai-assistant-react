@@ -54,7 +54,7 @@ class AiAssistantEngine extends EventEmitter {
         Logger.setDebugMode(debugMode);
         this.sdkVersion = pkg.version;
         Logger.log(
-            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion} + TS 5`,
+            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`,
         );
         this.scrapeContent = scrapeContent;
         this.apiKey = apiKey;
