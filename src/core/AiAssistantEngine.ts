@@ -9,12 +9,7 @@ import Logger from './Logger';
 import Scraper from './Scraper';
 import config from './config';
 import { VoiceFunction } from './commonTypes';
-
-interface EndUserDetails {
-    endUserAgent: string;
-    generatedEndUserId: string;
-    providedEndUserId: string | null;
-}
+import User from './User';
 
 interface ApiResponse {
     warningMessage?: string;
@@ -27,13 +22,13 @@ interface ApiResponse {
 class AiAssistantEngine extends EventEmitter {
     private readonly apiKey: string;
     private readonly apiUrl: string;
-    private readonly userId: string | null;
     private readonly scrapeContent: boolean;
     private readonly sdkVersion: string;
     private readonly audioPlayer: AudioPlayer;
     private readonly audioRecorder: AudioRecorder;
     private readonly functionExecutor: FunctionExecutor;
     private readonly scraper: Scraper;
+    private readonly user: User;
     private readonly pageContent: Record<string, string[]> | null;
 
     constructor(
@@ -64,13 +59,13 @@ class AiAssistantEngine extends EventEmitter {
         );
         this.apiUrl = apiUrl;
         Logger.log('--[SISTA]-- Using Base URL:', this.apiUrl);
-        this.userId = userId;
 
         this.audioPlayer = new AudioPlayer();
         this.audioRecorder = new AudioRecorder();
         this.functionExecutor = new FunctionExecutor();
         this.scraper = new Scraper();
         this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
+        this.user = new User(userId);
     }
 
     registerFunctions(voiceFunctions: VoiceFunction[]): void {
@@ -110,7 +105,10 @@ class AiAssistantEngine extends EventEmitter {
 
         const formData = new FormData();
         formData.append('sdkVersion', this.sdkVersion);
-        formData.append('endUser', JSON.stringify(this._getEndUserDetails()));
+        formData.append(
+            'endUser',
+            JSON.stringify(this.user.getEndUserDetails()),
+        );
         formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
@@ -137,20 +135,6 @@ class AiAssistantEngine extends EventEmitter {
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
-
-    private _getEndUserDetails(): EndUserDetails {
-        let endUserId = localStorage.getItem('endUserId');
-        if (!endUserId) {
-            endUserId = Math.random().toString(36).substring(2);
-            localStorage.setItem('endUserId', endUserId);
-        }
-
-        return {
-            endUserAgent: navigator.userAgent,
-            generatedEndUserId: endUserId,
-            providedEndUserId: this.userId,
-        };
-    }
 
     private _handleApiResponse = (response: ApiResponse): void => {
         Logger.log('--[SISTA]-- _handleApiResponse:', response);

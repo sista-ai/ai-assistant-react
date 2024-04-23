@@ -124,7 +124,22 @@ const aiFunctions = [
 ];
 ```
 
-For functions that accepts parameters:
+Register the functions using `registerFunctions([...]);` inside a `useEffect` hook.
+
+```js
+const { registerFunctions } = useAiAssistant();
+
+useEffect(() => {
+    if (registerFunctions) {
+      registerFunctions(aiFunctions);
+    }
+    
+}, [registerFunctions]);
+```
+
+> Just like that, your app is voice-interactive. Magic! :sparkles:
+
+For functions that accepts parameters: simply describe the parameters
 
 ```js
 const sayHello = (name) => {
@@ -153,22 +168,7 @@ const aiFunctions = [
 ];
 ```
 
-Register the functions using `registerFunctions([...]);` inside a `useEffect` hook.
-
-```js
-const { registerFunctions } = useAiAssistant();
-
-useEffect(() => {
-    if (registerFunctions) {
-      registerFunctions(voiceControlledFunctions);
-    }
-    
-}, [registerFunctions]);
-```
-
-> Just like that, your app is voice-interactive. Magic! :sparkles:
-
-To customize the AI assistant's voice or feed information about your product, visit the [Admin Panel](https://admin.sista.ai/applications).
+To customize the AI personality or voice or provide extra information, beyound what's on the user screen, visit the [Admin Panel](https://admin.sista.ai/applications).
 
 ## Full Example: (Todo App)
 
