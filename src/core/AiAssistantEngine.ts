@@ -12,11 +12,13 @@ import { VoiceFunction } from './commonTypes';
 import User from './User';
 
 interface ApiResponse {
+    inputVoiceCommandAsText?: string;
+    outputTextReply?: string;
+    outputAudioReply?: string;
+    outputExecutableFunctions?: any;
     warningMessage?: string;
     statusCode?: number;
     message?: string;
-    executableFunctions?: any;
-    audioFile?: string;
 }
 
 class AiAssistantEngine extends EventEmitter {
@@ -49,7 +51,7 @@ class AiAssistantEngine extends EventEmitter {
         Logger.setDebugMode(debugMode);
         this.sdkVersion = pkg.version;
         Logger.log(
-            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`,
+            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion} + L1`,
         );
         this.scrapeContent = scrapeContent;
         this.apiKey = apiKey;
@@ -151,29 +153,21 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
-        if (!response.executableFunctions) {
-            Logger.error('Invalid response format:', response);
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            return;
-        }
-
-        const message = response.executableFunctions;
-
-        if (!message) {
-            Logger.error('Response does not contain a message:', response);
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            return;
-        }
-
-        if (response.audioFile) {
-            this._handleAudioResponse(response.audioFile);
+        // Executing functions is top priority, no need for audio response even if it exists
+        if (
+            response.outputExecutableFunctions &&
+            response.outputExecutableFunctions.length > 0
+        ) {
+            this._handleExecutableFunctionsResponse(
+                response.outputExecutableFunctions,
+            );
         } else {
-            if (message.functions) {
-                this._handleExecutableFunctionsResponse(message);
+            if (response.outputAudioReply) {
+                this._handleAudioResponse(response.outputAudioReply);
             }
-            if (message.content !== null) {
-                this._handleTextResponse(message.content);
-            }
+        }
+        if (response.outputTextReply) {
+            this._handleTextResponse(response.outputTextReply);
         }
     };
 
@@ -185,8 +179,10 @@ class AiAssistantEngine extends EventEmitter {
         });
     };
 
-    private _handleExecutableFunctionsResponse = (message: any): void => {
-        this.functionExecutor.executeFunctions(message);
+    private _handleExecutableFunctionsResponse = (
+        executableFunctions: any,
+    ): void => {
+        this.functionExecutor.executeFunctions(executableFunctions);
         this.emitStateChange(EventEmitter.STATE_IDLE);
         this.audioPlayer.playEndTone();
     };

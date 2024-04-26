@@ -8,8 +8,10 @@ export interface FunctionSignature {
     function: { name: string; description: string; parameters?: unknown };
 }
 
-interface AiMessage {
-    functions: { function: { name: string; arguments: string } }[];
+interface ExecutableFunction {
+    name: string;
+    args: Record<string, unknown>;
+    id: string;
 }
 
 export default class FunctionExecutor {
@@ -46,14 +48,23 @@ export default class FunctionExecutor {
             }
         });
 
-        Logger.log('--[SISTA]-- Registered Function References:', this.functionHandlers);
-        Logger.log('--[SISTA]-- Registered Function Signatures:', this.functionSignatures);
+        Logger.log(
+            '--[SISTA]-- Registered Function References:',
+            this.functionHandlers,
+        );
+        Logger.log(
+            '--[SISTA]-- Registered Function Signatures:',
+            this.functionSignatures,
+        );
     }
 
-    executeFunctions(message: AiMessage): void {
+    executeFunctions(executableFunctions: ExecutableFunction[]): void {
         Logger.log('--[SISTA]-- executeFunctions');
 
-        console.dir(this.functionHandlers, { depth: null });
+        if (!executableFunctions || executableFunctions.length === 0) {
+            Logger.error('E1: Invalid API response:', executableFunctions);
+            return;
+        }
 
         if (!this.functionSignatures || this.functionSignatures.length === 0) {
             throw new Error(
@@ -67,18 +78,8 @@ export default class FunctionExecutor {
             );
         }
 
-        if (!message || !message.functions) {
-            Logger.error('E1: Invalid API response:', message);
-            return;
-        }
-
-        message.functions.forEach((func) => {
-            if (!func.function || !func.function.name) {
-                Logger.error('E2: Invalid API response:', func);
-                return;
-            }
-
-            const functionName = func.function.name;
+        executableFunctions.forEach((func) => {
+            const functionName = func.name;
             const functionToCall = this.functionHandlers.get(functionName);
 
             if (!functionToCall) {
@@ -88,21 +89,13 @@ export default class FunctionExecutor {
                 return;
             }
 
-            let functionArgs: Record<string, unknown> = {};
-            try {
-                functionArgs = JSON.parse(func.function.arguments);
-            } catch (error) {
-                Logger.error('E3: Invalid API response:', error);
-                return;
-            }
-
-            const functionArgsArray = Object.values(functionArgs);
+            const functionArgs = func.args || {};
             try {
                 Logger.log(
                     `--[SISTA]-- Calling function ${functionName} with arguments:`,
-                    functionArgsArray,
+                    functionArgs,
                 );
-                functionToCall(...functionArgsArray);
+                functionToCall(functionArgs);
             } catch (error) {
                 Logger.error(
                     `Error calling function ${functionName}:`,
