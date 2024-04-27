@@ -22,12 +22,13 @@ class User {
     }
 
     private _generateEndUserId(): string {
-        let endUserId = localStorage.getItem('generatedEndUserId');
+        const key = 'SS_DK_AG_EU_ID'; // Sista SDK Auto Generated End User ID
+        let endUserId = localStorage.getItem(key);
         if (!endUserId) {
             const timestamp = new Date().getTime();
             const randomPart = Math.random().toString(36).substring(2);
-            endUserId = `${timestamp}-${randomPart}`;
-            localStorage.setItem('generatedEndUserId', endUserId);
+            endUserId = `Sista:UID:${timestamp}:${randomPart}`;
+            localStorage.setItem(key, endUserId);
         }
 
         return endUserId;
