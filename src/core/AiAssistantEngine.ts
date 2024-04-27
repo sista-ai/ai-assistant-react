@@ -12,13 +12,14 @@ import { VoiceFunction } from './commonTypes';
 import User from './User';
 
 interface ApiResponse {
-    inputVoiceCommandAsText?: string;
-    outputTextReply?: string;
-    outputAudioReply?: string;
-    outputExecutableFunctions?: any;
-    warningMessage?: string;
-    statusCode?: number;
-    message?: string;
+    data: {
+        inputVoiceCommandAsText?: string;
+        outputTextReply?: string;
+        outputAudioReply?: string;
+        outputExecutableFunctions?: any;
+    };
+    statusCode: number;
+    message: string;
 }
 
 class AiAssistantEngine extends EventEmitter {
@@ -141,33 +142,34 @@ class AiAssistantEngine extends EventEmitter {
     private _handleApiResponse = (response: ApiResponse): void => {
         Logger.log('--[SISTA]-- _handleApiResponse:', response);
 
-        if (response.warningMessage) {
-            Logger.error('API Warning:', response.warningMessage);
+        // Handle any kind of HTTP error statuses
+        if (response.statusCode >= 400) {
+            Logger.error(
+                `API Error: Status Code - ${response.statusCode}, Message - ${response.message}`,
+            );
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
-        if (response.statusCode === 401) {
-            Logger.error('API Error:', response.message);
-            this.emitStateChange(EventEmitter.STATE_IDLE);
-            return;
-        }
-
-        // Executing functions is top priority, no need for audio response even if it exists
+        // Process executable functions if they are present, which have the highest priority
         if (
-            response.outputExecutableFunctions &&
-            response.outputExecutableFunctions.length > 0
+            response.data.outputExecutableFunctions &&
+            response.data.outputExecutableFunctions.length > 0
         ) {
             this._handleExecutableFunctionsResponse(
-                response.outputExecutableFunctions,
+                response.data.outputExecutableFunctions,
             );
-        } else {
-            if (response.outputAudioReply) {
-                this._handleAudioResponse(response.outputAudioReply);
-            }
+            return; // No need to process further if functions are executed
         }
-        if (response.outputTextReply) {
-            this._handleTextResponse(response.outputTextReply);
+
+        // Handle audio response if available
+        if (response.data.outputAudioReply) {
+            this._handleAudioResponse(response.data.outputAudioReply);
+        }
+
+        // Handle text response last
+        if (response.data.outputTextReply) {
+            this._handleTextResponse(response.data.outputTextReply);
         }
     };
 
