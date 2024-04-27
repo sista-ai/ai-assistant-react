@@ -1,6 +1,6 @@
 {
     "name": "@sista/ai-assistant-react",
-    "version": "2.2.9",
+    "version": "2.2.10",
     "description": "An SDK for integrating AI-powered voice (or text) assistants into any React App, increasing user engagement with AI conversational interfaces.",
     "main": "dist/src/index.js",
     "repository": {
