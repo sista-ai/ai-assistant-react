@@ -4,9 +4,9 @@ import Logger from './Logger';
 
 class AudioRecorder {
     // Stop recording after x seconds as hard limit
-    private maxRecordingTime = 7000;
+    private maxRecordingTime = 9000;
     // Stop recording after x seconds of silence
-    private silenceThreshold = 1000;
+    private silenceThreshold = 1500;
     private mediaRecorder: MediaRecorder | null = null;
     private stream: MediaStream | null = null;
     private audioChunks: Blob[] = [];
