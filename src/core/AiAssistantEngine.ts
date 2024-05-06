@@ -151,6 +151,19 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
+        // ----[ Step 1: Display User Input Command ]----
+        // Handle user command as text first. This is useful for debugging
+        if (response.data.inputVoiceCommandAsText) {
+            this._handleInputVoiceCommandAsText(response.data.inputVoiceCommandAsText);
+        }
+
+        // ----[ Step 2: Display AI Text Reply ]----
+        // Handle text response last
+        if (response.data.outputTextReply) {
+            this._handleTextResponse(response.data.outputTextReply);
+        }
+
+        // ----[ Step 3: Execute Functions ]----
         // Process executable functions if they are present, which have the highest priority
         if (
             response.data.outputExecutableFunctions &&
@@ -162,15 +175,12 @@ class AiAssistantEngine extends EventEmitter {
             return; // No need to process further if functions are executed
         }
 
+        // ----[ Step 4: Play AI Audio Reply ]----
         // Handle audio response if available
         if (response.data.outputAudioReply) {
             this._handleAudioResponse(response.data.outputAudioReply);
         }
 
-        // Handle text response last
-        if (response.data.outputTextReply) {
-            this._handleTextResponse(response.data.outputTextReply);
-        }
     };
 
     private _handleAudioResponse = (audioFile: string): void => {
@@ -190,7 +200,11 @@ class AiAssistantEngine extends EventEmitter {
     };
 
     private _handleTextResponse = (content: string): void => {
-        Logger.log('--[SISTA]-- AI Response As Text:', content);
+        Logger.log('--[SISTA]-- AI Response:', content);
+    };
+
+    private _handleInputVoiceCommandAsText = (content: string): void => {
+        Logger.log('--[SISTA]-- User Command:', content);
     };
 }
 
