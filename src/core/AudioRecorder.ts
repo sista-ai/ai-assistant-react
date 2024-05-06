@@ -16,7 +16,8 @@ class AudioRecorder {
     private audioContext: AudioContext | null = null;
     private analyser: AnalyserNode | null = null;
     private microphone: MediaStreamAudioSourceNode | null = null;
-
+    private isRecording: boolean = false;
+    
     constructor() {
         this.handleDataAvailable = this.handleDataAvailable.bind(this);
         this.handleStop = this.handleStop.bind(this);
@@ -66,47 +67,61 @@ class AudioRecorder {
     }
 
     public async startRecording(): Promise<Blob> {
-        const stream = await this.getMediaStream();
-        // Try a wide range of MIME types to maximize browser compatibility
-        const possibleTypes = [
-            'audio/mp4', // Commonly supported in modern browsers
-            'audio/ogg; codecs=opus', // Supported in Firefox and Chrome
-            'audio/webm; codecs=opus', // Supported in Firefox and Chrome
-            'audio/wav', // Universally supported format
-            'audio/mpeg', // Common MP3 format
-        ];
-
-        let options = { mimeType: 'audio/wav' }; // Changed to 'audio/wav'
-        let supportedType = possibleTypes.find((type) =>
-            MediaRecorder.isTypeSupported(type),
-        );
-
-        if (!supportedType) {
-            console.error('No supported audio type found');
-            throw new Error('No supported audio type found');
+        if (this.isRecording) {
+            throw new Error('Recording is already in progress');
         }
 
-        options.mimeType = supportedType;
+        this.isRecording = true;
 
-        this.mediaRecorder = new MediaRecorder(stream, options);
-        this.mediaRecorder.ondataavailable = this.handleDataAvailable;
-        this.mediaRecorder.onstop = this.handleStop;
-        this.mediaRecorder.start();
+        try {
+            const stream = await this.getMediaStream();
+            const possibleTypes = [
+                'audio/mp4',
+                'audio/ogg; codecs=opus',
+                'audio/webm; codecs=opus',
+                'audio/wav',
+                'audio/mpeg',
+            ];
 
-        this.setupAudioAnalysis(stream);
+            let options = { mimeType: 'audio/wav' };
+            let supportedType = possibleTypes.find((type) =>
+                MediaRecorder.isTypeSupported(type),
+            );
 
-        setTimeout(() => {
-            if (
-                this.mediaRecorder &&
-                this.mediaRecorder.state === 'recording'
-            ) {
-                this.stopRecording();
+            if (!supportedType) {
+                console.error('No supported audio type found');
+                throw new Error('No supported audio type found');
             }
-        }, this.maxRecordingTime);
 
-        return new Promise<Blob>((resolve) => {
-            this.resolveRecording = resolve;
-        });
+            options.mimeType = supportedType;
+
+            this.mediaRecorder = new MediaRecorder(stream, options);
+            this.mediaRecorder.ondataavailable = this.handleDataAvailable;
+            this.mediaRecorder.onstop = () => {
+                this.handleStop();
+                this.cleanup();
+            };
+            this.mediaRecorder.start();
+
+            this.setupAudioAnalysis(stream);
+
+            setTimeout(() => {
+                if (
+                    this.mediaRecorder &&
+                    this.mediaRecorder.state === 'recording'
+                ) {
+                    this.stopRecording();
+                }
+            }, this.maxRecordingTime);
+
+            return new Promise<Blob>((resolve) => {
+                this.resolveRecording = resolve;
+            });
+        } catch (error) {
+            console.error('Error during recording:', error);
+            this.cleanup();
+            throw error;
+        }
     }
 
     private setupAudioAnalysis(stream: MediaStream) {
@@ -160,6 +175,7 @@ class AudioRecorder {
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
         }
+        this.isRecording = false;
     }
 }
 
