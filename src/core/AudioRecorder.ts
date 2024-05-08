@@ -4,9 +4,9 @@ import Logger from './Logger';
 
 class AudioRecorder {
     // Stop recording after x seconds as hard limit
-    private maxRecordingTime = 9000;
+    private maxRecordingTime = 10000;
     // Stop recording after x seconds of silence
-    private silenceThreshold = 1500;
+    private silenceThreshold = 1300;
     private mediaRecorder: MediaRecorder | null = null;
     private stream: MediaStream | null = null;
     private audioChunks: Blob[] = [];
@@ -16,11 +16,58 @@ class AudioRecorder {
     private audioContext: AudioContext | null = null;
     private analyser: AnalyserNode | null = null;
     private microphone: MediaStreamAudioSourceNode | null = null;
-    private isRecording: boolean = false;
-    
+
     constructor() {
         this.handleDataAvailable = this.handleDataAvailable.bind(this);
         this.handleStop = this.handleStop.bind(this);
+    }
+
+    public async startRecording(): Promise<Blob> {
+        if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+            console.error('Recording is already in progress');
+            throw new Error('Recording is already in progress');
+        }
+
+        const stream = await this.getMediaStream();
+        const possibleTypes = [
+            'audio/mp4',
+            'audio/ogg; codecs=opus',
+            'audio/webm; codecs=opus',
+            'audio/wav',
+            'audio/mpeg',
+        ];
+
+        let options = { mimeType: 'audio/wav' };
+        let supportedType = possibleTypes.find((type) =>
+            MediaRecorder.isTypeSupported(type),
+        );
+
+        if (!supportedType) {
+            console.error('No supported audio type found');
+            throw new Error('No supported audio type found');
+        }
+
+        options.mimeType = supportedType;
+
+        this.mediaRecorder = new MediaRecorder(stream, options);
+        this.mediaRecorder.ondataavailable = this.handleDataAvailable;
+        this.mediaRecorder.onstop = this.handleStop;
+        this.mediaRecorder.start();
+
+        this.setupAudioAnalysis(stream);
+
+        setTimeout(() => {
+            if (
+                this.mediaRecorder &&
+                this.mediaRecorder.state === 'recording'
+            ) {
+                this.stopRecording();
+            }
+        }, this.maxRecordingTime);
+
+        return new Promise<Blob>((resolve) => {
+            this.resolveRecording = resolve;
+        });
     }
 
     private async getMediaStream(): Promise<MediaStream> {
@@ -43,20 +90,6 @@ class AudioRecorder {
         }
     }
 
-    private cleanup(): void {
-        if (this.stream) {
-            this.stream.getTracks().forEach((track) => track.stop());
-            this.stream = null;
-        }
-        if (this.audioContext) {
-            this.audioContext.close();
-            this.audioContext = null;
-        }
-        this.analyser = null;
-        this.microphone = null;
-        this.mediaRecorder = null;
-    }
-
     private handleStop(): void {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
         this.audioChunks = [];
@@ -66,62 +99,32 @@ class AudioRecorder {
         this.cleanup();
     }
 
-    public async startRecording(): Promise<Blob> {
-        if (this.isRecording) {
-            throw new Error('Recording is already in progress');
-        }
-
-        this.isRecording = true;
-
-        try {
-            const stream = await this.getMediaStream();
-            const possibleTypes = [
-                'audio/mp4',
-                'audio/ogg; codecs=opus',
-                'audio/webm; codecs=opus',
-                'audio/wav',
-                'audio/mpeg',
-            ];
-
-            let options = { mimeType: 'audio/wav' };
-            let supportedType = possibleTypes.find((type) =>
-                MediaRecorder.isTypeSupported(type),
-            );
-
-            if (!supportedType) {
-                console.error('No supported audio type found');
-                throw new Error('No supported audio type found');
+    private cleanup(): void {
+        if (this.mediaRecorder) {
+            if (this.mediaRecorder.state === 'recording') {
+                this.mediaRecorder.stop();
             }
-
-            options.mimeType = supportedType;
-
-            this.mediaRecorder = new MediaRecorder(stream, options);
-            this.mediaRecorder.ondataavailable = this.handleDataAvailable;
-            this.mediaRecorder.onstop = () => {
-                this.handleStop();
-                this.cleanup();
-            };
-            this.mediaRecorder.start();
-
-            this.setupAudioAnalysis(stream);
-
-            setTimeout(() => {
-                if (
-                    this.mediaRecorder &&
-                    this.mediaRecorder.state === 'recording'
-                ) {
-                    this.stopRecording();
-                }
-            }, this.maxRecordingTime);
-
-            return new Promise<Blob>((resolve) => {
-                this.resolveRecording = resolve;
-            });
-        } catch (error) {
-            console.error('Error during recording:', error);
-            this.cleanup();
-            throw error;
+            this.mediaRecorder.ondataavailable = null;
+            this.mediaRecorder.onstop = null;
+            this.mediaRecorder = null;
         }
+        if (this.stream) {
+            this.stream.getTracks().forEach((track) => track.stop());
+            this.stream = null;
+        }
+        if (this.audioContext) {
+            this.audioContext.close().then(() => {
+                this.audioContext = null;
+                this.analyser = null;
+                this.microphone = null;
+            });
+        } else {
+            this.analyser = null;
+            this.microphone = null;
+        }
+        this.audioChunks = [];
+
+        this.resolveRecording = null;
     }
 
     private setupAudioAnalysis(stream: MediaStream) {
@@ -175,7 +178,6 @@ class AudioRecorder {
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
         }
-        this.isRecording = false;
     }
 }
 
