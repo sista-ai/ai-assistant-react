@@ -8,15 +8,17 @@ interface EndUserDetails {
 
 class User {
     private providedUserId: string | null;
+    private generatedUserId: string;
 
     constructor(providedUserId: string | null) {
         this.providedUserId = providedUserId;
+        this.generatedUserId = this._generateEndUserId();
     }
 
     public getEndUserDetails(): EndUserDetails {
         return {
             endUserAgent: navigator.userAgent,
-            generatedEndUserId: this._generateEndUserId(),
+            generatedEndUserId: this.generatedUserId,
             providedEndUserId: this.providedUserId,
         };
     }
@@ -34,5 +36,4 @@ class User {
         return endUserId;
     }
 }
-
 export default User;

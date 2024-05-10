@@ -10,6 +10,7 @@ import Scraper from './Scraper';
 import config from './config';
 import { VoiceFunction } from './commonTypes';
 import User from './User';
+import SpeechToText from './SpeechToText';
 
 interface ApiResponse {
     data: {
@@ -22,6 +23,11 @@ interface ApiResponse {
     message: string;
 }
 
+enum UserInputMethod {
+    AUDIO = 'AUDIO',
+    TEXT = 'TEXT',
+}
+
 class AiAssistantEngine extends EventEmitter {
     private readonly apiKey: string;
     private readonly apiUrl: string;
@@ -29,10 +35,12 @@ class AiAssistantEngine extends EventEmitter {
     private readonly sdkVersion: string;
     private readonly audioPlayer: AudioPlayer;
     private readonly audioRecorder: AudioRecorder;
+    private readonly speechToText: SpeechToText;
     private readonly functionExecutor: FunctionExecutor;
     private readonly scraper: Scraper;
     private readonly user: User;
     private readonly pageContent: Record<string, string[]> | null;
+    private userInputMethod: UserInputMethod;
 
     constructor(
         apiKey: string,
@@ -42,6 +50,7 @@ class AiAssistantEngine extends EventEmitter {
         debugMode: boolean = false,
     ) {
         super();
+        Logger.setDebugMode(debugMode);
 
         if (!apiKey) {
             throw new Error(
@@ -49,26 +58,37 @@ class AiAssistantEngine extends EventEmitter {
             );
         }
 
-        Logger.setDebugMode(debugMode);
+        // Control the user input method. TEXT = try to convert speech to text using
+        // browser's SpeechRecognition API first and fallback to Audio recording if it fails.
+        this.userInputMethod = UserInputMethod.TEXT;
         this.sdkVersion = pkg.version;
-        Logger.log(
-            `--[SISTA]-- Initializing AiAssistantEngine Version: ${this.sdkVersion}`,
-        );
-        this.scrapeContent = scrapeContent;
         this.apiKey = apiKey;
-        Logger.log(
-            '--[SISTA]-- Using Access Key:',
-            '...' + this.apiKey.slice(-8),
-        );
         this.apiUrl = apiUrl;
-        Logger.log('--[SISTA]-- Using Base URL:', this.apiUrl);
-
-        this.audioPlayer = new AudioPlayer();
+        this.scrapeContent = scrapeContent;
+        this.user = new User(userId);
+        this.speechToText = new SpeechToText();
         this.audioRecorder = new AudioRecorder();
+        this.audioPlayer = new AudioPlayer();
         this.functionExecutor = new FunctionExecutor();
         this.scraper = new Scraper();
         this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
-        this.user = new User(userId);
+
+        // Log the custom object
+        Logger.log(
+            '--[SISTA]-- Initialize Ai Assistant Engine:',
+            JSON.stringify(
+                {
+                    Version: this.sdkVersion,
+                    APIKey: '...' + this.apiKey.slice(-8),
+                    APIUrl: this.apiUrl,
+                    AutoScrapeContent: this.scrapeContent,
+                    ConfiguredUserInputMethod: this.userInputMethod,
+                    User: this.user,
+                },
+                null,
+                2,
+            ),
+        );
     }
 
     registerFunctions(voiceFunctions: VoiceFunction[]): void {
@@ -79,22 +99,24 @@ class AiAssistantEngine extends EventEmitter {
         Logger.log('--[SISTA]-- startProcessing');
 
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
-
         this.audioPlayer.playStartTone();
 
-        let userAudioCommand: Blob | undefined;
+        let inputUserCommand: string | Blob;
 
         try {
-            userAudioCommand = await this.audioRecorder.startRecording();
+            inputUserCommand = await this.getUserInput();
+            Logger.log(
+                `--[SISTA]-- Used "User Input Method" = ${this.userInputMethod}`,
+            );
         } catch (err) {
-            Logger.error('Error accessing the microphone:', err);
+            Logger.error('Error getting user input:', err);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
 
-        if (userAudioCommand) {
+        if (inputUserCommand) {
             try {
-                await this._makeAPIRequest(userAudioCommand);
+                await this._makeAPIRequest(inputUserCommand);
             } catch (err) {
                 Logger.error('Error making API request:', err);
                 this.emitStateChange(EventEmitter.STATE_IDLE);
@@ -102,17 +124,47 @@ class AiAssistantEngine extends EventEmitter {
         }
     };
 
-    private _makeAPIRequest = async (audioBlob: Blob): Promise<void> => {
+    private async getUserInput(): Promise<string | Blob> {
+        try {
+            if (this.userInputMethod === UserInputMethod.AUDIO) {
+                return await this.audioRecorder.startRecording();
+            } else if (this.userInputMethod === UserInputMethod.TEXT) {
+                return await this.speechToText.convertSpeechToText();
+            } else {
+                throw new Error('Invalid user input method!');
+            }
+        } catch (err) {
+            Logger.error('Error getting user input, switching method:', err);
+            this.userInputMethod =
+                this.userInputMethod === UserInputMethod.AUDIO
+                    ? UserInputMethod.TEXT
+                    : UserInputMethod.AUDIO;
+            Logger.log(
+                `--[SISTA]-- FALLBACK: Switchig "User Input Method" To = ${this.userInputMethod}`,
+            );
+            return this.getUserInput();
+        }
+    }
+
+    private _makeAPIRequest = async (
+        userInput: Blob | string,
+    ): Promise<void> => {
         Logger.log('--[SISTA]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
         const formData = new FormData();
+
+        if (this.userInputMethod === UserInputMethod.AUDIO) {
+            formData.append('userInputAsAudio', userInput as Blob);
+        } else if (this.userInputMethod === UserInputMethod.TEXT) {
+            formData.append('userInputAsText', userInput as string);
+        }
+
         formData.append('sdkVersion', this.sdkVersion);
         formData.append(
             'endUser',
             JSON.stringify(this.user.getEndUserDetails()),
         );
-        formData.append('audio', audioBlob);
         formData.append(
             'functionsSignatures',
             JSON.stringify(this.functionExecutor.functionSignatures),
@@ -154,7 +206,9 @@ class AiAssistantEngine extends EventEmitter {
         // ----[ Step 1: Display User Input Command ]----
         // Handle user command as text first. This is useful for debugging
         if (response.data.inputVoiceCommandAsText) {
-            this._handleInputVoiceCommandAsText(response.data.inputVoiceCommandAsText);
+            this._handleInputVoiceCommandAsText(
+                response.data.inputVoiceCommandAsText,
+            );
         }
 
         // ----[ Step 2: Display AI Text Reply ]----
@@ -180,7 +234,6 @@ class AiAssistantEngine extends EventEmitter {
         if (response.data.outputAudioReply) {
             this._handleAudioResponse(response.data.outputAudioReply);
         }
-
     };
 
     private _handleAudioResponse = (audioFile: string): void => {

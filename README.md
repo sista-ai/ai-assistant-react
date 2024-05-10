@@ -1,6 +1,6 @@
-# Voice AI Assistant (React JS)
+# AI Voice Assistant (React JS)
 
-Turn your App smart with a conversational AI assistant and interactive voice UI **in less than 10 minutes**!
+Give your App a voice, with a conversational AI assistant and interactive voice UI **in less than 10 minutes**!
 
 **No Code Changes! No Intent Definitions!** _Just add our magic button `<AiAssistantButton />`._
 
@@ -367,7 +367,7 @@ Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applica
   <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
 </a>
 
-Unlock the Future with our advacned **Voice AI Assistant**: Embrace top-tier components:
+Unlock the Future with our advacned **AI Voice Assistant**: Embrace top-tier components:
 
 -   Conversational AI Agents
 -   Interactive Voice UI
