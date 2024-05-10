@@ -1,3 +1,5 @@
+// src/core/SpeechToText.ts
+
 import Logger from './Logger';
 
 interface SpeechRecognitionEvent {
@@ -22,10 +24,7 @@ interface SpeechRecognitionObject {
     stop: () => void;
 }
 
-declare const SpeechRecognition: SpeechRecognitionObject | undefined;
-declare const webkitSpeechRecognition: SpeechRecognitionObject | undefined;
-
-class SpeechToText {
+class SpeechRecognizer {
     private recognition: SpeechRecognitionObject;
     private finalTranscript: string = '';
     private isListening: boolean = false;
@@ -50,21 +49,23 @@ class SpeechToText {
                     this.finalTranscript += result[0].transcript.trim();
                 }
             }
-            Logger.log(`Final result: ${this.finalTranscript}`);
+            Logger.log(`--[SISTA]-- Final result: ${this.finalTranscript}`);
         };
 
         this.recognition.onerror = (event: SpeechRecognitionEvent) => {
-            Logger.error(`Speech recognition error: ${event.error}`);
+            Logger.error(
+                `--[SISTA]-- Speech recognition error: ${event.error}`,
+            );
             this.isListening = false;
         };
 
         this.recognition.onend = () => {
-            Logger.log('Speech recognition stopped.');
+            Logger.log('--[SISTA]-- Speech recognition stopped.');
             this.isListening = false;
         };
     }
 
-    public async convertSpeechToText(): Promise<string> {
+    public async startListening(): Promise<string> {
         return new Promise((resolve, reject) => {
             if (this.recognition.continuous) {
                 reject('Recognition is already in progress');
@@ -74,36 +75,23 @@ class SpeechToText {
             this.finalTranscript = '';
 
             this.recognition.onend = () => {
-                Logger.log('Speech recognition service has ended.');
+                Logger.log('--[SISTA]-- Speech recognition service has ended.');
                 resolve(this.finalTranscript);
                 this.isListening = false;
             };
 
             this.recognition.onerror = (event: SpeechRecognitionEvent) => {
-                Logger.error(`Speech recognition error: ${event.error}`);
+                Logger.error(
+                    `--[SISTA]-- Speech recognition error: ${event.error}`,
+                );
                 reject(new Error(event.error));
                 this.isListening = false;
             };
 
             this.recognition.start();
-            Logger.log('Speech recognition started.');
+            Logger.log('--[SISTA]-- Speech recognition started.');
         });
-    }
-
-    public startListening(): void {
-        if (!this.isListening) {
-            this.finalTranscript = '';
-            this.recognition.start();
-            Logger.log('Speech recognition started.');
-        }
-    }
-
-    public stopListening(): void {
-        if (this.isListening) {
-            this.recognition.stop();
-            Logger.log('Speech recognition stopped.');
-        }
     }
 }
 
-export default SpeechToText;
+export default SpeechRecognizer;

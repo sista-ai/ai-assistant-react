@@ -10,7 +10,7 @@ import Scraper from './Scraper';
 import config from './config';
 import { VoiceFunction } from './commonTypes';
 import User from './User';
-import SpeechToText from './SpeechToText';
+import SpeechRecognizer from './SpeechRecognizer';
 
 interface ApiResponse {
     data: {
@@ -35,7 +35,7 @@ class AiAssistantEngine extends EventEmitter {
     private readonly sdkVersion: string;
     private readonly audioPlayer: AudioPlayer;
     private readonly audioRecorder: AudioRecorder;
-    private readonly speechToText: SpeechToText;
+    private readonly speechToText: SpeechRecognizer;
     private readonly functionExecutor: FunctionExecutor;
     private readonly scraper: Scraper;
     private readonly user: User;
@@ -66,7 +66,7 @@ class AiAssistantEngine extends EventEmitter {
         this.apiUrl = apiUrl;
         this.scrapeContent = scrapeContent;
         this.user = new User(userId);
-        this.speechToText = new SpeechToText();
+        this.speechToText = new SpeechRecognizer();
         this.audioRecorder = new AudioRecorder();
         this.audioPlayer = new AudioPlayer();
         this.functionExecutor = new FunctionExecutor();
@@ -129,7 +129,7 @@ class AiAssistantEngine extends EventEmitter {
             if (this.userInputMethod === UserInputMethod.AUDIO) {
                 return await this.audioRecorder.startRecording();
             } else if (this.userInputMethod === UserInputMethod.TEXT) {
-                return await this.speechToText.convertSpeechToText();
+                return await this.speechToText.startListening();
             } else {
                 throw new Error('Invalid user input method!');
             }
