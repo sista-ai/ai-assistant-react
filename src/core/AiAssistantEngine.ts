@@ -42,6 +42,8 @@ class AiAssistantEngine extends EventEmitter {
     private readonly user: User;
     private readonly pageContent: Record<string, string[]> | null;
     private userInputMethod: UserInputMethod;
+    private getingtUserInput: boolean;
+    private makeingAPIRequest: boolean;
 
     constructor(
         apiKey: string,
@@ -72,7 +74,8 @@ class AiAssistantEngine extends EventEmitter {
         this.functionExecutor = new FunctionExecutor();
         this.scraper = new Scraper();
         this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
-
+        this.getingtUserInput = false;
+        this.makeingAPIRequest = false;
         // Log the custom object
         Logger.log(
             '--[SISTA]-- Initialize Ai Assistant Engine:',
@@ -104,7 +107,7 @@ class AiAssistantEngine extends EventEmitter {
         let inputUserCommand: string | Blob;
 
         try {
-            inputUserCommand = await this.getUserInput();
+            inputUserCommand = await this._getUserAudioInput();
             Logger.log(
                 `--[SISTA]-- Used "User Input Method" = ${this.userInputMethod}`,
             );
@@ -125,15 +128,18 @@ class AiAssistantEngine extends EventEmitter {
     };
 
     /**
-     * Tries to get user input.
+     * Get the user input.
      * Falls back to alternate method and retries up to 2 times if errors occur.
      */
-    private async getUserInput(retries = 0): Promise<string | Blob> {
+    private async _getUserAudioInput(retries = 0): Promise<string | Blob> {
+        Logger.log('--[SISTA]-- _getUserAudioInput');
         try {
+            this.getingtUserInput = true;
             return this.userInputMethod === UserInputMethod.AUDIO_RECORDER
                 ? await this.audioRecorder.startRecording()
                 : await this.speechToText.startListening();
         } catch (err) {
+            this.getingtUserInput = false;
             if (retries >= 2) {
                 throw new Error('Failed to get user input after 2 retries');
             }
@@ -145,13 +151,14 @@ class AiAssistantEngine extends EventEmitter {
             Logger.log(
                 `--[SISTA]-- FALLBACK: Switching "User Input Method" To = ${this.userInputMethod}`,
             );
-            return this.getUserInput(retries + 1);
+            return this._getUserAudioInput(retries + 1);
         }
     }
 
     private _makeAPIRequest = async (
         userInput: Blob | string,
     ): Promise<void> => {
+        this.makeingAPIRequest = true;
         Logger.log('--[SISTA]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
@@ -186,11 +193,12 @@ class AiAssistantEngine extends EventEmitter {
             });
 
             const data: ApiResponse = await response.json();
-
+            this.makeingAPIRequest = false;
             this._handleApiResponse(data);
         } catch (error) {
             Logger.error('Error Calling Sista API:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
+            this.makeingAPIRequest = false;
         }
     };
 
@@ -252,7 +260,11 @@ class AiAssistantEngine extends EventEmitter {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReplyFromUrl(audioFile, () => {
             Logger.log('--[SISTA]-- Audio File reply has finished playing.');
-            this.emitStateChange(EventEmitter.STATE_IDLE);
+
+            // Check if getting user input or making API request is in progress and if so do not emit idle state
+            if (!this.getingtUserInput || !this.makeingAPIRequest) {
+                this.emitStateChange(EventEmitter.STATE_IDLE);
+            }
         });
     };
 

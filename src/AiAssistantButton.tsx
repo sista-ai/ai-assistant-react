@@ -101,11 +101,11 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
         if (aiAssistant) {
             const handleStateChange = (newState: string) => {
                 setRecordingState(newState as RecordingState);
-                setButtonDisabled(newState !== 'STATE_IDLE');
+                setButtonDisabled(newState === 'STATE_LISTENING_START' || newState === 'STATE_THINKING_START');
             };
-
+    
             aiAssistant.on('stateChange', handleStateChange);
-
+    
             return () => {
                 aiAssistant.off('stateChange', handleStateChange);
             };
