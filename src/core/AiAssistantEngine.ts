@@ -101,6 +101,9 @@ class AiAssistantEngine extends EventEmitter {
     startProcessing = async (): Promise<void> => {
         Logger.log('--[SISTA]-- startProcessing');
 
+        // Reset the assistant before starting processing
+        this._resetEngine();
+
         this.emitStateChange(EventEmitter.STATE_LISTENING_START);
         this.audioPlayer.playStartTone();
 
@@ -358,6 +361,14 @@ class AiAssistantEngine extends EventEmitter {
 
     private _handleInputVoiceCommandAsText = (content: string): void => {
         Logger.log('--[SISTA]-- User Command:', content);
+    };
+
+    // New method to reset the assistant
+    _resetEngine = (): void => {
+        // Reset the state of the assistant
+        this.emitStateChange(EventEmitter.STATE_IDLE);
+        this.getingtUserInput = false;
+        this.makeingAPIRequest = false;
     };
 }
 
