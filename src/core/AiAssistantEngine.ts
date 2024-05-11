@@ -15,17 +15,18 @@ import SpeechRecognizer from './SpeechRecognizer';
 interface ApiResponse {
     data: {
         inputVoiceCommandAsText?: string;
-        outputTextReply?: string;
-        outputAudioReply?: string;
         outputExecutableFunctions?: any;
+        outputTextReply?: string;
+        outputAudioUrlReply?: string;
+        shouldStreamAudioReply?: boolean;
     };
     statusCode: number;
     message: string;
 }
 
 enum UserInputMethod {
-    AUDIO = 'AUDIO',
-    TEXT = 'TEXT',
+    AUDIO_RECORDER = 'AUDIO_RECORDER',
+    SPEECH_RECOGNIZER = 'SPEECH_RECOGNIZER',
 }
 
 class AiAssistantEngine extends EventEmitter {
@@ -58,9 +59,8 @@ class AiAssistantEngine extends EventEmitter {
             );
         }
 
-        // Control the user input method. TEXT = try to convert speech to text using
-        // browser's SpeechRecognition API first and fallback to Audio recording if it fails.
-        this.userInputMethod = UserInputMethod.TEXT;
+        // Control the primary user input method, if one fails it will fallback to the others and retry
+        this.userInputMethod = UserInputMethod.SPEECH_RECOGNIZER;
         this.sdkVersion = pkg.version;
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
@@ -124,25 +124,28 @@ class AiAssistantEngine extends EventEmitter {
         }
     };
 
-    private async getUserInput(): Promise<string | Blob> {
+    /**
+     * Tries to get user input.
+     * Falls back to alternate method and retries up to 2 times if errors occur.
+     */
+    private async getUserInput(retries = 0): Promise<string | Blob> {
         try {
-            if (this.userInputMethod === UserInputMethod.AUDIO) {
-                return await this.audioRecorder.startRecording();
-            } else if (this.userInputMethod === UserInputMethod.TEXT) {
-                return await this.speechToText.startListening();
-            } else {
-                throw new Error('Invalid user input method!');
-            }
+            return this.userInputMethod === UserInputMethod.AUDIO_RECORDER
+                ? await this.audioRecorder.startRecording()
+                : await this.speechToText.startListening();
         } catch (err) {
+            if (retries >= 2) {
+                throw new Error('Failed to get user input after 2 retries');
+            }
             Logger.error('Error getting user input, switching method:', err);
             this.userInputMethod =
-                this.userInputMethod === UserInputMethod.AUDIO
-                    ? UserInputMethod.TEXT
-                    : UserInputMethod.AUDIO;
+                this.userInputMethod === UserInputMethod.AUDIO_RECORDER
+                    ? UserInputMethod.SPEECH_RECOGNIZER
+                    : UserInputMethod.AUDIO_RECORDER;
             Logger.log(
-                `--[SISTA]-- FALLBACK: Switchig "User Input Method" To = ${this.userInputMethod}`,
+                `--[SISTA]-- FALLBACK: Switching "User Input Method" To = ${this.userInputMethod}`,
             );
-            return this.getUserInput();
+            return this.getUserInput(retries + 1);
         }
     }
 
@@ -154,9 +157,9 @@ class AiAssistantEngine extends EventEmitter {
 
         const formData = new FormData();
 
-        if (this.userInputMethod === UserInputMethod.AUDIO) {
+        if (this.userInputMethod === UserInputMethod.AUDIO_RECORDER) {
             formData.append('userInputAsAudio', userInput as Blob);
-        } else if (this.userInputMethod === UserInputMethod.TEXT) {
+        } else if (this.userInputMethod === UserInputMethod.SPEECH_RECOGNIZER) {
             formData.append('userInputAsText', userInput as string);
         }
 
@@ -230,18 +233,103 @@ class AiAssistantEngine extends EventEmitter {
         }
 
         // ----[ Step 4: Play AI Audio Reply ]----
-        // Handle audio response if available
-        if (response.data.outputAudioReply) {
-            this._handleAudioResponse(response.data.outputAudioReply);
+        // Handle audio response if available as a Stream
+        if (response.data.shouldStreamAudioReply) {
+            this._handleAudioStreamResponse(response.data.outputTextReply);
+
+            // Handle audio response if available as a URL to an audio file
+        } else if (response.data.outputAudioUrlReply) {
+            this._handleAudioUrlResponse(response.data.outputAudioUrlReply);
+        } else {
+            // If no audio response is available, and no executable functions, means something went wrong
+            if (response.data.outputExecutableFunctions.length === 0) {
+                throw new Error('AI never responded!');
+            }
         }
     };
 
-    private _handleAudioResponse = (audioFile: string): void => {
+    private _handleAudioUrlResponse = (audioFile: string): void => {
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
-        this.audioPlayer.playAiReply(audioFile, () => {
-            Logger.log('--[SISTA]-- Audio reply has finished playing.');
+        this.audioPlayer.playAiReplyFromUrl(audioFile, () => {
+            Logger.log('--[SISTA]-- Audio File reply has finished playing.');
             this.emitStateChange(EventEmitter.STATE_IDLE);
         });
+    };
+
+    private _handleAudioStreamResponse = async (
+        outputAudioStreamReply: string | undefined,
+    ): Promise<void> => {
+        Logger.log(
+            '--[SISTA]-- _handleAudioStreamResponse:',
+            outputAudioStreamReply,
+        );
+
+        if (!outputAudioStreamReply) {
+            Logger.error('No Audio Text To Convert & Stream!');
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+            return;
+        }
+
+        this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
+
+        try {
+            const response = await fetch(
+                `${this.apiUrl}/processor/audio-stream`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': this.apiKey,
+                    },
+                    body: JSON.stringify({
+                        textMessage: outputAudioStreamReply,
+                    }),
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const reader = response.body?.getReader();
+            if (!reader) {
+                throw new Error('No reader found in the response');
+            }
+
+            const playChunk = (
+                result: ReadableStreamReadResult<Uint8Array>,
+            ) => {
+                const { done, value } = result;
+
+                if (done) {
+                    this.emitStateChange(EventEmitter.STATE_IDLE);
+                    return;
+                }
+
+                // Play the chunk
+                this.audioPlayer.playAiReplyFromStream(
+                    new ReadableStream({
+                        start(controller) {
+                            controller.enqueue(value);
+                            controller.close();
+                        },
+                    }),
+                    () => {
+                        Logger.log(
+                            '--[SISTA]-- Audio stream chunk has finished playing.',
+                        );
+                    },
+                );
+
+                // Read the next chunk
+                reader.read().then(playChunk);
+            };
+
+            reader.read().then(playChunk);
+        } catch (error) {
+            Logger.error('Error Calling Sista API:', error);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+        }
     };
 
     private _handleExecutableFunctionsResponse = (
