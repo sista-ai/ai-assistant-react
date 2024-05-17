@@ -22,52 +22,67 @@ class AudioRecorder {
         this.handleStop = this.handleStop.bind(this);
     }
 
+
+    public async test_startRecording(): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            reject(new Error('TEST Error starting recording...'));
+        });
+    }
+
     public async startRecording(): Promise<Blob> {
-        if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
-            console.error('Recording is already in progress');
-            throw new Error('Recording is already in progress');
-        }
-
-        const stream = await this.getMediaStream();
-        const possibleTypes = [
-            'audio/mp4',
-            'audio/ogg; codecs=opus',
-            'audio/webm; codecs=opus',
-            'audio/wav',
-            'audio/mpeg',
-        ];
-
-        let options = { mimeType: 'audio/wav' };
-        let supportedType = possibleTypes.find((type) =>
-            MediaRecorder.isTypeSupported(type),
-        );
-
-        if (!supportedType) {
-            console.error('No supported audio type found');
-            throw new Error('No supported audio type found');
-        }
-
-        options.mimeType = supportedType;
-
-        this.mediaRecorder = new MediaRecorder(stream, options);
-        this.mediaRecorder.ondataavailable = this.handleDataAvailable;
-        this.mediaRecorder.onstop = this.handleStop;
-        this.mediaRecorder.start();
-
-        this.setupAudioAnalysis(stream);
-
-        setTimeout(() => {
+        try {
             if (
                 this.mediaRecorder &&
                 this.mediaRecorder.state === 'recording'
             ) {
-                this.stopRecording();
+                console.error('Recording is already in progress');
+                throw new Error('Recording is already in progress');
             }
-        }, this.maxRecordingTime);
 
-        return new Promise<Blob>((resolve) => {
-            this.resolveRecording = resolve;
-        });
+            const stream = await this.getMediaStream();
+            const possibleTypes = [
+                'audio/mp4',
+                'audio/ogg; codecs=opus',
+                'audio/webm; codecs=opus',
+                'audio/wav',
+                'audio/mpeg',
+            ];
+
+            let options = { mimeType: 'audio/wav' };
+            let supportedType = possibleTypes.find((type) =>
+                MediaRecorder.isTypeSupported(type),
+            );
+
+            if (!supportedType) {
+                console.error('No supported audio type found');
+                throw new Error('No supported audio type found');
+            }
+
+            options.mimeType = supportedType;
+
+            this.mediaRecorder = new MediaRecorder(stream, options);
+            this.mediaRecorder.ondataavailable = this.handleDataAvailable;
+            this.mediaRecorder.onstop = this.handleStop;
+            this.mediaRecorder.start();
+
+            this.setupAudioAnalysis(stream);
+
+            setTimeout(() => {
+                if (
+                    this.mediaRecorder &&
+                    this.mediaRecorder.state === 'recording'
+                ) {
+                    this.stopRecording();
+                }
+            }, this.maxRecordingTime);
+
+            return new Promise<Blob>((resolve) => {
+                this.resolveRecording = resolve;
+            });
+        } catch (error) {
+            Logger.error('AudioRecorder Error starting recording:', error);
+            throw new Error('Error starting recording');
+        }
     }
 
     private async getMediaStream(): Promise<MediaStream> {

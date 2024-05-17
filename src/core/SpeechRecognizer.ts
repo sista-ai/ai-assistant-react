@@ -65,32 +65,44 @@ class SpeechRecognizer {
         };
     }
 
-    public async startListening(): Promise<string> {
+    public async test_startListening(): Promise<string> {
         return new Promise((resolve, reject) => {
-            if (this.recognition.continuous) {
-                reject('Recognition is already in progress');
-                return;
-            }
-
-            this.finalTranscript = '';
-
-            this.recognition.onend = () => {
-                Logger.log('--[SISTA]-- Speech recognition service has ended.');
-                resolve(this.finalTranscript);
-                this.isListening = false;
-            };
-
-            this.recognition.onerror = (event: SpeechRecognitionEvent) => {
-                Logger.error(
-                    `--[SISTA]-- Speech recognition error: ${event.error}`,
-                );
-                reject(new Error(event.error));
-                this.isListening = false;
-            };
-
-            this.recognition.start();
-            Logger.log('--[SISTA]-- Speech recognition started.');
+            reject(new Error('TEST Error starting listening...'));
         });
+    }
+
+    public async startListening(): Promise<string> {
+        try {
+            return new Promise((resolve, reject) => {
+                if (this.recognition.continuous) {
+                    console.error('Recognition is already in progress');
+                    throw new Error('Recognition is already in progress');
+                }
+
+                this.finalTranscript = '';
+
+                this.recognition.onend = () => {
+                    Logger.log(
+                        '--[SISTA]-- Speech recognition service has ended.',
+                    );
+                    resolve(this.finalTranscript);
+                    this.isListening = false;
+                };
+
+                this.recognition.onerror = (event: SpeechRecognitionEvent) => {
+                    Logger.error(
+                        `--[SISTA]-- Speech recognition error: ${event.error}`,
+                    );
+                    throw new Error(event.error);
+                };
+
+                this.recognition.start();
+                Logger.log('--[SISTA]-- Speech recognition started.');
+            });
+        } catch (error) {
+            Logger.error('SpeechRecognizer Error starting listening:', error);
+            throw new Error('Error starting listening');
+        }
     }
 }
 

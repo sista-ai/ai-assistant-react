@@ -62,7 +62,7 @@ class AiAssistantEngine extends EventEmitter {
         }
 
         // Control the primary user input method, if one fails it will fallback to the others and retry
-        this.userInputMethod = UserInputMethod.SPEECH_RECOGNIZER;
+        this.userInputMethod = UserInputMethod.AUDIO_RECORDER;
         this.sdkVersion = pkg.version;
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
@@ -142,11 +142,17 @@ class AiAssistantEngine extends EventEmitter {
                 ? await this.audioRecorder.startRecording()
                 : await this.speechToText.startListening();
         } catch (err) {
-            this.getingtUserInput = false;
-            if (retries >= 2) {
-                throw new Error('Failed to get user input after 2 retries');
+            Logger.error(err);
+            if (retries >= 3) {
+                Logger.log(
+                    'Both methods to getUserAudioInput failed. Stopping further attempts.',
+                );
+                throw new Error(
+                    'Failed to get user input after trying both methods.',
+                );
             }
-            Logger.error('Error getting user input, switching method:', err);
+
+            this.getingtUserInput = false;
             this.userInputMethod =
                 this.userInputMethod === UserInputMethod.AUDIO_RECORDER
                     ? UserInputMethod.SPEECH_RECOGNIZER
@@ -154,6 +160,7 @@ class AiAssistantEngine extends EventEmitter {
             Logger.log(
                 `--[SISTA]-- FALLBACK: Switching "User Input Method" To = ${this.userInputMethod}`,
             );
+
             return this._getUserAudioInput(retries + 1);
         }
     }
