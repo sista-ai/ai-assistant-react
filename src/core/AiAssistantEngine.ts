@@ -197,6 +197,7 @@ class AiAssistantEngine extends EventEmitter {
             const response = await fetch(`${this.apiUrl}/processor/run`, {
                 method: 'POST',
                 headers: {
+                    'api-version': 'v1',
                     'x-api-key': this.apiKey,
                 },
                 body: formData,
