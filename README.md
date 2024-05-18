@@ -4,11 +4,19 @@ Give your App a voice, with a conversational AI assistant and interactive voice 
 
 **No Code Changes! No Intent Definitions!** _Just add our magic button `<AiAssistantButton />`._
 
-[![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai)
+## Demo (Try it now!)
+
+Visit our [Demo](https://smart.sista.ai) _Say "Turn light on"!_
+
+[![Sista Logo](./assets/sista-demo-one.png)](https://smart.sista.ai)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
-**Features at a Glance:**
+## Plug & Play AI Integration
+
+Incorporating AI into your applications is now simpler than ever. Our seamless AI integration platform allows you to enhance your apps with intelligent features and voice capabilities.
+
+### Features at a Glance
 
 -   **AI Assistant:** Answers any question
 -   **UI Controller:** Performs any action
@@ -16,51 +24,27 @@ Give your App a voice, with a conversational AI assistant and interactive voice 
 -   **Auto Scraper:** Scrape any page
 -   **Admin Panel:** Customizes any detail
 
-## Demo
+### Supported Frameworks
 
-### Try it now!
+This package integrates seamlessly with a wide range of React projects, including **NextJS**, **Electron**, **Gatsby**, **Meteor**, **React Native**, **Remix**, **RedwoodJS**, **Parcel**, **Expo**, and **BlitzJS**.
 
-Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Say "Turn on the light"!_
-
-[![Sista Logo](./assets/sista-demo-one.png)](https://smart.sista.ai)
-
-## Supported Projects
-
-This package integrates with many React projects.
-
--   NextJS
--   Electron
--   Gatsby
--   Meteor
--   React Native
--   Remix
--   RedwoodJS
--   Parcel
--   Expo
--   BlitzJS
+<a href="https://smart.sista.ai">
+  <img src="./assets/sista-icon.png" alt="Sista Logo" width="130"/>
+</a>
 
 ## Installation
 
-To use [@sista/ai-assistant-react](https://www.npmjs.com/package/@sista/ai-assistant-react), install it in your React App.
-
-##### Using npm:
+Install [@sista/ai-assistant-react](https://www.npmjs.com/package/@sista/ai-assistant-react) in your React App.
 
 ```bash
+# Using npm
 npm install @sista/ai-assistant-react
-```
 
-##### Using yarn:
-
-```bash
+# Or using yarn
 yarn add @sista/ai-assistant-react
 ```
 
-<!-- ##### Using pnpm:
-```bash
-pnpm add @sista/ai-assistant-react
-``` -->
-
-## Setup
+## Setup: AI Assistant
 
 ### 1. Import Provider
 
@@ -103,9 +87,9 @@ function MyComponent() {
 
 ---
 
-### 3. Register Voice-Interactive Functions
+## Setup: UI Controller
 
-To make your UI voice-interactive, simply register an `array` of `function signatures` to the **Sista AI model**.
+Register Voice-Interactive Functions: To enable AI to control the UI using voice commands, you need to inform the model which functions it can call by registering an `array` of `function signatures`.
 
 ```js
 const sayHelloWorld = () => {
@@ -131,9 +115,8 @@ const { registerFunctions } = useAiAssistant();
 
 useEffect(() => {
     if (registerFunctions) {
-      registerFunctions(aiFunctions);
+        registerFunctions(aiFunctions);
     }
-    
 }, [registerFunctions]);
 ```
 
@@ -168,11 +151,9 @@ const aiFunctions = [
 ];
 ```
 
-To customize the AI personality or voice or provide extra information, beyound what's on the user screen, visit the [Admin Panel](https://admin.sista.ai/applications).
-
 ## Full Example: (Todo App)
 
-For a voice-interactive todo app to `add` or `remove` tasks, the setup is:
+For a voice-interactive todo app to `add` or `remove` tasks, the setup looks like this:
 
 ```js
 import React, { useEffect } from 'react';
@@ -248,27 +229,55 @@ function TodoApp() {
 export default TodoApp;
 ```
 
+[![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai)
+
 ---
 
 ## Configuration
 
+### 1. Access Control
+
+#### 1.1 Domain / IP Whitelisting
+
+To secure your production environment, you must whitelist your domains / IPs through the [Admin Panel](https://admin.sista.ai/applications).
+
+#### 1.2 Rate Limit Control
+
+To prevent abuse, configure request limits per user within a specified timeframe via the [Admin Panel](https://admin.sista.ai/applications).
+
+### 2. Props Reference
+
 `AiAssistantProvider` accepts the following props:
 
-````jsx
+```jsx
 <AiAssistantProvider
-    apiKey="api-key"           // (required): Your API key.
-    userId="user-id"           // (optional): Your end user ID (for analytics tracking).
-    scrapeContent={true}       // (optional): Automatic page content scraping (Enabled by default).
-    debug={false}              // (optional): Debug mode. (Disabled by default)
-    apiUrl="api-url"           // (optional): For testing purposes.
+    apiKey="api-key" // (required): Your API key.
+    userId="user-id" // (optional): Your end user ID (for analytics tracking).
+    scrapeContent={true} // (optional): Automatic page content scraping (Enabled by default).
+    debug={false} // (optional): Debug mode. (Disabled by default)
+    apiUrl="api-url" // (optional): For testing purposes.
 >
-  // ...
+    // ...
 </AiAssistantProvider>
+```
+
 ---
 
 ## Customization
 
-### Button Color
+### 1. AI Characteristics
+
+Customize the assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data`.
+
+> By default, `AiAssistantProvider` supplies the AI model with the current screen content. To disable, set `scrapeContent` to false. Scraped content supplements your custom prompts added from the admin panel.
+
+### 2. Assistant Voice
+
+Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
+
+### 3 Button Design
+
+#### 3.1 Button Color
 
 Modify the colors of the `AiAssistantButton` at different states:
 
@@ -281,9 +290,9 @@ const customStateColors = {
 };
 
 <AiAssistantButton stateColors={customStateColors} />;
-````
+```
 
-### Button Style & Position
+#### 3.2 Button Style & Position
 
 Pass a `style` object to adjust dimensions, position, and appearance:
 
@@ -322,7 +331,7 @@ const customStyle = {
 
 For example: To override default positioning, set `position: 'relative'` and `bottom/right: 'auto'`. This allows custom placement within your container.
 
-### Button Advanced Styling
+#### 3.3 Button Advanced Styling
 
 Apply CSS classes for complex styling:
 
@@ -349,25 +358,27 @@ Apply CSS classes for complex styling:
 
 Use the `style` prop for inline adjustments or `className` for stylesheet-based customizations.
 
-### Modify AI Responses
+---
 
-Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data` as AI Instructions.
+## Advanced Admin Panel
 
-By default, `AiAssistantProvider` supplies the AI model with the current page's content. To disable, set `scrapeContent` to false. Scraped content supplements your custom prompts added from the admin panel.
-
-### Change Assistant Voice
-
-Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
+The [Admin Panel](https://admin.sista.ai/applications) includes powerful analytics tools to help you understand your users and optimize their experience.
 
 [![Sista Logo](./assets/sista-admin-dark.png)](https://smart.sista.ai)
 
----
+## Diverse SDKs
 
-<a href="https://smart.sista.ai">
-  <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
-</a>
+Install across all platforms for a unified experience.
 
-Unlock the Future with our advacned **AI Voice Assistant**: Embrace top-tier components:
+|                                                                                                      |                                                                                                           |                                                                                                      |                                                                                                     |                                                                                                      |                                                                                                        |
+| :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
+|   [<img src="./assets/sdks/VUE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |   [<img src="./assets/sdks/ANGULAR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)    |  [<img src="./assets/sdks/EMBER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  | [<img src="./assets/sdks/SVELTE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |  [<img src="./assets/sdks/NEXT.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |  [<img src="./assets/sdks/GATSBY.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |
+|  [<img src="./assets/sdks/REMIX.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  |     [<img src="./assets/sdks/DART.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)     |   [<img src="./assets/sdks/JS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)    |  [<img src="./assets/sdks/IOS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   | [<img src="./assets/sdks/ANDROID.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |   [<img src="./assets/sdks/IONIC.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |
+| [<img src="./assets/sdks/CORDOVA.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/REACT-NATIVE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/FLUTTER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |  [<img src="./assets/sdks/MAUI.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  | [<img src="./assets/sdks/XAMARIN.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/CAPACITOR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |
+
+## Features
+
+Unlock the Future with our advanced **AI Voice Assistant**: Embrace top-tier components:
 
 -   Conversational AI Agents
 -   Interactive Voice UI
@@ -382,16 +393,6 @@ Unlock the Future with our advacned **AI Voice Assistant**: Embrace top-tier com
 -   Custom Prompt Configuration
 -   Analytics and Logging
 -   Privacy and Security
-
-## Diverse SDKs
-
-Install across all platforms for a unified experience.
-
-|                                                                                                      |                                                                                                           |                                                                                                      |                                                                                                     |                                                                                                      |                                                                                                        |
-| :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
-|   [<img src="./assets/sdks/VUE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |   [<img src="./assets/sdks/ANGULAR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)    |  [<img src="./assets/sdks/EMBER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  | [<img src="./assets/sdks/SVELTE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |  [<img src="./assets/sdks/NEXT.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |  [<img src="./assets/sdks/GATSBY.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |
-|  [<img src="./assets/sdks/REMIX.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  |     [<img src="./assets/sdks/DART.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)     |   [<img src="./assets/sdks/JS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)    |  [<img src="./assets/sdks/IOS.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   | [<img src="./assets/sdks/ANDROID.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |   [<img src="./assets/sdks/IONIC.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)   |
-| [<img src="./assets/sdks/CORDOVA.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/REACT-NATIVE.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/FLUTTER.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |  [<img src="./assets/sdks/MAUI.svg" width="100px">](https://github.com/orgs/sista-ai/repositories)  | [<img src="./assets/sdks/XAMARIN.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) | [<img src="./assets/sdks/CAPACITOR.svg" width="100px">](https://github.com/orgs/sista-ai/repositories) |
 
 ## Contributing
 
