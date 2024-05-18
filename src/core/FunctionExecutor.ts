@@ -16,7 +16,7 @@ interface ExecutableFunction {
 
 export default class FunctionExecutor {
     public functionSignatures: FunctionSignature[];
-    private functionHandlers: Map<string, Function>;
+    private functionHandlers: Map<Symbol, Function>;
 
     constructor() {
         this.functionSignatures = [];
@@ -26,26 +26,16 @@ export default class FunctionExecutor {
     registerFunctions(voiceFunctions: VoiceFunction[]): void {
         Logger.log('--[SISTA]-- registerFunctions');
 
-        // 1) extract the name and handler to build functionHandlers
-        // 2) removing the handler from functionSignatures
-        // 3) adding the type as 'function' to functionSignatures
-        // 4) adding the function name to functionSignatures from the handler
         voiceFunctions.forEach(({ function: func }) => {
             const { handler, ...rest } = func;
             const name = handler.name;
-            this.functionHandlers.set(name, handler);
+            const symbol = Symbol(name);
+            this.functionHandlers.set(symbol, handler);
 
-            // Ensure no duplicate function signatures
-            const functionExists = this.functionSignatures.some(
-                (funcSig) => funcSig.function.name === name,
-            );
-
-            if (!functionExists) {
-                this.functionSignatures.push({
-                    type: 'function',
-                    function: { name, ...rest },
-                });
-            }
+            this.functionSignatures.push({
+                type: 'function',
+                function: { name, ...rest },
+            });
         });
 
         Logger.log(
@@ -80,7 +70,14 @@ export default class FunctionExecutor {
 
         executableFunctions.forEach((func) => {
             const functionName = func.name;
-            const functionToCall = this.functionHandlers.get(functionName);
+            let functionToCall;
+
+            for (let [key, value] of this.functionHandlers.entries()) {
+                if (key.description === functionName) {
+                    functionToCall = value;
+                    break;
+                }
+            }
 
             if (!functionToCall) {
                 Logger.error(

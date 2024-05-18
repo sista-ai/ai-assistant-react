@@ -37,11 +37,7 @@ This package integrates seamlessly with a wide range of React projects, includin
 Install [@sista/ai-assistant-react](https://www.npmjs.com/package/@sista/ai-assistant-react) in your React App.
 
 ```bash
-# Using npm
 npm install @sista/ai-assistant-react
-
-# Or using yarn
-yarn add @sista/ai-assistant-react
 ```
 
 ## Setup: AI Assistant
