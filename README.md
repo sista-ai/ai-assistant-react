@@ -20,7 +20,7 @@ Give your App a voice, with a conversational AI assistant and interactive voice 
 
 ### Try it now!
 
-Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Say "Turn on the light"!_
+Visit our [Demo](https://smart.sista.ai) click the button, and start talking... _Try "Turn light on"!_
 
 [![Sista Logo](./assets/sista-demo-one.png)](https://smart.sista.ai)
 
@@ -131,9 +131,8 @@ const { registerFunctions } = useAiAssistant();
 
 useEffect(() => {
     if (registerFunctions) {
-      registerFunctions(aiFunctions);
+        registerFunctions(aiFunctions);
     }
-    
 }, [registerFunctions]);
 ```
 
@@ -167,8 +166,6 @@ const aiFunctions = [
     },
 ];
 ```
-
-To customize the AI personality or voice or provide extra information, beyound what's on the user screen, visit the [Admin Panel](https://admin.sista.ai/applications).
 
 ## Full Example: (Todo App)
 
@@ -252,21 +249,47 @@ export default TodoApp;
 
 ## Configuration
 
+### Access Control
+
+#### Domain / IP Whitelisting
+
+To secure your production environment, ensure that you whitelist your domain or IP address through the [Admin Panel](https://admin.sista.ai/applications).
+
+#### Rate Limit Control
+
+To prevent abuse, configure request limits per user within a specified timeframe via the [Admin Panel](https://admin.sista.ai/applications) to prevent abuse.
+
+### Props Reference
+
 `AiAssistantProvider` accepts the following props:
 
-````jsx
+```jsx
 <AiAssistantProvider
-    apiKey="api-key"           // (required): Your API key.
-    userId="user-id"           // (optional): Your end user ID (for analytics tracking).
-    scrapeContent={true}       // (optional): Automatic page content scraping (Enabled by default).
-    debug={false}              // (optional): Debug mode. (Disabled by default)
-    apiUrl="api-url"           // (optional): For testing purposes.
+    apiKey="api-key" // (required): Your API key.
+    userId="user-id" // (optional): Your end user ID (for analytics tracking).
+    scrapeContent={true} // (optional): Automatic page content scraping (Enabled by default).
+    debug={false} // (optional): Debug mode. (Disabled by default)
+    apiUrl="api-url" // (optional): For testing purposes.
 >
-  // ...
+    // ...
 </AiAssistantProvider>
+```
+
+[![Sista Logo](./assets/sista-admin-dark.png)](https://smart.sista.ai)
+
 ---
 
 ## Customization
+
+### AI Characteristics
+
+Customize the assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data`.
+
+By default, `AiAssistantProvider` supplies the AI model with the current screen content. To disable, set `scrapeContent` to false. Scraped content supplements your custom prompts added from the admin panel.
+
+### Assistant Voice
+
+Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
 
 ### Button Color
 
@@ -281,7 +304,7 @@ const customStateColors = {
 };
 
 <AiAssistantButton stateColors={customStateColors} />;
-````
+```
 
 ### Button Style & Position
 
@@ -349,25 +372,13 @@ Apply CSS classes for complex styling:
 
 Use the `style` prop for inline adjustments or `className` for stylesheet-based customizations.
 
-### Modify AI Responses
-
-Customize AI assistant behavior via the [Admin Panel](https://admin.sista.ai/applications) by providing your `custom prompt` and `training data` as AI Instructions.
-
-By default, `AiAssistantProvider` supplies the AI model with the current page's content. To disable, set `scrapeContent` to false. Scraped content supplements your custom prompts added from the admin panel.
-
-### Change Assistant Voice
-
-Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applications) by selecting your preferred voice in the application settings.
-
-[![Sista Logo](./assets/sista-admin-dark.png)](https://smart.sista.ai)
-
 ---
 
 <a href="https://smart.sista.ai">
   <img src="./assets/sista-icon.png" alt="Sista Logo" width="100"/>
 </a>
 
-Unlock the Future with our advacned **AI Voice Assistant**: Embrace top-tier components:
+Unlock the Future with our advanced **AI Voice Assistant**: Embrace top-tier components:
 
 -   Conversational AI Agents
 -   Interactive Voice UI
