@@ -24,16 +24,28 @@ class User {
     }
 
     private _generateEndUserId(): string {
-        const key = 'SS_DK_AG_EU_ID'; // Sista SDK Auto Generated End User ID
-        let endUserId = localStorage.getItem(key);
+        const timestamp = Date.now();
+        const randomPart = this._generateRandomString(36);
+        const localStorageKey = `SISTA-${timestamp}-${randomPart}`;
+        let endUserId = localStorage.getItem(localStorageKey);
         if (!endUserId) {
-            const timestamp = new Date().getTime();
-            const randomPart = Math.random().toString(36).substring(2);
-            endUserId = `Sista:UID:${timestamp}:${randomPart}`;
-            localStorage.setItem(key, endUserId);
+            endUserId = `GID-${timestamp}-${randomPart}`;
+            localStorage.setItem(localStorageKey, endUserId);
         }
 
         return endUserId;
+    }
+
+    private _generateRandomString(length: number): string {
+        let result = '';
+        const characters =
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * characters.length),
+            );
+        }
+        return result;
     }
 }
 export default User;
