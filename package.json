@@ -1,7 +1,7 @@
 {
     "name": "@sista/ai-assistant-react",
-    "version": "2.2.22",
-    "description": "An SDK for integrating AI-powered voice (and text) assistants, powered by ChatGPT, into any React App, increasing user engagement with AI conversational interfaces.",
+    "version": "2.2.23",
+    "description": "Integrate AI-powered voice and text assistants into your React app in just 10 minutes with our comprehensive SDK. Transform user engagement effortlessly with our end-to-end AI integration platform, powered by ChatGPT.",
     "main": "dist/src/index.js",
     "repository": {
         "type": "git",
@@ -18,14 +18,24 @@
         "version:patch": "npm version patch"
     },
     "keywords": [
-        "sista",
-        "voice",
+        "Sista",
+        "Sista AI",
+        "Voice",
         "UI",
-        "controller",
-        "assistant",
-        "react",
-        "sdk",
-        "AI"
+        "UI Controller",
+        "Assistant",
+        "AI Assistant",
+        "voice-assistant",
+        "text-assistant",
+        "React",
+        "React Native",
+        "Electron",
+        "Gatsby",
+        "Meteor",
+        "siri",
+        "AI",
+        "ChatGPT",
+        "GPT"
     ],
     "author": "Sista AI <support@sista.ai>",
     "license": "MIT",
