@@ -115,7 +115,7 @@ class Scraper {
             result[key] = Array.from(value).map((text) => text.trim());
         }
 
-        Logger.log('--[SISTA]-- Scraped Text:', result);
+        Logger.log('--[SISTA]-- Page Content:', result);
         return result;
     };
 }

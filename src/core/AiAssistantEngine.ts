@@ -40,10 +40,9 @@ class AiAssistantEngine extends EventEmitter {
     private readonly functionExecutor: FunctionExecutor;
     private readonly scraper: Scraper;
     private readonly user: User;
-    private readonly pageContent: Record<string, string[]> | null;
     private userInputMethod: UserInputMethod;
-    private getingtUserInput: boolean;
-    private makeingAPIRequest: boolean;
+    private gettingUserInput: boolean;
+    private makingAPIRequest: boolean;
 
     constructor(
         apiKey: string,
@@ -73,9 +72,8 @@ class AiAssistantEngine extends EventEmitter {
         this.audioPlayer = new AudioPlayer();
         this.functionExecutor = new FunctionExecutor();
         this.scraper = new Scraper();
-        this.pageContent = this.scrapeContent ? this.scraper.getText() : null;
-        this.getingtUserInput = false;
-        this.makeingAPIRequest = false;
+        this.gettingUserInput = false;
+        this.makingAPIRequest = false;
         // Log the custom object
         Logger.log(
             '--[SISTA]-- Initialize Ai Assistant Engine:',
@@ -137,7 +135,7 @@ class AiAssistantEngine extends EventEmitter {
     private async _getUserAudioInput(retries = 0): Promise<string | Blob> {
         Logger.log('--[SISTA]-- _getUserAudioInput');
         try {
-            this.getingtUserInput = true;
+            this.gettingUserInput = true;
             return this.userInputMethod === UserInputMethod.AUDIO_RECORDER
                 ? await this.audioRecorder.startRecording()
                 : await this.speechToText.startListening();
@@ -152,7 +150,7 @@ class AiAssistantEngine extends EventEmitter {
                 );
             }
 
-            this.getingtUserInput = false;
+            this.gettingUserInput = false;
             this.userInputMethod =
                 this.userInputMethod === UserInputMethod.AUDIO_RECORDER
                     ? UserInputMethod.SPEECH_RECOGNIZER
@@ -168,7 +166,7 @@ class AiAssistantEngine extends EventEmitter {
     private _makeAPIRequest = async (
         userInput: Blob | string,
     ): Promise<void> => {
-        this.makeingAPIRequest = true;
+        this.makingAPIRequest = true;
         Logger.log('--[SISTA]-- _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
@@ -189,8 +187,12 @@ class AiAssistantEngine extends EventEmitter {
             'functionsSignatures',
             JSON.stringify(this.functionExecutor.functionSignatures),
         );
+
         if (this.scrapeContent) {
-            formData.append('pageContent', JSON.stringify(this.pageContent));
+            formData.append(
+                'pageContent',
+                JSON.stringify(this.scraper.getText()),
+            );
         }
 
         try {
@@ -204,12 +206,12 @@ class AiAssistantEngine extends EventEmitter {
             });
 
             const data: ApiResponse = await response.json();
-            this.makeingAPIRequest = false;
+            this.makingAPIRequest = false;
             this._handleApiResponse(data);
         } catch (error) {
             Logger.error('Error Calling Sista API:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
-            this.makeingAPIRequest = false;
+            this.makingAPIRequest = false;
         }
     };
 
@@ -273,7 +275,7 @@ class AiAssistantEngine extends EventEmitter {
             Logger.log('--[SISTA]-- Audio File reply has finished playing.');
 
             // Check if getting user input or making API request is in progress and if so do not emit idle state
-            if (!this.getingtUserInput || !this.makeingAPIRequest) {
+            if (!this.gettingUserInput || !this.makingAPIRequest) {
                 this.emitStateChange(EventEmitter.STATE_IDLE);
             }
         });
@@ -375,8 +377,8 @@ class AiAssistantEngine extends EventEmitter {
     _resetEngine = (): void => {
         // Reset the state of the assistant
         this.emitStateChange(EventEmitter.STATE_IDLE);
-        this.getingtUserInput = false;
-        this.makeingAPIRequest = false;
+        this.gettingUserInput = false;
+        this.makingAPIRequest = false;
     };
 }
 
