@@ -125,22 +125,41 @@ const sayHello = (name) => {
     console.log(`Hello ${name}!`);
 };
 
+const navigateToPage = (page) => {
+    console.log(`Navigating to ${page}`);
+};
+
 // Define the functions to be voice-controlled
 const aiFunctions = [
     {
         function: {
             handler: sayHello,
             description: 'Greets the user with their name.',
-            // In case your function accepts parameters:
             parameters: {
                 type: 'object',
                 properties: {
                     name: {
                         type: 'string', // set parameter type
-                        description: "User's name.", // add parameter description
+                        description: "The user's name.", // add parameter description
                     },
                 },
-                required: ['name'], // list required parameters
+            },
+        },
+    },
+    {
+        function: {
+            handler: navigateToPage,
+            description: 'Go to a specific page.',
+            parameters: {
+                type: 'object',
+                properties: {
+                    page: {
+                        type: 'string', // set parameter type
+                        description: 'The page to navigate to.', // add parameter description
+                        enum: ['Page 1', 'Page 2', 'Page 3'], // list acceptable values
+                    },
+                },
+                required: ['page'], // list required parameters
             },
         },
     },
@@ -224,6 +243,19 @@ function TodoApp() {
 
 export default TodoApp;
 ```
+
+## Real-World Implementations:
+
+Here are some open-source, real-world implementations:
+
+- **Porto SAP Docs**: 
+  - [Source Code](https://github.com/Mahmoudz/Porto/blob/master/docs/src/components/AiAssistant/index.tsx)
+  - [Live Demo](https://mahmoudz.github.io/Porto/)
+
+<br/>
+<br/>
+<br/>
+
 
 [![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai)
 

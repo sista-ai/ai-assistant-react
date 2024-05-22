@@ -1,6 +1,8 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import AiAssistantEngine from './core/AiAssistantEngine';
-import AiAssistantContext, { AiAssistantContextType } from './AiAssistantContext';
+import AiAssistantContext, {
+    AiAssistantContextType,
+} from './AiAssistantContext';
 
 interface AiAssistantProviderProps {
     children: ReactNode;
@@ -17,15 +19,21 @@ export const AiAssistantProvider: React.FC<AiAssistantProviderProps> = ({
     apiUrl,
     userId,
     scrapeContent,
-    debug
+    debug,
 }) => {
-    const [aiAssistant, setAiAssistant] = useState<AiAssistantEngine | undefined>();
+    const [aiAssistant, setAiAssistant] = useState<
+        AiAssistantEngine | undefined
+    >();
 
     useEffect(() => {
-        const aiAssistantInstance = new AiAssistantEngine(apiKey, apiUrl, userId, scrapeContent, debug);
+        const aiAssistantInstance = new AiAssistantEngine(
+            apiKey,
+            apiUrl,
+            userId,
+            scrapeContent,
+            debug,
+        );
         setAiAssistant(aiAssistantInstance);
-
-        console.log('AiAssistant Initialized:', aiAssistantInstance);
     }, [apiKey, apiUrl, userId, scrapeContent, debug]);
 
     const contextValue: AiAssistantContextType = {
