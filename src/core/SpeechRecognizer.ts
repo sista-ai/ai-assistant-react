@@ -25,11 +25,13 @@ interface SpeechRecognitionObject {
 }
 
 class SpeechRecognizer {
-    private recognition: SpeechRecognitionObject;
+    private recognition: SpeechRecognitionObject =
+        {} as SpeechRecognitionObject;
     private finalTranscript: string = '';
     private isListening: boolean = false;
+    private isInitialized: boolean = false;
 
-    constructor() {
+    private initialize() {
         const SpeechRecognition =
             window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -63,6 +65,8 @@ class SpeechRecognizer {
             Logger.log('--[SISTA]-- Speech recognition stopped.');
             this.isListening = false;
         };
+
+        this.isInitialized = true;
     }
 
     public async test_startListening(): Promise<string> {
@@ -72,6 +76,10 @@ class SpeechRecognizer {
     }
 
     public async startListening(): Promise<string> {
+        if (!this.isInitialized) {
+            this.initialize();
+        }
+
         try {
             return new Promise((resolve, reject) => {
                 if (this.recognition.continuous) {
