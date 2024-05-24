@@ -1,6 +1,6 @@
 // src/core/AudioPlayer.ts
 
-import { Howl } from 'howler';
+import { Howl, Howler } from 'howler';
 import config from './config';
 import Logger from './Logger';
 
@@ -11,6 +11,7 @@ interface SoundCallback {
 class AudioPlayer {
     private readonly startSound: Howl;
     private readonly endSound: Howl;
+    private currentSound: Howl | null = null;
 
     constructor() {
         // Specify volume at 50% for start and end tones (0.5 = 50%)
@@ -82,7 +83,7 @@ class AudioPlayer {
     ): void => {
         Logger.log('F: playAiReplyFromUrl');
         // Play AI reply at 100% volume (1.0 = 100%)
-        this.playSound(audioFileUrl, callback, 1.0);
+        this.currentSound = this.playSound(audioFileUrl, callback, 1.0);
     };
 
     playStartTone = (): void => {
@@ -91,6 +92,19 @@ class AudioPlayer {
 
     playEndTone = (): void => {
         this.endSound.play();
+    };
+
+    setVolume = (volume: number): void => {
+        if (this.currentSound) {
+            this.currentSound.volume(volume);
+        }
+    };
+
+    stopCurrentSound = (): void => {
+        if (this.currentSound) {
+            this.currentSound.stop();
+            this.currentSound = null;
+        }
     };
 
     private initializeSound = (soundFileUrl: string, volume = 1.0): Howl => {
@@ -108,7 +122,7 @@ class AudioPlayer {
         soundFileUrl: string,
         callback?: SoundCallback,
         volume?: number,
-    ): void => {
+    ): Howl => {
         Logger.log('F: playSound');
         const sound = new Howl({
             src: [soundFileUrl],
@@ -123,6 +137,7 @@ class AudioPlayer {
         });
 
         sound.play();
+        return sound;
     };
 }
 

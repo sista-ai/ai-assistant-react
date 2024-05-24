@@ -22,13 +22,13 @@ class AudioRecorder {
         this.handleStop = this.handleStop.bind(this);
     }
 
-    public async test_startRecording(): Promise<Blob> {
+    async test_startRecording(): Promise<Blob> {
         return new Promise((resolve, reject) => {
             reject(new Error('TEST Error starting recording...'));
         });
     }
 
-    public async startRecording(): Promise<Blob> {
+    async startRecording(): Promise<Blob> {
         Logger.log('F: startRecording');
         try {
             if (

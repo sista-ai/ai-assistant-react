@@ -99,6 +99,9 @@ class AiAssistantEngine extends EventEmitter {
     startProcessing = async (): Promise<void> => {
         Logger.log('F: startProcessing');
 
+        // Lower the volume of any currently playing audio
+        this.audioPlayer.setVolume(0.5);
+
         // Reset the assistant before starting processing
         this._resetEngine();
 
@@ -252,6 +255,8 @@ class AiAssistantEngine extends EventEmitter {
         }
 
         // ----[ Step 4: Play AI Audio Reply ]----
+        // Stop any currently playing audio
+        this.audioPlayer.stopCurrentSound();
         // Handle audio response if available as a Stream
         if (response.data.shouldStreamAudioReply) {
             this._handleAudioStreamResponse(response.data.outputTextReply);

@@ -69,13 +69,13 @@ class SpeechRecognizer {
         this.isInitialized = true;
     }
 
-    public async test_startListening(): Promise<string> {
+    async test_startListening(): Promise<string> {
         return new Promise((resolve, reject) => {
             reject(new Error('TEST Error starting listening...'));
         });
     }
 
-    public async startListening(): Promise<string> {
+    async startListening(): Promise<string> {
         Logger.log('F: startListening');
 
         if (!this.isInitialized) {

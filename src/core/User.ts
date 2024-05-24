@@ -15,7 +15,7 @@ class User {
         this.generatedUserId = this._generateEndUserId();
     }
 
-    public getEndUserDetails(): EndUserDetails {
+    getEndUserDetails(): EndUserDetails {
         return {
             endUserAgent: navigator.userAgent,
             generatedEndUserId: this.generatedUserId,
