@@ -64,7 +64,8 @@ class AudioRecorder {
             this.mediaRecorder = new MediaRecorder(stream, options);
             this.mediaRecorder.ondataavailable = this.handleDataAvailable;
             this.mediaRecorder.onstop = this.handleStop;
-            this.mediaRecorder.start();
+            // VIP: It's essential for mobile browsers to set this to 1000ms timeslice. 
+            this.mediaRecorder.start(1000);
 
             this.setupAudioAnalysis(stream);
 
