@@ -64,12 +64,14 @@ type StateColors = {
 interface AiAssistantButtonProps {
     stateColors?: StateColors;
     style?: any;
+    onClick?: () => void;
     [key: string]: any;
 }
 
 const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
     stateColors = {},
     style = {},
+    onClick,
     ...props
 }) => {
     const { aiAssistant } = useAiAssistant();
@@ -95,17 +97,23 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
         if (aiAssistant) {
             aiAssistant.startProcessing();
         }
+        if (onClick) {
+            onClick();
+        }
     };
 
     useEffect(() => {
         if (aiAssistant) {
             const handleStateChange = (newState: string) => {
                 setRecordingState(newState as RecordingState);
-                setButtonDisabled(newState === 'STATE_LISTENING_START' || newState === 'STATE_THINKING_START');
+                setButtonDisabled(
+                    newState === 'STATE_LISTENING_START' ||
+                        newState === 'STATE_THINKING_START',
+                );
             };
-    
+
             aiAssistant.on('stateChange', handleStateChange);
-    
+
             return () => {
                 aiAssistant.off('stateChange', handleStateChange);
             };

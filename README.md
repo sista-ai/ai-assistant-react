@@ -64,7 +64,7 @@ Get your **free** `API key` from the [Admin Panel](https://admin.sista.ai/applic
 
 Import `AiAssistantButton` and add it wherever you want.
 
-```js
+```jsx
 // ...
 import { AiAssistantButton } from "@sista/ai-assistant-react";
 
@@ -87,7 +87,7 @@ function MyComponent() {
 
 Register Voice-Interactive Functions: To enable AI to control the UI using voice commands, you need to inform the model which functions it can call by registering an `array` of `function signatures`.
 
-```js
+```jsx
 const sayHelloWorld = () => {
     console.log('Hello, World!');
 };
@@ -106,7 +106,7 @@ const aiFunctions = [
 
 Register the functions using `registerFunctions([...]);` inside a `useEffect` hook.
 
-```js
+```jsx
 const { registerFunctions } = useAiAssistant();
 
 useEffect(() => {
@@ -120,7 +120,7 @@ useEffect(() => {
 
 For functions that accepts parameters: simply describe the parameters
 
-```js
+```jsx
 const sayHello = (name) => {
     console.log(`Hello ${name}!`);
 };
@@ -170,7 +170,7 @@ const aiFunctions = [
 
 For a voice-interactive todo app to `add` or `remove` tasks, the setup looks like this:
 
-```js
+```jsx
 import React, { useEffect } from 'react';
 import { useAiAssistant, AiAssistantButton } from '@sista/ai-assistant-react';
 
@@ -309,7 +309,7 @@ Change AI assistant's voice via the [Admin Panel](https://admin.sista.ai/applica
 
 Modify the colors of the `AiAssistantButton` at different states:
 
-```js
+```jsx
 const customStateColors = {
     STATE_IDLE: '#4a6cf6', // Bright Blue
     STATE_LISTENING_START: '#F64A7B', // Bright Pink
@@ -324,7 +324,7 @@ const customStateColors = {
 
 Pass a `style` object to adjust dimensions, position, and appearance:
 
-```js
+```jsx
 const customStyle = {
     // Positioning and layout properties
     position: 'relative', // Positioning of the button, 'absolute' or 'relative' to its normal position
@@ -363,7 +363,7 @@ For example: To override default positioning, set `position: 'relative'` and `bo
 
 Apply CSS classes for complex styling:
 
-```js
+```jsx
 .my-custom-button {
     padding: 10px 20px;
     transition: all 0.5s ease;
@@ -385,6 +385,18 @@ Apply CSS classes for complex styling:
 ```
 
 Use the `style` prop for inline adjustments or `className` for stylesheet-based customizations.
+
+### 4 Button Click Event Tracking
+
+To track button click events, you can pass a function to the onClick prop of the button.
+
+```jsx
+const trackAiAssistantButtonClick = () => {
+  console.log("AiAssistantButton Clicked!");
+};
+
+<AiAssistantButton onClick={trackAiAssistantButtonClick} />
+```
 
 ---
 
