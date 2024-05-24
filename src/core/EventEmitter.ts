@@ -27,7 +27,7 @@ class EventEmitter {
     }
 
     emitStateChange(eventName: string, ...args: any[]): void {
-        Logger.log('--[SISTA]-- emitStateChange: ', eventName, ...args);
+        Logger.log('emitStateChange: ', eventName, ...args);
         this.emit('stateChange', eventName, ...args);
     }
 

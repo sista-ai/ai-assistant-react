@@ -14,6 +14,8 @@ class Scraper {
     constructor() {}
 
     getText = (): Record<string, string[]> => {
+        Logger.log('F: getText');
+
         let groupedTexts: GroupedTexts = {
             buttons: new Set(),
             links: new Set(),
@@ -115,7 +117,7 @@ class Scraper {
             result[key] = Array.from(value).map((text) => text.trim());
         }
 
-        Logger.log('--[SISTA]-- Page Content:', result);
+        Logger.log('Scraped Page Content:', result);
         return result;
     };
 }

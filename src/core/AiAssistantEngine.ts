@@ -76,7 +76,7 @@ class AiAssistantEngine extends EventEmitter {
         this.makingAPIRequest = false;
         // Log the custom object
         Logger.log(
-            '--[SISTA]-- Initialize Ai Assistant Engine:',
+            'Initialize Ai Assistant Engine:',
             JSON.stringify(
                 {
                     Version: this.sdkVersion,
@@ -97,7 +97,7 @@ class AiAssistantEngine extends EventEmitter {
     }
 
     startProcessing = async (): Promise<void> => {
-        Logger.log('--[SISTA]-- startProcessing');
+        Logger.log('F: startProcessing');
 
         // Reset the assistant before starting processing
         this._resetEngine();
@@ -109,9 +109,7 @@ class AiAssistantEngine extends EventEmitter {
 
         try {
             inputUserCommand = await this._getUserAudioInput();
-            Logger.log(
-                `--[SISTA]-- Used "User Input Method" = ${this.userInputMethod}`,
-            );
+            Logger.log(`Used "User Input Method" = ${this.userInputMethod}`);
         } catch (err) {
             Logger.error('Error getting user input:', err);
             this.emitStateChange(EventEmitter.STATE_IDLE);
@@ -133,7 +131,7 @@ class AiAssistantEngine extends EventEmitter {
      * Falls back to alternate method and retries up to 2 times if errors occur.
      */
     private async _getUserAudioInput(retries = 0): Promise<string | Blob> {
-        Logger.log('--[SISTA]-- _getUserAudioInput');
+        Logger.log('F: _getUserAudioInput');
         try {
             this.gettingUserInput = true;
             return this.userInputMethod === UserInputMethod.AUDIO_RECORDER
@@ -156,7 +154,7 @@ class AiAssistantEngine extends EventEmitter {
                     ? UserInputMethod.SPEECH_RECOGNIZER
                     : UserInputMethod.AUDIO_RECORDER;
             Logger.log(
-                `--[SISTA]-- FALLBACK: Switching "User Input Method" To = ${this.userInputMethod}`,
+                `FALLBACK: Switching "User Input Method" To = ${this.userInputMethod}`,
             );
 
             return this._getUserAudioInput(retries + 1);
@@ -167,7 +165,7 @@ class AiAssistantEngine extends EventEmitter {
         userInput: Blob | string,
     ): Promise<void> => {
         this.makingAPIRequest = true;
-        Logger.log('--[SISTA]-- _makeAPIRequest');
+        Logger.log('F: _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
 
         const formData = new FormData();
@@ -216,7 +214,7 @@ class AiAssistantEngine extends EventEmitter {
     };
 
     private _handleApiResponse = (response: ApiResponse): void => {
-        Logger.log('--[SISTA]-- _handleApiResponse:', response);
+        Logger.log('F: _handleApiResponse:', response);
 
         // Handle any kind of HTTP error statuses
         if (response.statusCode >= 400) {
@@ -270,9 +268,11 @@ class AiAssistantEngine extends EventEmitter {
     };
 
     private _handleAudioUrlResponse = (audioFile: string): void => {
+        Logger.log('F: _handleAudioUrlResponse');
+
         this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
         this.audioPlayer.playAiReplyFromUrl(audioFile, () => {
-            Logger.log('--[SISTA]-- Audio File reply has finished playing.');
+            Logger.log('Audio File reply has finished playing.');
 
             // Check if getting user input or making API request is in progress and if so do not emit idle state
             if (!this.gettingUserInput || !this.makingAPIRequest) {
@@ -284,10 +284,7 @@ class AiAssistantEngine extends EventEmitter {
     private _handleAudioStreamResponse = async (
         outputAudioStreamReply: string | undefined,
     ): Promise<void> => {
-        Logger.log(
-            '--[SISTA]-- _handleAudioStreamResponse:',
-            outputAudioStreamReply,
-        );
+        Logger.log('F: _handleAudioStreamResponse:', outputAudioStreamReply);
 
         if (!outputAudioStreamReply) {
             Logger.error('No Audio Text To Convert & Stream!');
@@ -340,9 +337,7 @@ class AiAssistantEngine extends EventEmitter {
                         },
                     }),
                     () => {
-                        Logger.log(
-                            '--[SISTA]-- Audio stream chunk has finished playing.',
-                        );
+                        Logger.log('Audio stream chunk has finished playing.');
                     },
                 );
 
@@ -360,21 +355,26 @@ class AiAssistantEngine extends EventEmitter {
     private _handleExecutableFunctionsResponse = (
         executableFunctions: any,
     ): void => {
+        Logger.log('F: _handleExecutableFunctionsResponse');
+
         this.functionExecutor.executeFunctions(executableFunctions);
         this.emitStateChange(EventEmitter.STATE_IDLE);
         this.audioPlayer.playEndTone();
     };
 
     private _handleTextResponse = (content: string): void => {
-        Logger.log('--[SISTA]-- AI Response:', content);
+        Logger.log('F: _handleTextResponse');
+        Logger.log('>>> AI OUTPUT:', content);
     };
 
     private _handleInputVoiceCommandAsText = (content: string): void => {
-        Logger.log('--[SISTA]-- User Command:', content);
+        Logger.log('F: _handleInputVoiceCommandAsText');
+        Logger.log('>>> USER INPUT:', content);
     };
 
     // New method to reset the assistant
     _resetEngine = (): void => {
+        Logger.log('F: _resetEngine');
         // Reset the state of the assistant
         this.emitStateChange(EventEmitter.STATE_IDLE);
         this.gettingUserInput = false;

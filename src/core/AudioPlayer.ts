@@ -22,7 +22,7 @@ class AudioPlayer {
         audioStream: ReadableStream<Uint8Array>,
         callback?: SoundCallback,
     ): void => {
-        Logger.log('--[SISTA]-- playAiReplyFromStream');
+        Logger.log('F: playAiReplyFromStream');
 
         const audioContext = new AudioContext();
         const reader = audioStream.getReader();
@@ -80,7 +80,7 @@ class AudioPlayer {
         audioFileUrl: string,
         callback?: SoundCallback,
     ): void => {
-        Logger.log('--[SISTA]-- playAiReplyFromUrl');
+        Logger.log('F: playAiReplyFromUrl');
         // Play AI reply at 100% volume (1.0 = 100%)
         this.playSound(audioFileUrl, callback, 1.0);
     };
@@ -109,6 +109,7 @@ class AudioPlayer {
         callback?: SoundCallback,
         volume?: number,
     ): void => {
+        Logger.log('F: playSound');
         const sound = new Howl({
             src: [soundFileUrl],
             volume: volume,

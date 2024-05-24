@@ -22,7 +22,6 @@ class AudioRecorder {
         this.handleStop = this.handleStop.bind(this);
     }
 
-
     public async test_startRecording(): Promise<Blob> {
         return new Promise((resolve, reject) => {
             reject(new Error('TEST Error starting recording...'));
@@ -30,12 +29,13 @@ class AudioRecorder {
     }
 
     public async startRecording(): Promise<Blob> {
+        Logger.log('F: startRecording');
         try {
             if (
                 this.mediaRecorder &&
                 this.mediaRecorder.state === 'recording'
             ) {
-                console.error('Recording is already in progress');
+                Logger.error('Recording is already in progress');
                 throw new Error('Recording is already in progress');
             }
 
@@ -54,11 +54,12 @@ class AudioRecorder {
             );
 
             if (!supportedType) {
-                console.error('No supported audio type found');
+                Logger.error('No supported audio type found');
                 throw new Error('No supported audio type found');
             }
 
             options.mimeType = supportedType;
+            Logger.log(`Recording audio file format: ${options.mimeType}`);
 
             this.mediaRecorder = new MediaRecorder(stream, options);
             this.mediaRecorder.ondataavailable = this.handleDataAvailable;
@@ -72,7 +73,7 @@ class AudioRecorder {
                     this.mediaRecorder &&
                     this.mediaRecorder.state === 'recording'
                 ) {
-                    this.stopRecording();
+                    this._stopRecording();
                 }
             }, this.maxRecordingTime);
 
@@ -86,6 +87,7 @@ class AudioRecorder {
     }
 
     private async getMediaStream(): Promise<MediaStream> {
+        Logger.log('F: getMediaStream');
         if (!this.stream) {
             try {
                 this.stream = await navigator.mediaDevices.getUserMedia({
@@ -100,12 +102,14 @@ class AudioRecorder {
     }
 
     private handleDataAvailable(event: BlobEvent): void {
+        Logger.log('F: handleDataAvailable');
         if (event.data && event.data.size > 0) {
             this.audioChunks.push(event.data);
         }
     }
 
     private handleStop(): void {
+        Logger.log('F: handleStop');
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
         this.audioChunks = [];
         if (this.resolveRecording) {
@@ -115,6 +119,7 @@ class AudioRecorder {
     }
 
     private cleanup(): void {
+        Logger.log('F: cleanup');
         if (this.mediaRecorder) {
             if (this.mediaRecorder.state === 'recording') {
                 this.mediaRecorder.stop();
@@ -143,6 +148,7 @@ class AudioRecorder {
     }
 
     private setupAudioAnalysis(stream: MediaStream) {
+        Logger.log('F: setupAudioAnalysis');
         this.audioContext = new AudioContext();
         this.analyser = this.audioContext.createAnalyser();
         this.analyser.fftSize = 2048;
@@ -171,7 +177,7 @@ class AudioRecorder {
                         performance.now() - silenceStart >
                         this.silenceThreshold
                     ) {
-                        this.stopRecording();
+                        this._stopRecording();
                     }
                 } else {
                     silenceStart = performance.now();
@@ -189,7 +195,8 @@ class AudioRecorder {
         }
     }
 
-    public stopRecording(): void {
+    private _stopRecording(): void {
+        Logger.log('F: _stopRecording');
         if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
             this.mediaRecorder.stop();
         }

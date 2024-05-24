@@ -24,7 +24,7 @@ export default class FunctionExecutor {
     }
 
     registerFunctions(voiceFunctions: VoiceFunction[]): void {
-        Logger.log('--[SISTA]-- registerFunctions');
+        Logger.log('F: registerFunctions');
 
         voiceFunctions.forEach(({ function: func }) => {
             const { handler, ...rest } = func;
@@ -39,17 +39,17 @@ export default class FunctionExecutor {
         });
 
         Logger.log(
-            '--[SISTA]-- Registered Function References:',
+            'Registered Function References:',
             this.functionHandlers,
         );
         Logger.log(
-            '--[SISTA]-- Registered Function Signatures:',
+            'Registered Function Signatures:',
             this.functionSignatures,
         );
     }
 
     executeFunctions(executableFunctions: ExecutableFunction[]): void {
-        Logger.log('--[SISTA]-- executeFunctions');
+        Logger.log('F: executeFunctions');
 
         if (!executableFunctions || executableFunctions.length === 0) {
             Logger.error('E1: Invalid API response:', executableFunctions);
@@ -89,7 +89,7 @@ export default class FunctionExecutor {
             const functionArgs = func.args || {};
             try {
                 Logger.log(
-                    `--[SISTA]-- Calling function ${functionName} with arguments:`,
+                    `Calling function ${functionName} with arguments:`,
                     functionArgs,
                 );
                 functionToCall(functionArgs);

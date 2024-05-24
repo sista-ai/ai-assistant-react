@@ -25,12 +25,12 @@ class Logger {
 
     log(...args: LogArgs): void {
         if (this.debug) {
-            console.log(...args);
+            console.log('--[SISTA]-- ', ...args);
         }
     }
 
     error(...args: LogArgs): void {
-        console.error(...args);
+        console.error('--[SISTA]-- ', ...args);
     }
 }
 
