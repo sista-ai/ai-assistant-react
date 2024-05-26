@@ -46,6 +46,10 @@ class EventEmitter {
     static get STATE_SPEAKING_START(): string {
         return 'STATE_SPEAKING_START';
     }
+    
+    static get STATE_FREEZING(): string {
+        return 'STATE_FREEZING';
+    }
 }
 
 export default EventEmitter;

@@ -52,13 +52,11 @@ type RecordingState =
     | 'STATE_IDLE'
     | 'STATE_LISTENING_START'
     | 'STATE_THINKING_START'
-    | 'STATE_SPEAKING_START';
+    | 'STATE_SPEAKING_START'
+    | 'STATE_FREEZING';
 
 type StateColors = {
-    STATE_IDLE?: string;
-    STATE_LISTENING_START?: string;
-    STATE_THINKING_START?: string;
-    STATE_SPEAKING_START?: string;
+    [state in RecordingState]?: string;
 };
 
 interface AiAssistantButtonProps {
@@ -89,6 +87,7 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
         STATE_LISTENING_START: '#F64A7B',
         STATE_THINKING_START: '#015589',
         STATE_SPEAKING_START: '#019a9a',
+        STATE_FREEZING: '#3c4559',
     };
 
     const colors: StateColors = { ...defaultStateColors, ...stateColors };
@@ -108,7 +107,8 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
                 setRecordingState(newState as RecordingState);
                 setButtonDisabled(
                     newState === 'STATE_LISTENING_START' ||
-                        newState === 'STATE_THINKING_START',
+                        newState === 'STATE_THINKING_START' ||
+                        newState === 'STATE_FREEZING',
                 );
             };
 

@@ -6,9 +6,9 @@ Give your App a voice, with a conversational AI assistant and interactive voice 
 
 ## Demo (Try it now!)
 
-Visit our [Demo](https://smart.sista.ai) _Say "Turn light on"!_
+Visit our [Demo](https://smart.sista.ai/?utm_source=github_repo&utm_medium=demo_button&utm_campaign=react_sdk_readme) _Say "Turn light on"!_
 
-[![Sista Logo](./assets/sista-demo-one.png)](https://smart.sista.ai)
+[![Sista AI Banner](./assets/sista-demo-one.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=main_banner&utm_campaign=react_sdk_readme)
 
 > Sista AI: 🤖 Your AI Integration Platform. ❤️
 
@@ -28,8 +28,8 @@ Incorporating AI into your applications is now simpler than ever. Our seamless A
 
 This package integrates seamlessly with a wide range of React projects, including **NextJS**, **Electron**, **Gatsby**, **Meteor**, **React Native**, **Remix**, **RedwoodJS**, **Parcel**, **Expo**, and **BlitzJS**.
 
-<a href="https://smart.sista.ai">
-  <img src="./assets/sista-icon.png" alt="Sista Logo" width="130"/>
+<a href="https://smart.sista.ai/?utm_source=github_repo&utm_medium=small_logo&utm_campaign=react_sdk_readme">
+    <img src="./assets/sista-icon.png" alt="Sista Logo" width="130"/>
 </a>
 
 ## Installation
@@ -257,7 +257,7 @@ Here are some open-source, real-world implementations:
 <br/>
 
 
-[![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai)
+[![Sista Logo](./assets/sista-logo.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=big_logo&utm_campaign=react_sdk_readme)
 
 ---
 
@@ -404,7 +404,7 @@ const trackAiAssistantButtonClick = () => {
 
 The [Admin Panel](https://admin.sista.ai/applications) includes powerful analytics tools to help you understand your users and optimize their experience.
 
-[![Sista Logo](./assets/sista-admin-dark.png)](https://smart.sista.ai)
+[![Sista AI Admin Panel](./assets/sista-admin-dark.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=admin_panel_screenshot&utm_campaign=react_sdk_readme)
 
 ## Diverse SDKs
 

@@ -213,6 +213,7 @@ class AiAssistantEngine extends EventEmitter {
             Logger.error('Error Calling Sista API:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             this.makingAPIRequest = false;
+            this.gettingUserInput = false;
         }
     };
 
@@ -221,10 +222,18 @@ class AiAssistantEngine extends EventEmitter {
 
         // Handle any kind of HTTP error statuses
         if (response.statusCode >= 400) {
-            Logger.error(
-                `API Error: Status Code - ${response.statusCode}, Message - ${response.message}`,
-            );
-            this.emitStateChange(EventEmitter.STATE_IDLE);
+            // Handle API Guards
+            if (response.statusCode === 403 || response.statusCode === 429) {
+                Logger.error(
+                    `Server Access Issue: Status Code - ${response.statusCode}, Message - ${response.message}`,
+                );
+                this.emitStateChange(EventEmitter.STATE_FREEZING);
+            } else {
+                Logger.error(
+                    `Server Error: Status Code - ${response.statusCode}, Message - ${response.message}`,
+                );
+                this.emitStateChange(EventEmitter.STATE_IDLE);
+            }
             return;
         }
 
