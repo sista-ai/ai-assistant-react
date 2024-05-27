@@ -402,7 +402,7 @@ const trackAiAssistantButtonClick = () => {
 
 ## Advanced Admin Panel
 
-The [Admin Panel](https://admin.sista.ai/applications) includes powerful analytics tools to help you understand your users and optimize their experience.
+The [Admin Panel](https://admin.sista.ai/applications) has powerful analytics to help you understand and optimize user experiences.
 
 [![Sista AI Admin Panel](./assets/sista-admin-dark.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=admin_panel_screenshot&utm_campaign=react_sdk_readme)
 

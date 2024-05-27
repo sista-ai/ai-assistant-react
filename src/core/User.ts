@@ -1,4 +1,5 @@
 // src/core/User.ts
+import { v4 as uuidv4 } from 'uuid';
 
 interface EndUserIds {
     generatedEndUserId: string;
@@ -22,28 +23,14 @@ class User {
     }
 
     private _generateEndUserId(): string {
-        const timestamp = Date.now();
-        const randomChars = this._generateRandomString(36);
         const localStorageKey = `SISTA-GID`;
         let endUserId = localStorage.getItem(localStorageKey);
         if (!endUserId) {
-            endUserId = `GID-${randomChars}-${timestamp}`;
+            endUserId = `GID-${uuidv4()}`;
             localStorage.setItem(localStorageKey, endUserId);
         }
 
         return endUserId;
-    }
-
-    private _generateRandomString(length: number): string {
-        let result = '';
-        const characters =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZ-abcdefghijklmnopqrstuvwxyz-0123456789';
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(
-                Math.floor(Math.random() * characters.length),
-            );
-        }
-        return result;
     }
 }
 export default User;
