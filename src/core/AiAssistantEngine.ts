@@ -121,7 +121,7 @@ class AiAssistantEngine extends EventEmitter {
 
         if (inputUserCommand) {
             try {
-                await this._makeAPIRequest(inputUserCommand);
+                await this._makeApiCall(inputUserCommand);
             } catch (err) {
                 Logger.error('Error making API request:', err);
                 this.emitStateChange(EventEmitter.STATE_IDLE);
@@ -164,37 +164,56 @@ class AiAssistantEngine extends EventEmitter {
         }
     }
 
-    private _makeAPIRequest = async (
-        userInput: Blob | string,
-    ): Promise<void> => {
+    private _makeApiCall = async (userInput: Blob | string): Promise<void> => {
+        Logger.log('F: _makeApiCall');
+
+        // --------[ Update UI ]--------
+
         this.makingAPIRequest = true;
-        Logger.log('F: _makeAPIRequest');
         this.emitStateChange(EventEmitter.STATE_THINKING_START);
+
+        // --------[ Prepare FormData ]--------
 
         const formData = new FormData();
 
+        // Add the user IDs object
+        formData.append('endUser', JSON.stringify(this.user.getEndUserIds()));
+
+        // Add the user input
         if (this.userInputMethod === UserInputMethod.AUDIO_RECORDER) {
             formData.append('userInputAsAudio', userInput as Blob);
         } else if (this.userInputMethod === UserInputMethod.SPEECH_RECOGNIZER) {
             formData.append('userInputAsText', userInput as string);
         }
 
-        formData.append('sdkVersion', this.sdkVersion);
-        formData.append(
-            'endUser',
-            JSON.stringify(this.user.getEndUserDetails()),
-        );
+        // Add the functions signatures
         formData.append(
             'functionsSignatures',
             JSON.stringify(this.functionExecutor.functionSignatures),
         );
 
+        // Add the page content (user screen)
         if (this.scrapeContent) {
             formData.append(
                 'pageContent',
                 JSON.stringify(this.scraper.getText()),
             );
         }
+
+        // Add some metadata
+        formData.append(
+            'meta',
+            JSON.stringify({
+                sdkVersion: this.sdkVersion,
+                currentUrl: window.location.href,
+                referrerUrl: document.referrer,
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                screenResolution: `${window.screen.width}x${window.screen.height}`,
+            }),
+        );
+
+        // --------[ Make the API Call ]--------
 
         try {
             const response = await fetch(`${this.apiUrl}/processor/run`, {
@@ -206,14 +225,15 @@ class AiAssistantEngine extends EventEmitter {
                 body: formData,
             });
 
-            const data: ApiResponse = await response.json();
+            // --------[ Handle the API Response ]--------
+
             this.makingAPIRequest = false;
+            const data: ApiResponse = await response.json();
             this._handleApiResponse(data);
         } catch (error) {
             Logger.error('Error Calling Sista API:', error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             this.makingAPIRequest = false;
-            this.gettingUserInput = false;
         }
     };
 
@@ -237,7 +257,7 @@ class AiAssistantEngine extends EventEmitter {
             return;
         }
 
-        // ----[ Step 1: Display User Input Command ]----
+        // --------[ Step 1: Display User Input Command ]--------
         // Handle user command as text first. This is useful for debugging
         if (response.data.inputVoiceCommandAsText) {
             this._handleInputVoiceCommandAsText(
@@ -245,13 +265,13 @@ class AiAssistantEngine extends EventEmitter {
             );
         }
 
-        // ----[ Step 2: Display AI Text Reply ]----
+        // --------[ Step 2: Display AI Text Reply ]--------
         // Handle text response last
         if (response.data.outputTextReply) {
             this._handleTextResponse(response.data.outputTextReply);
         }
 
-        // ----[ Step 3: Execute Functions ]----
+        // --------[ Step 3: Execute Functions ]--------
         // Process executable functions if they are present, which have the highest priority
         if (
             response.data.outputExecutableFunctions &&
@@ -263,7 +283,7 @@ class AiAssistantEngine extends EventEmitter {
             return; // No need to process further if functions are executed
         }
 
-        // ----[ Step 4: Play AI Audio Reply ]----
+        // --------[ Step 4: Play AI Audio Reply ]--------
         // Stop any currently playing audio
         this.audioPlayer.stopCurrentSound();
         // Handle audio response if available as a Stream

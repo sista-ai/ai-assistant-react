@@ -1,7 +1,6 @@
 // src/core/User.ts
 
-interface EndUserDetails {
-    endUserAgent: string;
+interface EndUserIds {
     generatedEndUserId: string;
     providedEndUserId: string | null;
 }
@@ -15,9 +14,8 @@ class User {
         this.generatedUserId = this._generateEndUserId();
     }
 
-    getEndUserDetails(): EndUserDetails {
+    getEndUserIds(): EndUserIds {
         return {
-            endUserAgent: navigator.userAgent,
             generatedEndUserId: this.generatedUserId,
             providedEndUserId: this.providedUserId,
         };
