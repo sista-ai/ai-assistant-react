@@ -3,7 +3,10 @@ name: AI Assistant (React) - Build and Publish to NPM
 on:
   push:
     branches: [main]
-
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - 'assets/**'
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
