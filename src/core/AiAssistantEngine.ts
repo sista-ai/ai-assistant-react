@@ -100,7 +100,7 @@ class AiAssistantEngine extends EventEmitter {
         Logger.log('F: startProcessing');
 
         // Lower the volume of any currently playing audio
-        this.audioPlayer.setVolume(0.5);
+        this.audioPlayer.setVolume(0.15);
 
         // Reset the assistant before starting processing
         this._resetEngine();
