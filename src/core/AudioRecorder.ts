@@ -6,7 +6,7 @@ class AudioRecorder {
     // Stop recording after x seconds as hard limit
     private maxRecordingTime = 10000;
     // Stop recording after x seconds of silence
-    private silenceThreshold = 1300;
+    private silenceThreshold = 2000;
     private mediaRecorder: MediaRecorder | null = null;
     private stream: MediaStream | null = null;
     private audioChunks: Blob[] = [];
