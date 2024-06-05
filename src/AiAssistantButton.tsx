@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAiAssistant } from './AiAssistantContext';
 import { FaMicrophone, FaVolumeUp } from 'react-icons/fa';
 import { GiBrainFreeze } from 'react-icons/gi';
@@ -18,6 +18,10 @@ const injectStyles = () => {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
             100% { box-shadow: 0 0 0 30px rgba(255, 255, 255, 0); }
         }
+        @keyframes attention {
+            0%, 50%, 100% { background-color: #4a6cf6; }
+            25%, 75% { background-color: rgba(255, 255, 255, 0.7); }
+        }
         .ai-assistant-button {
             width: 75px;
             height: 75px;
@@ -34,6 +38,12 @@ const injectStyles = () => {
             bottom: 75px;
             right: 75px;
             z-index: 9999;
+        }
+        .ai-assistant-button.attention {
+            animation: attention 1s 2;
+        }
+        .ai-assistant-button:hover {
+            border: 1px solid #fff;
         }
         @media (max-width: 768px) {
             .ai-assistant-button {
@@ -77,6 +87,7 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
         useState<RecordingState>('STATE_IDLE');
     const [isButtonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [hover, setHover] = useState<boolean>(false);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         injectStyles();
@@ -120,8 +131,29 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
         }
     }, [aiAssistant]);
 
+    useEffect(() => {
+        if (buttonRef.current) {
+            buttonRef.current.classList.add('attention');
+
+            const animationEndHandler = () => {
+                if (buttonRef.current) {
+                    buttonRef.current.classList.remove('attention');
+                }
+            };
+
+            buttonRef.current.addEventListener('animationend', animationEndHandler);
+
+            return () => {
+                if (buttonRef.current) {
+                    buttonRef.current.removeEventListener('animationend', animationEndHandler);
+                }
+            };
+        }
+    }, []);
+
     return (
         <button
+            ref={buttonRef}
             className="ai-assistant-button"
             onClick={handleButtonClick}
             disabled={isButtonDisabled}
@@ -139,7 +171,7 @@ const AiAssistantButton: React.FC<AiAssistantButtonProps> = ({
                         ? 'bounce 2s infinite'
                         : recordingState === 'STATE_SPEAKING_START'
                         ? 'pulse 1.5s infinite'
-                        : 'none',
+                        : '',
                 ...style,
             }}
             {...props}
