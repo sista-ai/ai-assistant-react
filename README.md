@@ -16,7 +16,7 @@ Give your App a voice, with a conversational AI assistant and interactive voice 
     <img src="./assets/sista-icon.png" alt="Sista Logo" width="130"/>
 </a>
 
-## Demo 
+## Demo
 
 Try it [here](https://smart.sista.ai/?utm_source=github_repo&utm_medium=demo_button&utm_campaign=react_sdk_readme). Click the round button located at the bottom right corner.
 
@@ -93,3 +93,6 @@ Licensed under [CC BY-NC-ND 3.0](./LICENSE).
 ## Support
 
 For issues, raise on Github or contact [support@sista.ai](mailto:support@sista.ai).
+
+
+[![Sista Logo](https://github.com/sista-ai/ai-assistant-react/blob/main/assets/sista-logo.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=big_logo&utm_campaign=react_sdk_readme)
