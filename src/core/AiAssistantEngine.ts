@@ -11,6 +11,7 @@ import config from './config';
 import { VoiceFunction } from './commonTypes';
 import User from './User';
 import SpeechRecognizer from './SpeechRecognizer';
+import ErrorReporter from './ErrorReporter';
 
 interface ApiResponse {
     data: {
@@ -99,22 +100,23 @@ class AiAssistantEngine extends EventEmitter {
     startProcessing = async (): Promise<void> => {
         Logger.log('F: startProcessing');
 
-        // Lower the volume of any currently playing audio
-        this.audioPlayer.setVolume(0.15);
-
-        // Reset the assistant before starting processing
-        this._resetEngine();
-
-        this.emitStateChange(EventEmitter.STATE_LISTENING_START);
-        this.audioPlayer.playStartTone();
-
         let inputUserCommand: string | Blob;
 
         try {
+            // Lower the volume of any currently playing audio
+            this.audioPlayer.setVolume(0.15);
+
+            // Reset the assistant before starting processing
+            this._resetEngine();
+
+            this.emitStateChange(EventEmitter.STATE_LISTENING_START);
+            this.audioPlayer.playStartTone();
+
             inputUserCommand = await this._getUserAudioInput();
             Logger.log(`Used "User Input Method" = ${this.userInputMethod}`);
-        } catch (err) {
-            Logger.error('Error getting user input:', err);
+        } catch (error) {
+            Logger.error('Error getting user input:', error);
+            ErrorReporter.captureException(error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
             return;
         }
@@ -124,6 +126,7 @@ class AiAssistantEngine extends EventEmitter {
                 await this._makeApiCall(inputUserCommand);
             } catch (err) {
                 Logger.error('Error making API request:', err);
+                ErrorReporter.captureException(err);
                 this.emitStateChange(EventEmitter.STATE_IDLE);
             }
         }
@@ -140,8 +143,10 @@ class AiAssistantEngine extends EventEmitter {
             return this.userInputMethod === UserInputMethod.AUDIO_RECORDER
                 ? await this.audioRecorder.startRecording()
                 : await this.speechToText.startListening();
-        } catch (err) {
-            Logger.error(err);
+        } catch (error) {
+            Logger.error(error);
+            ErrorReporter.captureException(error);
+
             if (retries >= 3) {
                 Logger.log(
                     'Both methods to getUserAudioInput failed. Stopping further attempts.',
@@ -227,11 +232,17 @@ class AiAssistantEngine extends EventEmitter {
 
             // --------[ Handle the API Response ]--------
 
-            this.makingAPIRequest = false;
-            const data: ApiResponse = await response.json();
-            this._handleApiResponse(data);
+            try {
+                const data: ApiResponse = await response.json();
+                this._handleApiResponse(data);
+            } catch (error) {
+                Logger.error('Error Handling API Response:', error);
+                ErrorReporter.captureException(error);
+            }
         } catch (error) {
             Logger.error('Error Calling Sista API:', error);
+            ErrorReporter.captureException(error);
+        } finally {
             this.emitStateChange(EventEmitter.STATE_IDLE);
             this.makingAPIRequest = false;
         }
@@ -382,6 +393,7 @@ class AiAssistantEngine extends EventEmitter {
             reader.read().then(playChunk);
         } catch (error) {
             Logger.error('Error Calling Sista API:', error);
+            ErrorReporter.captureException(error);
             this.emitStateChange(EventEmitter.STATE_IDLE);
         }
     };
