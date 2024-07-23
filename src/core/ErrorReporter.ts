@@ -13,7 +13,7 @@ class ErrorReporter {
             ],
             tracePropagationTargets: [
                 'localhost',
-                new RegExp(`^${config.apiUrl}`),
+				new RegExp('.*'), // Allow any domain
             ],
             // TODO: reduce from 0.5 to 0.1 after Sep 2024
             tracesSampleRate: 0.5, // 50% of traces will be captured. Be cautious with a high number in production
