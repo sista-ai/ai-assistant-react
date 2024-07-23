@@ -266,7 +266,7 @@ class AiAssistantEngine extends EventEmitter {
         }
 
         // --------[ Step 2: Display AI Text Reply ]--------
-        // Handle text response last
+        // Handle text response. This is useful for debugging
         if (response.data.outputTextReply) {
             this._handleTextResponse(response.data.outputTextReply);
         }
@@ -280,7 +280,7 @@ class AiAssistantEngine extends EventEmitter {
             this._handleExecutableFunctionsResponse(
                 response.data.outputExecutableFunctions,
             );
-            return; // No need to process further if functions are executed
+            // return; // No need to process further if functions are executed
         }
 
         // --------[ Step 4: Play AI Audio Reply ]--------
