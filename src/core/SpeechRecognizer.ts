@@ -57,7 +57,7 @@ class SpeechRecognizer {
         };
 
         this.recognition.onerror = (event: SpeechRecognitionEvent) => {
-            Logger.error(`Speech recognition error: ${event.error}`);
+            Logger.error(`Speech recognition error (in initializeSpeechRecognizer): ${event.error}`);
             this.isListening = false;
         };
 
@@ -98,7 +98,7 @@ class SpeechRecognizer {
                 };
 
                 this.recognition.onerror = (event: SpeechRecognitionEvent) => {
-                    Logger.error(`Speech recognition error: ${event.error}`);
+                    Logger.error(`Speech recognition error (in startListening): ${event.error}`);
                     throw new Error(event.error);
                 };
 

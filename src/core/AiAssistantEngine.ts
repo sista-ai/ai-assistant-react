@@ -37,7 +37,7 @@ class AiAssistantEngine extends EventEmitter {
     private readonly sdkVersion: string;
     private readonly audioPlayer: AudioPlayer;
     private readonly audioRecorder: AudioRecorder;
-    private readonly speechToText: SpeechRecognizer;
+    private readonly speechRecognizer: SpeechRecognizer;
     private readonly functionExecutor: FunctionExecutor;
     private readonly scraper: Scraper;
     private readonly user: User;
@@ -68,7 +68,7 @@ class AiAssistantEngine extends EventEmitter {
         this.apiUrl = apiUrl;
         this.scrapeContent = scrapeContent;
         this.user = new User(userId);
-        this.speechToText = new SpeechRecognizer();
+        this.speechRecognizer = new SpeechRecognizer();
         this.audioRecorder = new AudioRecorder();
         this.audioPlayer = new AudioPlayer();
         this.functionExecutor = new FunctionExecutor();
@@ -142,7 +142,7 @@ class AiAssistantEngine extends EventEmitter {
             this.gettingUserInput = true;
             return this.userInputMethod === UserInputMethod.AUDIO_RECORDER
                 ? await this.audioRecorder.startRecording()
-                : await this.speechToText.startListening();
+                : await this.speechRecognizer.startListening();
         } catch (error) {
             Logger.error(error);
             ErrorReporter.captureException(error);
@@ -315,7 +315,11 @@ class AiAssistantEngine extends EventEmitter {
     private _handleAudioUrlResponse = (audioFile: string): void => {
         Logger.log('F: _handleAudioUrlResponse');
 
-        this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
+        // Delay to ensure state changes are emitted in the correct order, cause func exec will emit idle state quickly
+        setTimeout(() => {
+            this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
+        }, 100);
+
         this.audioPlayer.playAiReplyFromUrl(audioFile, () => {
             Logger.log('Audio File reply has finished playing.');
 
@@ -403,9 +407,11 @@ class AiAssistantEngine extends EventEmitter {
     ): void => {
         Logger.log('F: _handleExecutableFunctionsResponse');
 
-        this.functionExecutor.executeFunctions(executableFunctions);
-        this.emitStateChange(EventEmitter.STATE_IDLE);
-        this.audioPlayer.playEndTone();
+        if (executableFunctions) {
+            this.functionExecutor.executeFunctions(executableFunctions);
+            this.emitStateChange(EventEmitter.STATE_IDLE);
+            this.audioPlayer.playEndTone();
+        }
     };
 
     private _handleTextResponse = (content: string): void => {
