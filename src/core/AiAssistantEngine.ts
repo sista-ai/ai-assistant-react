@@ -318,7 +318,7 @@ class AiAssistantEngine extends EventEmitter {
         // Delay to ensure state changes are emitted in the correct order, cause func exec will emit idle state quickly
         setTimeout(() => {
             this.emitStateChange(EventEmitter.STATE_SPEAKING_START);
-        }, 100);
+        }, 50);
 
         this.audioPlayer.playAiReplyFromUrl(audioFile, () => {
             Logger.log('Audio File reply has finished playing.');

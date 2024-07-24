@@ -1,5 +1,4 @@
 // src/core/AudioRecorder.ts
-
 import Logger from './Logger';
 
 class AudioRecorder {
@@ -20,6 +19,7 @@ class AudioRecorder {
     constructor() {
         this.handleDataAvailable = this.handleDataAvailable.bind(this);
         this.handleStop = this.handleStop.bind(this);
+        this.cleanup = this.cleanup.bind(this);
     }
 
     async test_startRecording(): Promise<Blob> {
@@ -38,6 +38,8 @@ class AudioRecorder {
                 Logger.error('Recording is already in progress');
                 throw new Error('Recording is already in progress');
             }
+
+            await this.cleanup(); // Ensure previous resources are cleaned up
 
             const stream = await this.getMediaStream();
             const possibleTypes = [
@@ -64,7 +66,7 @@ class AudioRecorder {
             this.mediaRecorder = new MediaRecorder(stream, options);
             this.mediaRecorder.ondataavailable = this.handleDataAvailable;
             this.mediaRecorder.onstop = this.handleStop;
-            // VIP: It's essential for mobile browsers to set this to 1000ms timeslice. 
+            // VIP: It's essential for mobile browsers to set this to 1000ms timeslice.
             this.mediaRecorder.start(1000);
 
             this.setupAudioAnalysis(stream);
@@ -83,6 +85,7 @@ class AudioRecorder {
             });
         } catch (error) {
             Logger.error('AudioRecorder Error starting recording:', error);
+            await this.cleanup();
             throw new Error('Error starting recording');
         }
     }
@@ -115,11 +118,12 @@ class AudioRecorder {
         this.audioChunks = [];
         if (this.resolveRecording) {
             this.resolveRecording(audioBlob);
+            this.resolveRecording = null;
         }
         this.cleanup();
     }
 
-    private cleanup(): void {
+    private async cleanup(): Promise<void> {
         Logger.log('F: cleanup');
         if (this.mediaRecorder) {
             if (this.mediaRecorder.state === 'recording') {
@@ -134,66 +138,65 @@ class AudioRecorder {
             this.stream = null;
         }
         if (this.audioContext) {
-            this.audioContext.close().then(() => {
-                this.audioContext = null;
-                this.analyser = null;
-                this.microphone = null;
-            });
-        } else {
+            await this.audioContext.close();
+            this.audioContext = null;
             this.analyser = null;
             this.microphone = null;
         }
         this.audioChunks = [];
-
         this.resolveRecording = null;
+        Logger.log('Cleanup complete');
     }
 
     private setupAudioAnalysis(stream: MediaStream) {
         Logger.log('F: setupAudioAnalysis');
+
         this.audioContext = new AudioContext();
+
         this.analyser = this.audioContext.createAnalyser();
+
         this.analyser.fftSize = 2048;
+
         this.microphone = this.audioContext.createMediaStreamSource(stream);
+
         this.microphone.connect(this.analyser);
 
-        if (this.analyser) {
-            const bufferLength = this.analyser.fftSize;
-            const dataArray = new Uint8Array(bufferLength);
-            let silenceStart = performance.now();
+        const bufferLength = this.analyser!.fftSize;
 
-            const checkSilence = () => {
-                this.analyser?.getByteTimeDomainData(dataArray);
-                let sum = 0;
+        const dataArray = new Uint8Array(bufferLength);
 
-                for (let i = 0; i < bufferLength; i++) {
-                    let x = dataArray[i] - 128;
-                    sum += x * x;
+        let silenceStart = performance.now();
+
+        const checkSilence = () => {
+            if (!this.analyser) return;
+            this.analyser.getByteTimeDomainData(dataArray);
+
+            let sum = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                let x = dataArray[i] - 128;
+                sum += x * x;
+            }
+
+            let rms = Math.sqrt(sum / bufferLength);
+
+            if (rms < 2) {
+                if (performance.now() - silenceStart > this.silenceThreshold) {
+                    this._stopRecording();
                 }
+            } else {
+                silenceStart = performance.now();
+            }
 
-                let rms = Math.sqrt(sum / bufferLength);
+            if (
+                this.mediaRecorder &&
+                this.mediaRecorder.state === 'recording'
+            ) {
+                requestAnimationFrame(checkSilence);
+            }
+        };
 
-                if (rms < 2) {
-                    // Determine threshold based on your needs
-                    if (
-                        performance.now() - silenceStart >
-                        this.silenceThreshold
-                    ) {
-                        this._stopRecording();
-                    }
-                } else {
-                    silenceStart = performance.now();
-                }
-
-                if (
-                    this.mediaRecorder &&
-                    this.mediaRecorder.state === 'recording'
-                ) {
-                    requestAnimationFrame(checkSilence);
-                }
-            };
-
-            checkSilence();
-        }
+        checkSilence();
     }
 
     private _stopRecording(): void {
