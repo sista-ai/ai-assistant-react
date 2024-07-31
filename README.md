@@ -22,15 +22,13 @@ Give your App a voice, with a conversational AI assistant and interactive voice 
 Try it [here](https://smart.sista.ai/?utm_source=github_repo&utm_medium=demo_button&utm_campaign=react_sdk_readme). Click the round button located at the bottom right corner.
 
 <br/>
-<br>
 
 <p align="center">
 	<a href="https://smart.sista.ai/?utm_source=github_repo&utm_medium=demo_button&utm_campaign=react_sdk_readme">
-	   <img src="./assets/button_demo.png" width="300px" alt="Sista AI Docs"/>
+	   <img src="./assets/button_demo.png" alt="Sista AI Demo"/>
 	</a>
 </p>
 
-<br>
 
 ## Features at a Glance
 
@@ -41,18 +39,24 @@ Try it [here](https://smart.sista.ai/?utm_source=github_repo&utm_medium=demo_but
 -   **Admin Panel:** Customizes any detail
 
 
+## Plug & Play AI Integration
+
+Integrating AI into your applications is now simpler than ever. The [Admin Panel](https://admin.sista.ai/applications) offers full control, customization, powerful analytics, and detailed insights to optimize user experiences.
+
+
+[![Sista AI Admin Panel](./assets/sista-admin-dark.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=admin_panel_screenshot&utm_campaign=react_sdk_readme)
+
+> Sista AI: 🤖 Your AI Integration Platform. ❤️
+
 
 <br>
-<br>
-<br>
+
 
 <p align="center">
 	<a href="https://docs.sista.ai/installation/download">
-	   <img src="./assets/button_documentation.png" width="300px" alt="Sista AI Docs"/>
+	   <img src="./assets/button_documentation.png" alt="Sista AI Docs"/>
 	</a>
 </p>
-
-<br>
 
 
 
@@ -71,16 +75,6 @@ This package supports a diverse range of React-based projects:
 
 
 
-## Plug & Play AI Integration
-
-Integrating AI into your applications is now simpler than ever. The [Admin Panel](https://admin.sista.ai/applications) offers full control, customization, powerful analytics, and detailed insights to optimize user experiences.
-
-
-[![Sista AI Admin Panel](./assets/sista-admin-dark.png)](https://smart.sista.ai/?utm_source=github_repo&utm_medium=admin_panel_screenshot&utm_campaign=react_sdk_readme)
-
-> Sista AI: 🤖 Your AI Integration Platform. ❤️
-
-
 ## Supported Platforms
 
 Our AI technology is supported across all platforms, delivering a unified experience for users everywhere.
@@ -96,11 +90,14 @@ Our AI technology is supported across all platforms, delivering a unified experi
 
 For issues, raise on Github or contact [support@sista.ai](mailto:support@sista.ai).
 
+Join our community on [Discord](https://discord.gg/e2arxq9Js4) to connect with other users.
+
+<br/>
 <br/>
 
 <p align="center">
 	<a href="https://discord.gg/e2arxq9Js4">
-	   <img src="./assets/button_community.png" width="300px" alt="Sista AI Docs"/>
+	   <img src="./assets/button_community.png" alt="Sista AI Community"/>
 	</a>
 </p>
 
