@@ -1,6 +1,6 @@
 {
     "name": "@sista/ai-assistant-react",
-    "version": "2.2.38",
+    "version": "2.2.39",
     "description": "Integrate AI voice assistants into your React app in just 10 minutes. Transform user engagement with end-to-end AI integration platform, powered by ChatGPT. The first plug and play AI Assistant, with voice UI controller and much more.",
     "main": "dist/src/index.js",
     "repository": {
