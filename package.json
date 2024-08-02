@@ -8,6 +8,16 @@
         "type": "git",
         "url": "git+https://github.com/sista-ai/ai-assistant-react.git"
     },
+    "scripts": {
+        "watch": "nodemon --exec yarn run build --watch src --ext ts,tsx",
+        "build": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepublishOnly": "npm run build",
+        "publish:public": "npm publish --access public",
+        "version:major": "npm version major",
+        "version:minor": "npm version minor",
+        "version:patch": "npm version patch"
+    },
     "keywords": [
         "AI Voice Assistant",
         "AI Assistant",
