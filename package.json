@@ -1,6 +1,6 @@
 {
     "name": "@sista/ai-assistant-react",
-    "version": "2.2.39",
+    "version": "2.2.40",
     "description": "Integrate AI voice assistants into your React app in just 10 minutes with the world's first plug-and-play AI integration platform, featuring a powerful Voice UI Controller and powered by ChatGPT.",
     "longDescription": "Easily integrate AI voice assistants, AI chatbots, and AI voicebots into your React applications with our plug-and-play AI integration platform. Powered by ChatGPT, this comprehensive SDK allows you to create intelligent, voice-enabled experiences that enhance user engagement and satisfaction. The platform features a powerful Voice UI Controller, enabling seamless interaction through a voice user interface (Voice UI) that supports natural language processing and voice recognition. Perfect for building conversational AI agents, virtual assistants, and interactive chatbots, our solution is designed to elevate your app's functionality. Whether you're looking to improve customer support, increase accessibility, or streamline user onboarding, this AI assistant delivers a flexible and scalable integration that can be set up in just minutes. With support for multi-language interactions and real-time data integration, Sista AI offers the most advanced tools to transform your applications into smart, responsive, and user-friendly platforms.",
     "main": "dist/src/index.js",
