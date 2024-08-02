@@ -32,11 +32,11 @@ Try it [here](https://smart.sista.ai/?utm_source=github_repo&utm_medium=demo_but
 
 ## Features at a Glance
 
--   **AI Assistant:** Answers any question
--   **UI Controller:** Performs any action
--   **Voice UI:** Speaks any language
--   **Auto Scraper:** Scrape any page
--   **Admin Panel:** Customizes any detail
+- **AI Assistant:** Answers any question
+- **UI Controller:** Performs any action
+- **Context Awareness:** Read any screen
+- **Voice UI:** Speaks any language
+- **Admin Panel:** Customizes any detail
 
 
 ## Plug & Play AI Integration
